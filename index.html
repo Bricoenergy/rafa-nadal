@@ -19,7 +19,7 @@
   --skin:#f4dccb; --skin-line:#cfa98f; --musc-fill:#dd6a5e; --musc-line:#9f3a31;
   --brain:#e8a3a8; --cord:#c4865a; --nerve-line:#3c6ee0;
   --rep-fill:#f2aabb; --rep-dark:#d9708c; --rep-line:#a94a67; --ovary:#d6b0e2; --bladder:#f5e6b2; --urethra:#efc23f;
-  --pt:#1b2232; --pt-ink:#ffffff; --pt-ring:#e0691c;
+  --pt:#1b2232; --pt-ink:#ffffff; --pt-ring:#e0691c; --tendon:#e6e0d6;
   --display:"Baloo 2", "Trebuchet MS", system-ui, sans-serif;
   --body:"Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
   --r:14px;
@@ -97,6 +97,24 @@ main{max-width:960px;margin:0 auto;padding-block:20px 60px;padding-left:max(16px
 .cmp small{font-weight:700;color:var(--muted)}
 .bigsay{font:800 1.2rem var(--body);border:0;border-radius:999px;padding:14px 26px;background:var(--tc);color:var(--surface)}
 .hintline{font:800 1.4rem var(--body);letter-spacing:.25em;color:var(--muted)}
+/* explainers */
+.glow{filter:drop-shadow(0 0 5px var(--accent)) drop-shadow(0 0 2px var(--accent))}
+.tendon{stroke:var(--tendon);stroke-width:5;stroke-linecap:round}
+.flick{transform-box:fill-box;transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scale(.88,1.08)}}
+@media (prefers-reduced-motion:reduce){.flick{animation:none}}
+.ex-panel{display:grid;gap:12px;align-content:start}
+.cap-en{font-family:var(--display);font-size:clamp(1.3rem,3.6vw,1.6rem);font-weight:700;line-height:1.25;min-height:2.5em}
+.ex-steps{margin:0;padding:0;list-style:none;display:grid;gap:4px;counter-reset:e}
+.ex-steps li{counter-increment:e}
+.ex-steps button{display:flex;gap:8px;width:100%;text-align:left;border:0;background:none;border-radius:8px;padding:6px 8px;font-size:.88rem;font-weight:600;color:var(--muted)}
+.ex-steps button::before{content:counter(e);flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--line);color:var(--ink);font-weight:800;font-size:.78rem}
+.ex-steps button.done::before{content:"✓";background:var(--ok-soft);color:var(--ok)}
+.ex-steps button.cur{background:var(--accent-soft);color:var(--ink)}
+.ex-steps button.cur::before{background:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.slider{display:grid;gap:6px;padding:8px 6px 4px;font-weight:800}
+.slider input{width:100%;accent-color:var(--accent);height:28px}
 /* home */
 .hero{display:grid;gap:10px;padding-block:6px}
 .eyebrow{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem;color:var(--accent);margin:0}
@@ -470,13 +488,13 @@ function skeletonArt(){
   s+=both(m=>[[96,110,9],[78,206,8],[67,297,7],[126,342,9],[117,448,10],[112,549,7]].map(([x,y,r])=>`<circle class="joint" cx="${m(x)}" cy="${y}" r="${r}"/>`).join(""),W);
   return s;
 }
-function bodyArt(fill="skin"){
+function bodyArt(o={}){
   const W=300;
-  let s=both(m=>`<polyline points="${m(100)},112 ${m(82)},205 ${m(68)},295" fill="none" stroke="var(--skin-line)" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>`+
+  let s=both(m=>(o.armR&&m(1)!==1?"":`<polyline points="${m(100)},112 ${m(82)},205 ${m(68)},295" fill="none" stroke="var(--skin-line)" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>`)+
                 `<polyline points="${m(128)},300 ${m(121)},445 ${m(116)},556" fill="none" stroke="var(--skin-line)" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/>`,W);
-  s+=both(m=>`<polyline points="${m(100)},112 ${m(82)},205 ${m(68)},295" fill="none" stroke="var(--skin)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>`+
+  s+=both(m=>(o.armR&&m(1)!==1?o.armR:`<polyline points="${m(100)},112 ${m(82)},205 ${m(68)},295" fill="none" stroke="var(--skin)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>`)+
              `<polyline points="${m(128)},300 ${m(121)},445 ${m(116)},556" fill="none" stroke="var(--skin)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>`+
-             `<ellipse class="skin" cx="${m(64)}" cy="312" rx="11" ry="15"/><ellipse class="skin" cx="${m(108)}" cy="570" rx="20" ry="9"/>`,W);
+             (o.armR&&m(1)!==1?"":`<ellipse class="skin" cx="${m(64)}" cy="312" rx="11" ry="15"/>`)+`<ellipse class="skin" cx="${m(108)}" cy="570" rx="20" ry="9"/>`,W);
   s+=`<path class="skin" d="M102,100 Q150,88 198,100 L204,190 Q198,250 194,300 Q188,336 150,340 Q112,336 106,300 Q102,250 96,190 Z"/>`;
   s+=`<rect class="skin" x="138" y="74" width="24" height="26"/><ellipse class="skin" cx="150" cy="46" rx="27" ry="33"/>`;
   return s;
@@ -497,13 +515,14 @@ function muscleArt(){
   s+=`<line x1="150" y1="168" x2="150" y2="260" stroke="var(--musc-line)" stroke-width="1.2"/>`;
   return s;
 }
-function nerveArt(){
-  const W=300; let s=bodyArt();
+function nerveArt(o={}){
+  const W=300; let s=bodyArt(o);
   const N=`fill="none" stroke="var(--nerve-line)" stroke-width="2" stroke-linecap="round"`;
   s+=both(m=>{
-    let r=`<path d="M150,110 Q${m(120)},108 ${m(100)},118 L${m(84)},205 L${m(70)},292" ${N}/>`;
-    r+=[[56,322],[62,327],[70,328],[77,322]].map(([x,y])=>`<path d="M${m(70)},292 L${m(x)},${y}" ${N} stroke-width="1.4"/>`).join("");
-    r+=`<path d="M${m(84)},205 Q${m(76)},250 ${m(66)},290" ${N} stroke-width="1.4"/>`;
+    const skipArm=o.armR&&m(1)!==1;
+    let r=skipArm?`<path d="M150,110 Q${m(120)},108 ${m(100)},118" ${N}/>`:`<path d="M150,110 Q${m(120)},108 ${m(100)},118 L${m(84)},205 L${m(70)},292" ${N}/>`;
+    if(!skipArm){r+=[[56,322],[62,327],[70,328],[77,322]].map(([x,y])=>`<path d="M${m(70)},292 L${m(x)},${y}" ${N} stroke-width="1.4"/>`).join("");
+    r+=`<path d="M${m(84)},205 Q${m(76)},250 ${m(66)},290" ${N} stroke-width="1.4"/>`;}
     for(let y=130;y<=280;y+=18) r+=`<path d="M150,${y} Q${m(130)},${y+2} ${m(112)},${y+14}" ${N} stroke-width="1.4"/>`;
     r+=`<path d="M150,300 Q${m(132)},310 ${m(128)},330 L${m(121)},445 L${m(116)},552" ${N}/>`;
     r+=`<path d="M${m(121)},445 Q${m(128)},500 ${m(124)},552" ${N} stroke-width="1.4"/><path d="M${m(116)},552 L${m(100)},570 M${m(116)},552 L${m(110)},572" ${N} stroke-width="1.4"/>`;
@@ -562,6 +581,227 @@ const DIAGRAMS = [
 ];
 const ES_PT = {"skull":"cráneo","humerus":"húmero","rib cage":"caja torácica","spinal column":"columna vertebral","pelvis":"pelvis","radius":"radio","femur":"fémur","tibia":"tibia","shoulder":"hombro","elbow":"codo","wrist":"muñeca","hip":"cadera","knee":"rodilla","ankle":"tobillo","trapezius":"trapecio","deltoid":"deltoides","pectoral":"pectoral","biceps":"bíceps","triceps":"tríceps","abdominal":"abdominales","quadriceps":"cuádriceps","brain":"cerebro","spinal cord":"médula espinal","nerves":"nervios","fallopian tube":"trompa de Falopio","ovary":"ovario","uterus":"útero","cervix":"cuello uterino","vagina":"vagina","vas deferens":"conducto deferente","seminal vesicle":"vesícula seminal","prostate":"próstata","testicle":"testículo","urethra":"uretra","penis":"pene"};
 
+/* ============ EXPLAINERS (animated "how it works") ============ */
+const NS="http://www.w3.org/2000/svg";
+const lerp=(a,b,k)=>a+(b-a)*k;
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+const EX={token:0,i:-1,playing:false,done:false,armA:0};
+function tween(d,fn){const tok=EX.token;return new Promise(res=>{const t0=performance.now();const f=now=>{if(tok!==EX.token)return res();const k=Math.min(1,(now-t0)/d);fn(ease(k),k);k<1?requestAnimationFrame(f):res();};requestAnimationFrame(f);});}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function sayP(t){return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;res();}};
+  try{const u=new SpeechSynthesisUtterance(t);u.lang="en-GB";u.rate=.9;u.onend=fin;u.onerror=fin;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){fin();}
+  setTimeout(fin,t.length*85+2500);});}
+const setT=(e,x,y,s=1,flip=false,rot=0)=>e.setAttribute("transform",`translate(${x},${y}) rotate(${rot}) scale(${flip?-s:s},${s})`);
+
+function exCtx(instant){
+  const svg=$("#exsvg"), fx=svg.querySelector("#x-fx");
+  const el=id=>svg.querySelector("#x-"+id);
+  const tw=(d,fn)=>instant?(fn(1,1),Promise.resolve()):tween(d,fn);
+  const mk=(tag,at)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);fx.appendChild(e);return e;};
+  return {instant,el,tw,
+    wait:ms=>instant?Promise.resolve():wait(ms),
+    show:(id,d=500,to=1)=>{const e=el(id);return tw(d,k=>e.style.opacity=k*to);},
+    hide:(id,d=400)=>{const e=el(id);const s=+(e.style.opacity||1);return tw(d,k=>e.style.opacity=s*(1-k));},
+    ring(x,y,color="var(--accent)",d=900){if(instant)return Promise.resolve();const r=mk("circle",{cx:x,cy:y,fill:"none",stroke:color,"stroke-width":4});
+      return tween(d,(k,raw)=>{r.setAttribute("r",6+raw*28);r.style.opacity=1-raw;}).then(()=>r.remove());},
+    glow(id,ms=1400){if(instant)return Promise.resolve();const e=el(id);e.classList.add("glow");return wait(ms).then(()=>e.classList.remove("glow"));},
+    travel(pid,{color="var(--nerv)",r=6,d=1600,n=1,gap=220}={}){
+      if(instant)return Promise.resolve();
+      const p=el(pid),L=p.getTotalLength();
+      const tr=mk("path",{d:p.getAttribute("d"),fill:"none",stroke:color,"stroke-width":4,"stroke-linecap":"round",opacity:.45,"stroke-dasharray":L,"stroke-dashoffset":L});
+      const dots=[...Array(n)].map(()=>mk("circle",{r,fill:color,stroke:"var(--plate)","stroke-width":1.5,opacity:0}));
+      const total=d+gap*(n-1);
+      return tween(total,(k,raw)=>{const t=raw*total;tr.setAttribute("stroke-dashoffset",L*(1-Math.min(1,t/d)));
+        dots.forEach((dt,i)=>{const kk=Math.max(0,Math.min(1,(t-i*gap)/d));const q=p.getPointAtLength(L*kk);dt.setAttribute("cx",q.x);dt.setAttribute("cy",q.y);dt.setAttribute("opacity",kk>0&&kk<1?1:0);});
+      }).then(()=>dots.forEach(x=>x.remove()));},
+    along(id,pid,d){const e=el(id),p=el(pid),L=p.getTotalLength();return tw(d,(k,raw)=>{const q=p.getPointAtLength(L*raw);e.setAttribute("transform",`translate(${q.x},${q.y})`);});},
+    rows(n){[1,2,3].forEach(i=>{const r=el("row"+i);if(r)r.style.opacity=i===n?1:.3;});},
+  };
+}
+const ROUTE=`class="route" fill="none" stroke="none"`;
+
+/* 1. Touching something hot */
+function hotArt(){
+  const N=`fill="none" stroke="var(--nerve-line)" stroke-width="2" stroke-linecap="round"`;
+  const arm=`<g id="x-armR">
+    <polyline points="200,112 218,205 232,295" fill="none" stroke="var(--skin-line)" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="200,112 218,205 232,295" fill="none" stroke="var(--skin)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse class="skin" cx="236" cy="312" rx="11" ry="15"/>
+    <path d="M200,118 L216,205 L230,292 M230,292 L244,322 M230,292 L238,327 M230,292 L230,328 M230,292 L223,322" ${N}/></g>`;
+  return `<g id="x-candle"><rect x="226" y="346" width="20" height="46" rx="3" fill="var(--bone-fill)" stroke="var(--bone-line)" stroke-width="1.5"/>
+      <path class="flick" d="M236,316 C247,331 245,342 236,345 C227,342 225,331 236,316 Z" fill="var(--accent)"/><path class="flick" d="M236,327 C241,335 240,341 236,343 C232,341 231,335 236,327 Z" fill="var(--urethra)"/></g>`+
+    nerveArt({armR:arm})+
+    `<path id="x-r1" ${ROUTE} d="M234,318 L230,292 L216,205 L200,118 Q180,108 150,112"/>
+     <path id="x-r2" ${ROUTE} d="M150,112 L150,50"/>
+     <path id="x-r3" ${ROUTE} d="M150,50 L150,112 Q180,108 200,118 L210,165"/>
+     <g id="x-hot" style="opacity:0"><rect x="252" y="300" width="44" height="22" rx="11" fill="var(--bad)"/><text x="274" y="315" text-anchor="middle" font-size="12" font-weight="800" fill="var(--plate)">HOT!</text></g>
+     <g id="x-move" style="opacity:0"><rect x="176" y="10" width="62" height="22" rx="11" fill="var(--accent)"/><text x="207" y="25" text-anchor="middle" font-size="12" font-weight="800" fill="var(--plate)">Move!</text></g>`;
+}
+/* 2. Skeleton */
+function bonesArt(){
+  let sp="";const pts=[[-12,-10,5],[4,-14,4],[14,-2,5],[-4,4,6],[8,12,4],[-14,8,4],[0,-2,3],[-6,16,4],[12,-14,3],[-18,-2,3]];
+  pts.forEach(([x,y,r])=>sp+=`<circle cx="${262+x}" cy="${400+y}" r="${r}" fill="var(--plate)" stroke="var(--bone-line)" stroke-width=".8"/>`);
+  return `<g id="x-hl" style="opacity:0"><ellipse cx="128" cy="168" rx="18" ry="36" fill="var(--rep-fill)"/><ellipse cx="172" cy="168" rx="18" ry="36" fill="var(--rep-fill)"/>
+      <path d="M160,200 C140,186 142,170 152,172 C157,173 160,178 160,180 C160,178 163,173 168,172 C178,170 180,186 160,200 Z" fill="var(--musc-fill)" stroke="var(--musc-line)"/></g>
+    <g id="x-skel">${skeletonArt()}</g>
+    <ellipse id="x-brain" cx="150" cy="35" rx="20" ry="13" fill="var(--brain)" stroke="var(--cord)" style="opacity:0"/>
+    <line id="x-cord" x1="150" y1="86" x2="150" y2="300" stroke="var(--cord)" stroke-width="3.5" stroke-dasharray="214" stroke-dashoffset="214"/>
+    <g id="x-sponge" style="opacity:0"><line x1="184" y1="400" x2="222" y2="400" stroke="var(--bone-line)" stroke-width="2" stroke-dasharray="3 3"/>
+      <circle cx="262" cy="400" r="36" fill="var(--bone-fill)" stroke="var(--bone-line)" stroke-width="10"/>${sp}
+      <text class="lbl" x="262" y="352" text-anchor="middle" font-size="12">hard outside</text><text class="lbl" x="262" y="456" text-anchor="middle" font-size="12">spongy inside</text></g>`;
+}
+/* 3. Arm: biceps & triceps */
+function armArt(){
+  return `<path id="x-nv" d="M232,20 Q190,40 170,150" fill="none" stroke="var(--nerve-line)" stroke-width="2" stroke-dasharray="4 4" opacity=".7"/>
+   <g id="x-fore"><line x1="150" y1="230" x2="150" y2="372" stroke="var(--skin)" stroke-width="42" stroke-linecap="round" opacity=".6"/>
+     ${bone(156,242,156,368,6)}${bone(144,238,144,368,6)}<ellipse class="skin" cx="150" cy="394" rx="17" ry="23" opacity=".9"/></g>
+   <line x1="150" y1="64" x2="150" y2="230" stroke="var(--skin)" stroke-width="50" stroke-linecap="round" opacity=".6"/>
+   ${bone(150,74,150,226,11)}
+   <path id="x-tri" class="mus" d="" opacity=".85"/><path id="x-bic" class="mus" d=""/>
+   <g id="x-tendons"><line id="x-bt1" class="tendon"/><line id="x-bt2" class="tendon"/><line id="x-tt1" class="tendon"/><line id="x-tt2" class="tendon"/></g>
+   <circle class="joint" cx="150" cy="66" r="15"/><circle id="x-elbow" class="joint" cx="150" cy="230" r="11"/>
+   <line id="x-bLine" stroke="var(--muted)" stroke-width="1"/><line id="x-tLine" stroke="var(--muted)" stroke-width="1"/>
+   <text class="lbl" x="250" y="120" font-size="15">biceps</text><text id="x-bS" class="lbl" x="250" y="138" font-size="13"></text>
+   <text class="lbl" x="92" y="120" font-size="15" text-anchor="end">triceps</text><text id="x-tS" class="lbl" x="92" y="138" font-size="13" text-anchor="end"></text>
+   <text class="lbl" x="172" y="62" font-size="12">shoulder</text><text class="lbl" x="128" y="252" font-size="12" text-anchor="end">elbow</text>`;
+}
+function belly(P,Q,b,side){const dx=Q.x-P.x,dy=Q.y-P.y,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,nx=-uy*side,ny=ux*side;
+  const P1={x:P.x+ux*14,y:P.y+uy*14},Q1={x:Q.x-ux*16,y:Q.y-uy*16},M={x:(P1.x+Q1.x)/2,y:(P1.y+Q1.y)/2};
+  return {P1,Q1,M:{x:M.x+nx*b,y:M.y+ny*b},d:`M${P1.x},${P1.y} Q${M.x+nx*b*2},${M.y+ny*b*2} ${Q1.x},${Q1.y} Q${M.x-nx*b*.5},${M.y-ny*b*.5} ${P1.x},${P1.y} Z`};}
+function armUpdate(a,states){
+  const svg=$("#exsvg"); if(!svg||!svg.querySelector("#x-fore")) return;
+  const g=id=>svg.querySelector("#x-"+id), r=a*Math.PI/180, E={x:150,y:230};
+  const rot=(x,y)=>{const dx=x-E.x,dy=y-E.y;return {x:E.x+dx*Math.cos(r)-dy*Math.sin(r),y:E.y+dx*Math.sin(r)+dy*Math.cos(r)};};
+  g("fore").setAttribute("transform",`rotate(${a} 150 230)`);
+  const bP={x:162,y:84},bQ=rot(162,264),bL=Math.hypot(bQ.x-bP.x,bQ.y-bP.y);
+  const B=belly(bP,bQ,11+30*Math.max(0,1-bL/180),-1);
+  const tP={x:138,y:84},tQ=rot(136,234),tL=Math.hypot(tQ.x-tP.x,tQ.y-tP.y);
+  const T=belly(tP,tQ,13*Math.pow(150/tL,3),1);
+  g("bic").setAttribute("d",B.d); g("tri").setAttribute("d",T.d);
+  const ln=(id,p,q)=>{const e=g(id);e.setAttribute("x1",p.x);e.setAttribute("y1",p.y);e.setAttribute("x2",q.x);e.setAttribute("y2",q.y);};
+  ln("bt1",bP,B.P1); ln("bt2",B.Q1,bQ); ln("tt1",tP,T.P1); ln("tt2",T.Q1,tQ);
+  ln("bLine",{x:246,y:122},B.M); ln("tLine",{x:96,y:122},T.M);
+  if(states){const set=(id,s)=>{const e=g(id);e.textContent=s==="c"?"contracts":s==="r"?"relaxes":"";e.setAttribute("class","lbl "+(s==="c"?"bad":""));};set("bS",states[0]);set("tS",states[1]);}
+  EX.armA=a;
+}
+/* 4. Animals */
+function animalsArt(){
+  const lane=(n,top,en,es)=>`<rect x="6" y="${top}" width="388" height="128" rx="14" fill="var(--bg)"/>
+    <text class="lbl" x="18" y="${top+24}" font-size="15">${en}</text><text x="18" y="${top+42}" font-size="12" fill="var(--muted)" font-weight="700">${es}</text>`;
+  const emo=(id,ch,x,y,size,flip=true,op=1,s=1)=>`<g id="x-${id}" transform="translate(${x},${y}) rotate(0) scale(${flip?-s:s},${s})" style="opacity:${op}"><text font-size="${size}" text-anchor="middle" dominant-baseline="central">${ch}</text></g>`;
+  return `<g id="x-row1">${lane(1,6,"oviparous","ovíparos: ponen huevos")}<line x1="150" y1="118" x2="388" y2="118" stroke="var(--bone-line)" stroke-width="2" stroke-dasharray="6 5"/>
+      ${emo("m1","🐢",86,92,54)}${emo("e1","🥚",90,100,26,false,1,0)}${emo("b1","🐢",210,104,24,true,0)}</g>
+    <g id="x-row2">${lane(2,146,"viviparous","vivíparos: crecen dentro de la madre")}${emo("m2","🐬",96,228,66)}
+      <circle id="x-w2" cx="96" cy="238" r="20" fill="var(--rep-fill)" style="opacity:0"/>${emo("b2","🐬",96,238,22,true,1,0)}</g>
+    <g id="x-row3">${lane(3,286,"ovoviviparous","ovovivíparos: huevo dentro de la madre")}${emo("m3","🦈",96,368,66)}
+      <circle id="x-w3" cx="96" cy="378" r="20" fill="var(--rep-fill)" style="opacity:0"/>${emo("e3","🥚",96,378,18,false,1,0)}${emo("b3","🦈",96,378,20,true,0)}</g>`;
+}
+/* 5. Egg to baby */
+function eggArt(){
+  return femaleArt()+`<path id="x-e1" ${ROUTE} d="M312,118 Q334,102 328,84 C318,72 302,67 288,70"/>
+    <path id="x-e2" ${ROUTE} d="M288,70 C270,72 256,80 244,92 Q214,110 200,128"/>
+    <path id="x-sp" ${ROUTE} d="M200,300 L200,210 L200,128 Q214,110 244,92 C256,80 270,72 288,70"/>
+    <g id="x-egg" transform="translate(312,118)" style="opacity:0"><circle r="7" fill="var(--bladder)" stroke="var(--rep-line)" stroke-width="1.5"/><circle id="x-nuc" r="2.5" fill="var(--rep-line)"/></g>
+    <g id="x-fetus" transform="translate(200,130) scale(.2)" style="opacity:0"><circle cx="6" cy="-14" r="11" fill="var(--skin)" stroke="var(--skin-line)" stroke-width="1.5"/>
+      <path d="M-2,-6 C-18,4 -12,26 6,24 C20,22 20,4 10,-2" fill="var(--skin)" stroke="var(--skin-line)" stroke-width="1.5"/></g>
+    <text id="x-month" x="320" y="230" text-anchor="middle" font-size="20" font-weight="800" fill="var(--accent)" style="opacity:0"></text>`;
+}
+/* 6. Sperm path */
+function spermArt(){
+  return maleArt()+`<path id="x-m1" ${ROUTE} d="M268,232 C280,190 308,120 296,70 C286,34 240,36 238,70 C236,96 234,112 224,134"/>
+    <path id="x-m1l" ${ROUTE} d="M132,232 C120,190 92,120 104,70 C114,34 160,36 162,70 C164,96 166,112 176,134"/>
+    <path id="x-m2" ${ROUTE} d="M200,150 L200,340"/>
+    <g id="x-cells" style="opacity:0">${[[124,256],[138,268],[130,276],[262,256],[276,268],[268,276],[140,250],[270,248]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.6" fill="var(--nerv)"/>`).join("")}</g>`;
+}
+
+const EXPL=[
+ {id:"hot",topic:"nervous",title:"Touching something hot",es:"Tocar algo caliente",vb:"0 0 300 590",art:hotArt,
+  intro:"What happens in your nervous system when you touch something hot?",introEs:"¿Qué pasa en tu sistema nervioso cuando tocas algo caliente?",steps:[
+  {en:"Sara touches a hot candle with her hand.",es:"Sara toca una vela caliente con la mano.",run:async c=>{await c.ring(236,320,"var(--bad)");}},
+  {en:"The nerves in her skin receive the information: it's hot!",es:"Los nervios de su piel reciben la información: ¡quema!",run:async c=>{await c.show("hot",300);await c.ring(236,318,"var(--bad)");await c.ring(236,318,"var(--bad)");}},
+  {en:"The message travels through the nerves to the spinal cord.",es:"El mensaje viaja por los nervios hasta la médula espinal.",run:async c=>{await c.travel("r1",{d:2000});}},
+  {en:"The spinal cord takes the message to the brain. It's like a motorway!",es:"La médula espinal lleva el mensaje al cerebro. ¡Es como una autopista!",run:async c=>{await c.travel("r2",{d:1100});await c.ring(150,40,"var(--nerv)");}},
+  {en:"The brain is the boss. It sends a message to react.",es:"El cerebro es el jefe. Envía un mensaje para reaccionar.",run:async c=>{c.ring(150,40);await c.show("move",400);await c.ring(150,40);}},
+  {en:"The message travels through the spinal cord and the nerves to the muscles.",es:"El mensaje viaja por la médula espinal y los nervios hasta los músculos.",run:async c=>{await c.travel("r3",{d:1900,color:"var(--accent)"});}},
+  {en:"The muscles contract and move the hand away. It all happens in less than a second!",es:"Los músculos se contraen y apartan la mano. ¡Todo pasa en menos de un segundo!",run:async c=>{c.hide("hot",300);await c.tw(500,k=>c.el("armR").setAttribute("transform",`rotate(${-30*k} 200 112)`));}},
+ ]},
+ {id:"bones",topic:"locomotor",title:"What bones do",es:"Para qué sirven los huesos",vb:"0 0 300 590",art:bonesArt,
+  intro:"Why do we need bones and joints?",introEs:"¿Para qué necesitamos los huesos y las articulaciones?",steps:[
+  {en:"Bones give our body shape and support. Without bones we couldn't stand up!",es:"Los huesos dan forma y sostén al cuerpo. ¡Sin huesos no podríamos estar de pie!",run:async c=>{await c.glow("skel",1800);}},
+  {en:"The skull protects the brain.",es:"El cráneo protege el cerebro.",run:async c=>{await c.show("brain",600);await c.ring(150,40);}},
+  {en:"The rib cage protects the heart and the lungs.",es:"La caja torácica protege el corazón y los pulmones.",run:async c=>{await c.show("hl",700);await c.ring(150,175);}},
+  {en:"The spinal column protects the spinal cord.",es:"La columna vertebral protege la médula espinal.",run:async c=>{await c.tw(1400,k=>c.el("cord").setAttribute("stroke-dashoffset",214*(1-k)));}},
+  {en:"Joints connect the bones and let us move: shoulder, elbow, wrist, hip, knee and ankle.",es:"Las articulaciones unen los huesos y nos dejan movernos: hombro, codo, muñeca, cadera, rodilla y tobillo.",run:async c=>{for(const [x,y] of [[204,110],[222,206],[233,297],[174,342],[183,448],[188,549]]){c.ring(x,y);await c.wait(320);}await c.wait(700);}},
+  {en:"Bones are hard on the outside and like sponges on the inside.",es:"Los huesos son duros por fuera y como esponjas por dentro.",run:async c=>{await c.show("sponge",700);}},
+ ]},
+ {id:"arm",topic:"muscular",title:"Biceps and triceps",es:"Bíceps y tríceps",vb:"0 0 340 430",art:armArt,
+  intro:"How do muscles move our bones?",introEs:"¿Cómo mueven los músculos nuestros huesos?",steps:[
+  {en:"Muscles work in pairs. In the arm we have the biceps and the triceps.",es:"Los músculos trabajan en parejas. En el brazo tenemos el bíceps y el tríceps.",run:async c=>{armUpdate(0,["",""]);c.glow("bic",1500);await c.glow("tri",1500);}},
+  {en:"The brain sends a command to the biceps through a nerve.",es:"El cerebro envía una orden al bíceps por un nervio.",run:async c=>{armUpdate(0,["",""]);await c.travel("nv",{d:1300,color:"var(--accent)"});await c.ring(170,150);}},
+  {en:"The biceps contracts: it gets shorter and fatter and pulls the forearm up. The triceps relaxes.",es:"El bíceps se contrae: se hace más corto y gordo y tira del antebrazo hacia arriba. El tríceps se relaja.",run:async c=>{await c.tw(1800,k=>armUpdate(-115*k,["c","r"]));}},
+  {en:"Tendons connect the muscles to the bones. The tendon pulls the bone.",es:"Los tendones unen los músculos a los huesos. El tendón tira del hueso.",run:async c=>{armUpdate(-115,["c","r"]);await c.glow("tendons",2000);}},
+  {en:"Now the triceps contracts and the biceps relaxes: the arm straightens.",es:"Ahora el tríceps se contrae y el bíceps se relaja: el brazo se estira.",run:async c=>{await c.tw(1800,k=>armUpdate(-115*(1-k),["r","c"]));}},
+  {en:"The elbow is the joint where the arm bends. Now move the arm yourself with the slider!",es:"El codo es la articulación donde se dobla el brazo. ¡Ahora mueve tú el brazo con el deslizador!",run:async c=>{armUpdate(0,["",""]);await c.ring(150,230);await c.ring(150,230);}},
+ ]},
+ {id:"animals",topic:"repro",title:"Eggs or born alive?",es:"¿Huevo o nacen vivos?",vb:"0 0 400 420",art:animalsArt,
+  intro:"Oviparous, viviparous or ovoviviparous? Let's see how these animals are born.",introEs:"¿Ovíparo, vivíparo u ovovivíparo? Veamos cómo nacen estos animales.",steps:[
+  {en:"Oviparous animals reproduce by laying eggs. The turtle lays its eggs on the beach.",es:"Los ovíparos se reproducen poniendo huevos. La tortuga pone sus huevos en la playa.",run:async c=>{c.rows(1);await c.tw(1300,k=>setT(c.el("e1"),lerp(90,210,k),lerp(100,104,k),k));}},
+  {en:"The baby turtle hatches from the egg, outside the mother's body.",es:"La tortuga bebé sale del huevo, fuera del cuerpo de la madre.",run:async c=>{c.rows(1);await c.tw(900,(k,raw)=>setT(c.el("e1"),210,104,1,false,Math.sin(raw*Math.PI*6)*14*(1-raw)));c.hide("e1",300);await c.show("b1",300);await c.tw(1500,k=>setT(c.el("b1"),lerp(210,350,k),104,1,true));}},
+  {en:"Viviparous animals grow inside the mother's body, like a dolphin.",es:"Los vivíparos crecen dentro del cuerpo de la madre, como el delfín.",run:async c=>{c.rows(2);c.show("w2",500,.6);await c.tw(1600,k=>setT(c.el("b2"),96,238,k*.9,true));}},
+  {en:"Then the baby dolphin is born and swims next to its mother.",es:"Después nace el delfín bebé y nada junto a su madre.",run:async c=>{c.rows(2);c.hide("w2",400);await c.tw(1600,k=>setT(c.el("b2"),lerp(96,300,k),lerp(238,236,k),lerp(.9,1.3,k),true));}},
+  {en:"Ovoviviparous animals hatch from eggs inside the mother's body, like the great white shark.",es:"Los ovovivíparos salen de huevos dentro del cuerpo de la madre, como el tiburón blanco.",run:async c=>{c.rows(3);c.show("w3",500,.6);await c.tw(1200,k=>setT(c.el("e3"),96,378,k));}},
+  {en:"The baby shark hatches inside its mother, and then it is born.",es:"El tiburón bebé sale del huevo dentro de su madre, y después nace.",run:async c=>{c.rows(3);await c.tw(900,(k,raw)=>setT(c.el("e3"),96,378,1,false,Math.sin(raw*Math.PI*6)*14*(1-raw)));c.hide("e3",300);await c.show("b3",300);c.hide("w3",400);await c.tw(1600,k=>setT(c.el("b3"),lerp(96,300,k),378,lerp(1,1.4,k),true));}},
+ ]},
+ {id:"egg",topic:"repro",title:"From egg cell to baby",es:"Del óvulo al bebé",vb:"0 0 400 320",art:eggArt,
+  intro:"How does a baby start to grow?",introEs:"¿Cómo empieza a crecer un bebé?",steps:[
+  {en:"The ovaries produce egg cells. An egg cell (ovum) leaves the ovary.",es:"Los ovarios producen óvulos. Un óvulo sale del ovario.",run:async c=>{c.ring(312,120,"var(--repro)");await c.show("egg",700);}},
+  {en:"The egg cell travels through the fallopian tube.",es:"El óvulo viaja por la trompa de Falopio.",run:async c=>{c.el("egg").style.opacity=1;await c.along("egg","e1",2000);}},
+  {en:"Sperm cells travel up to the fallopian tube. One sperm cell fertilises the egg cell.",es:"Los espermatozoides suben hasta la trompa. Un espermatozoide fecunda el óvulo.",run:async c=>{c.el("egg").style.opacity=1;c.el("egg").setAttribute("transform","translate(288,70)");await c.travel("sp",{d:2200,n:5,gap:160,r:3,color:"var(--nerv)"});c.el("nuc").setAttribute("fill","var(--accent)");await c.ring(288,70);}},
+  {en:"The fertilised egg travels to the uterus.",es:"El óvulo fecundado viaja hasta el útero.",run:async c=>{c.el("egg").style.opacity=1;c.el("nuc").setAttribute("fill","var(--accent)");await c.along("egg","e2",1800);}},
+  {en:"In the uterus, the fertilised egg develops into a fetus.",es:"En el útero, el óvulo fecundado se convierte en feto.",run:async c=>{c.hide("egg",400);await c.tw(1800,k=>{const f=c.el("fetus");f.style.opacity=Math.min(1,k*2);f.setAttribute("transform",`translate(200,130) scale(${lerp(.2,1.25,k)})`);});}},
+  {en:"After nine months of pregnancy, the baby is born.",es:"Después de nueve meses de embarazo, nace el bebé.",run:async c=>{const m=c.el("month");m.style.opacity=1;await c.tw(2700,(k,raw)=>{m.textContent="Month "+Math.max(1,Math.ceil(raw*9));});m.textContent="Month 9 👶";await c.ring(200,130,"var(--repro)");}},
+ ]},
+ {id:"sperm",topic:"repro",title:"The path of sperm cells",es:"El recorrido de los espermatozoides",vb:"0 0 400 370",art:spermArt,
+  intro:"Where do sperm cells go? (Question 3, page 32)",introEs:"¿Por dónde van los espermatozoides? (Pregunta 3, pág. 32)",steps:[
+  {en:"The testicles produce sperm cells.",es:"Los testículos producen espermatozoides.",run:async c=>{c.ring(132,262,"var(--repro)");c.ring(268,262,"var(--repro)");await c.show("cells",800);}},
+  {en:"Sperm cells travel through the vas deferens…",es:"Los espermatozoides viajan por el conducto deferente…",run:async c=>{c.travel("m1l",{d:2400,n:5,gap:180,r:3.5});await c.travel("m1",{d:2400,n:5,gap:180,r:3.5});}},
+  {en:"…to the seminal vesicles and the prostate. They produce semen.",es:"…hasta las vesículas seminales y la próstata. Ellas producen el semen.",run:async c=>{c.ring(154,130,"var(--urethra)");c.ring(246,130,"var(--urethra)");await c.ring(200,152,"var(--urethra)");await c.ring(200,152,"var(--urethra)");}},
+  {en:"The urethra carries semen out of the body.",es:"La uretra lleva el semen fuera del cuerpo.",run:async c=>{await c.travel("m2",{d:1700,n:5,gap:140,r:4,color:"var(--urethra)"});}},
+ ]},
+];
+function curEx(){return EXPL.find(x=>x.id===S.ex)||EXPL[0];}
+function exBuild(){const X=curEx(),svg=$("#exsvg");svg.innerHTML=X.art()+`<g id="x-fx"></g>`;if(X.id==="arm"){armUpdate(0,["",""]);const r=$("#armRange");if(r)r.value=0;}}
+async function exGo(i){
+  const X=curEx(); EX.token++; const tok=EX.token; EX.i=i; EX.done=false;
+  try{speechSynthesis.cancel();}catch(e){}
+  exBuild(); const ci=exCtx(true); for(let j=0;j<i;j++) await X.steps[j].run(ci);
+  if(tok!==EX.token) return;
+  exPanel();
+  const st=X.steps[i];
+  await Promise.all([st.run(exCtx(false)), S.narr?sayP(st.en):wait(st.en.length*45+900)]);
+  if(tok!==EX.token) return;
+  EX.done=true;
+  if(EX.playing&&i+1<X.steps.length){await wait(700); if(tok===EX.token&&EX.playing) exGo(i+1);}
+  else {EX.playing=false; exPanel();}
+}
+function exStop(){EX.token++;EX.playing=false;try{speechSynthesis.cancel();}catch(e){}}
+function exPanel(){
+  const X=curEx(),i=EX.i,n=X.steps.length,st=i<0?{en:X.intro,es:X.introEs}:X.steps[i],P=$("#exPanel"); if(!P) return;
+  const playLbl=EX.playing?"⏸ Pausa":i<0?"▶ Empezar":(i>=n-1&&EX.done)?"↺ Otra vez":"▶ Seguir";
+  P.innerHTML=`<div class="count">${i<0?"Pulsa ▶ para empezar":`Paso ${i+1} de ${n}`}</div>
+   <div class="cap-en">${esc(st.en)}</div>${S.tr?`<div class="trad" style="font-size:1rem">${esc(st.es)}</div>`:""}
+   <div class="row"><button class="btn" data-act="exPrev" ${i<=0?"disabled":""} aria-label="Paso anterior">⏮</button><button class="btn primary" data-act="exPlay">${playLbl}</button><button class="btn" data-act="exNext" ${i>=n-1?"disabled":""} aria-label="Paso siguiente">⏭</button><button class="chip" data-act="exNarr" aria-pressed="${S.narr}">🔊 Voz</button></div>
+   <ol class="ex-steps">${X.steps.map((s,k)=>`<li><button data-act="exStep" data-arg="${k}" class="${k===i?"cur":k<i?"done":""}">${esc(s.en)}</button></li>`).join("")}</ol>`;
+}
+function viewExplain(){
+  const X=curEx();
+  return `<div class="view-head"><h2>¿Cómo funciona?</h2><p>Mira la animación paso a paso. Pulsa ▶ y la app te lo explica en inglés. Puedes pararla, volver atrás o tocar cualquier paso.</p></div>
+   <div class="chips">${EXPL.map(x=>`<button class="chip" style="--tc:${TOPICS[x.topic].tc}" data-act="exPick" data-arg="${x.id}" aria-pressed="${x.id===X.id}"><span class="dot"></span>${x.title}</button>`).join("")}</div>
+   <div class="map-grid"><div class="plate"><svg id="exsvg" viewBox="${X.vb}" role="img" aria-label="${esc(X.title)}"></svg>
+     ${X.id==="arm"?`<label class="slider"><span>💪 Mueve tú el brazo</span><input type="range" id="armRange" min="0" max="115" value="0"></label>`:""}</div>
+   <div class="panel ex-panel" id="exPanel"></div></div>`;
+}
+
 /* ============ STATE ============ */
 const KEY="ciencias-sara-v1";
 let store={stats:{},mistakes:[],known:[],tr:true,spellWrong:[]};
@@ -571,7 +811,7 @@ function record(id,ok){
   const st=store.stats[id]||(store.stats[id]={r:0,w:0}); ok?st.r++:st.w++;
   const m=new Set(store.mistakes); ok?m.delete(id):m.add(id); store.mistakes=[...m]; save();
 }
-const S={spellMode:store.spellMode||"es",spell:null,tr:store.tr!==false,view:"home",topic:"all",cards:null,cardDir:"en",map:{d:"skeleton",mode:"study",run:null,sel:null},quiz:null,order:{i:0},drafts:{},revealed:{}};
+const S={ex:"hot",narr:store.narr!==false,spellMode:store.spellMode||"es",spell:null,tr:store.tr!==false,view:"home",topic:"all",cards:null,cardDir:"en",map:{d:"skeleton",mode:"study",run:null,sel:null},quiz:null,order:{i:0},drafts:{},revealed:{}};
 
 /* ============ HELPERS ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -604,22 +844,22 @@ function diagramSVG(d,o={}){
 }
 
 /* ============ VIEWS ============ */
-const VIEWS=[["home","Inicio"],["cards","Tarjetas"],["spell","Escribir"],["map","Posiciones"],["quiz","Test"],["order","Ordenar"],["read","Comprensión"]];
+const VIEWS=[["home","Inicio"],["explain","¿Cómo funciona?"],["cards","Tarjetas"],["spell","Escribir"],["map","Posiciones"],["quiz","Test"],["order","Ordenar"],["read","Comprensión"]];
 function renderTabs(){ const b=$("#trBtn"); b.setAttribute("aria-pressed",S.tr); b.textContent=S.tr?"✓ Español":"Español"; b.title="Mostrar u ocultar la traducción al castellano"; $("#tabs").innerHTML=VIEWS.map(([k,l])=>`<button class="tab" data-act="go" data-arg="${k}" aria-current="${S.view===k||(k==="quiz"&&S.view==="quizrun")}">${l}</button>`).join(""); }
 
 function viewHome(){
   const nm=store.mistakes.length;
-  const tips=[["Tarjetas","aprende el vocabulario en inglés. Escúchalo con 🔊 y repítelo en voz alta."],["Escribir","te digo la palabra en castellano y la escribes en inglés con el lápiz o el teclado."],["Posiciones","sitúa cada hueso, articulación, músculo y órgano en el dibujo."],["Test","responde preguntas como las del libro y del examen."],["Ordenar","pon en orden los procesos (por ejemplo, la pregunta 3 de la pág. 32)."],["Comprensión","lee el resumen y contesta con tus propias palabras."]];
+  const tips=[["¿Cómo funciona?","primero entiende: mira las animaciones paso a paso."],["Tarjetas","aprende el vocabulario en inglés. Escúchalo con 🔊 y repítelo en voz alta."],["Escribir","te digo la palabra en castellano y la escribes en inglés con el lápiz o el teclado."],["Posiciones","sitúa cada hueso, articulación, músculo y órgano en el dibujo."],["Test","responde preguntas como las del libro y del examen."],["Ordenar","pon en orden los procesos (por ejemplo, la pregunta 3 de la pág. 32)."],["Comprensión","lee el resumen y contesta con tus propias palabras."]];
   return `<section class="hero">
    <p class="eyebrow">Science · The human body · pp. 29–32</p>
    <h1>¡A por el examen, Sara!</h1>
    <p>Practica el vocabulario, las posiciones en los dibujos y la comprensión. Tus fallos se guardan para repasarlos al final.</p>
-   <div class="row"><button class="btn primary" data-act="exam">Examen de prueba</button>${nm?`<button class="btn" data-act="review">Repasar mis fallos (${nm})</button>`:""}</div>
+   <div class="row"><button class="btn primary" data-act="go" data-arg="explain">▶ ¿Cómo funciona?</button><button class="btn" data-act="exam">Examen de prueba</button>${nm?`<button class="btn" data-act="review">Repasar mis fallos (${nm})</button>`:""}</div>
   </section>
   <div class="topics">${Object.entries(TOPICS).map(([k,t])=>{const p=topicProgress(k);return `<article class="topic" style="--tc:${t.tc}">
     <h3>${t.en}</h3><div class="es">${t.es} · ${t.page}</div>
     <div class="bar"><i style="width:${p}%"></i></div><div class="pct">${p}% dominado</div>
-    <div class="row"><button class="btn small" data-act="goTopic" data-arg="cards|${k}">Tarjetas</button><button class="btn small" data-act="goTopic" data-arg="map|${k}">Posiciones</button><button class="btn small" data-act="goTopic" data-arg="quiz|${k}">Test</button></div>
+    <div class="row"><button class="btn small" data-act="goTopic" data-arg="explain|${k}">▶ Animación</button><button class="btn small" data-act="goTopic" data-arg="cards|${k}">Tarjetas</button><button class="btn small" data-act="goTopic" data-arg="map|${k}">Posiciones</button><button class="btn small" data-act="goTopic" data-arg="quiz|${k}">Test</button></div>
   </article>`;}).join("")}</div>
   <section class="panel"><h3 style="font-size:1.2rem;margin-bottom:8px">Cómo estudiar</h3>
    <ol class="steps">${tips.map(([a,b])=>`<li><b>${a}</b>: ${b}</li>`).join("")}</ol></section>`;
@@ -834,14 +1074,16 @@ function viewRead(){
 
 function render(){
   renderTabs();
-  const v={home:viewHome,spell:viewSpell,cards:viewCards,map:viewMap,quiz:viewQuiz,quizrun:viewQuizRun,order:viewOrder,read:viewRead}[S.view];
+  const v={explain:viewExplain,home:viewHome,spell:viewSpell,cards:viewCards,map:viewMap,quiz:viewQuiz,quizrun:viewQuizRun,order:viewOrder,read:viewRead}[S.view];
   $("#app").innerHTML=v();
+  if(S.view==="explain"){exStop();EX.i=-1;EX.done=false;exBuild();exPanel();}
 }
 
 /* ============ ACTIONS ============ */
 const ACT={
-  go(a){S.view=a; if(a==="map"){S.map.run=null;} render(); window.scrollTo(0,0); if(a==="spell") speakSpell();},
-  goTopic(a){const [v,t]=a.split("|"); S.topic=t;
+  go(a){exStop(); S.view=a; if(a==="map"){S.map.run=null;} render(); window.scrollTo(0,0); if(a==="spell") speakSpell();},
+  goTopic(a){exStop(); const [v,t]=a.split("|"); S.topic=t;
+    if(v==="explain") S.ex=EXPL.find(x=>x.topic===t).id;
     if(v==="cards") newDeck();
     if(v==="map"){S.map.d=DIAGRAMS.find(d=>d.topic===t).id;S.map.mode="study";S.map.run=null;}
     if(v==="quiz"){startQuiz("normal"); render(); window.scrollTo(0,0); return;}
@@ -894,6 +1136,16 @@ const ACT={
     P.state=ok?"ok":"bad"; spellResult(ok); if(ok) say(w[0]); render(); if(!ok) focusSpell();},
   spellShow(){S.spell.show=true; say(S.spell.queue[S.spell.i][0]); render();},
   spellNext(){const P=S.spell; P.i++; P.val=""; P.state=null; P.hint=false; P.tries=0; P.show=false; render(); focusSpell(); speakSpell();},
+  exPick(a){S.ex=a; render();},
+  exPlay(){const X=curEx();
+    if(EX.playing){exStop(); exPanel(); return;}
+    EX.playing=true;
+    const n=X.steps.length; let i=EX.i<0?0:EX.done?EX.i+1:EX.i; if(i>=n) i=0;
+    exGo(i);},
+  exNext(){EX.playing=false; exGo(Math.min(curEx().steps.length-1,EX.i+1));},
+  exPrev(){EX.playing=false; exGo(Math.max(0,EX.i-1));},
+  exStep(a){EX.playing=false; exGo(+a);},
+  exNarr(){S.narr=!S.narr; store.narr=S.narr; save(); if(!S.narr){try{speechSynthesis.cancel();}catch(e){}} exPanel();},
   readTopic(a){S.topic=a; render();},
   reveal(a){S.revealed[a]=!S.revealed[a]; render();},
 };
@@ -908,7 +1160,8 @@ function answer(a){
 document.addEventListener("click",e=>{const t=e.target.closest("[data-act]"); if(!t) return; ACT[t.dataset.act]?.(t.dataset.arg,t,e);});
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches('[role="button"][data-act]')){e.preventDefault();e.target.click?e.target.click():ACT[e.target.dataset.act]?.(e.target.dataset.arg);}});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="spell-in"){e.preventDefault(); if(!e.target.readOnly) ACT.spellCheck(); else ACT.spellNext();}});
-document.addEventListener("input",e=>{if(e.target.id==="spell-in"&&S.spell){S.spell.val=e.target.value; if(S.spell.state==="bad"){S.spell.state=null; e.target.className="";}}
+document.addEventListener("input",e=>{if(e.target.id==="armRange"){if(EX.playing||EX.i>=0&&!EX.done)exStop(); const a=-(+e.target.value); const bending=a<EX.armA; armUpdate(a,a===EX.armA?null:bending?["c","r"]:["r","c"]); exPanel(); return;}
+if(e.target.id==="spell-in"&&S.spell){S.spell.val=e.target.value; if(S.spell.state==="bad"){S.spell.state=null; e.target.className="";}}
 const id=e.target.dataset&&e.target.dataset.draft; if(id) S.drafts[id]=e.target.value;});
 render();
 </script>

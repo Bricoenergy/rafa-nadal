@@ -83,6 +83,19 @@ main{max-width:960px;margin:0 auto;padding-block:20px 60px;padding-left:max(16px
 .trbtn{margin-left:auto;font-size:.82rem;padding:4px 11px;white-space:nowrap}
 @media (max-width:520px){.brand small{display:none}}
 .reading .es-block{border-top:1px dashed var(--line);padding-top:10px;margin-top:6px;color:var(--muted);font-style:italic}
+/* spelling */
+.spell{display:grid;gap:14px;justify-items:center;text-align:center}
+.spell .esword{font-family:var(--display);font-size:clamp(2rem,8vw,2.8rem);font-weight:800;color:var(--tc);line-height:1.1}
+.spell input{width:min(100%,460px);font:700 clamp(1.6rem,6vw,2.2rem)/1.2 var(--body);text-align:center;padding:14px;border:3px solid var(--line);border-radius:16px;background:var(--bg);color:var(--ink)}
+.spell input:focus{outline:none;border-color:var(--accent)}
+.spell input.ok{border-color:var(--ok);background:var(--ok-soft)} .spell input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.letters{font:800 1.6rem/1.3 var(--body);letter-spacing:.06em;display:flex;flex-wrap:wrap;justify-content:center}
+.letters span{padding:0 1px;border-radius:4px}
+.letters .m{color:var(--ok)} .letters .x{color:var(--bad);background:var(--bad-soft)} .letters .del{color:var(--bad);text-decoration:line-through}
+.letters .miss{color:var(--accent);background:var(--accent-soft)}
+.cmp{display:grid;gap:4px;justify-items:center}
+.cmp small{font-weight:700;color:var(--muted)}
+.hintline{font:800 1.4rem var(--body);letter-spacing:.25em;color:var(--muted)}
 /* home */
 .hero{display:grid;gap:10px;padding-block:6px}
 .eyebrow{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem;color:var(--accent);margin:0}
@@ -550,14 +563,14 @@ const ES_PT = {"skull":"cráneo","humerus":"húmero","rib cage":"caja torácica"
 
 /* ============ STATE ============ */
 const KEY="ciencias-sara-v1";
-let store={stats:{},mistakes:[],known:[],tr:true};
+let store={stats:{},mistakes:[],known:[],tr:true,spellWrong:[]};
 try{const s=JSON.parse(localStorage.getItem(KEY)); if(s) store=Object.assign(store,s);}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}};
 function record(id,ok){
   const st=store.stats[id]||(store.stats[id]={r:0,w:0}); ok?st.r++:st.w++;
   const m=new Set(store.mistakes); ok?m.delete(id):m.add(id); store.mistakes=[...m]; save();
 }
-const S={tr:store.tr!==false,view:"home",topic:"all",cards:null,cardDir:"en",map:{d:"skeleton",mode:"study",run:null,sel:null},quiz:null,order:{i:0},drafts:{},revealed:{}};
+const S={spell:null,tr:store.tr!==false,view:"home",topic:"all",cards:null,cardDir:"en",map:{d:"skeleton",mode:"study",run:null,sel:null},quiz:null,order:{i:0},drafts:{},revealed:{}};
 
 /* ============ HELPERS ============ */
 const $=(s,el=document)=>el.querySelector(s);
@@ -590,12 +603,12 @@ function diagramSVG(d,o={}){
 }
 
 /* ============ VIEWS ============ */
-const VIEWS=[["home","Inicio"],["cards","Tarjetas"],["map","Posiciones"],["quiz","Test"],["order","Ordenar"],["read","Comprensión"]];
+const VIEWS=[["home","Inicio"],["cards","Tarjetas"],["spell","Escribir"],["map","Posiciones"],["quiz","Test"],["order","Ordenar"],["read","Comprensión"]];
 function renderTabs(){ const b=$("#trBtn"); b.setAttribute("aria-pressed",S.tr); b.textContent=S.tr?"✓ Español":"Español"; b.title="Mostrar u ocultar la traducción al castellano"; $("#tabs").innerHTML=VIEWS.map(([k,l])=>`<button class="tab" data-act="go" data-arg="${k}" aria-current="${S.view===k||(k==="quiz"&&S.view==="quizrun")}">${l}</button>`).join(""); }
 
 function viewHome(){
   const nm=store.mistakes.length;
-  const tips=[["Tarjetas","aprende el vocabulario en inglés. Escúchalo con 🔊 y repítelo en voz alta."],["Posiciones","sitúa cada hueso, articulación, músculo y órgano en el dibujo."],["Test","responde preguntas como las del libro y del examen."],["Ordenar","pon en orden los procesos (por ejemplo, la pregunta 3 de la pág. 32)."],["Comprensión","lee el resumen y contesta con tus propias palabras."]];
+  const tips=[["Tarjetas","aprende el vocabulario en inglés. Escúchalo con 🔊 y repítelo en voz alta."],["Escribir","te digo la palabra en castellano y la escribes en inglés con el lápiz o el teclado."],["Posiciones","sitúa cada hueso, articulación, músculo y órgano en el dibujo."],["Test","responde preguntas como las del libro y del examen."],["Ordenar","pon en orden los procesos (por ejemplo, la pregunta 3 de la pág. 32)."],["Comprensión","lee el resumen y contesta con tus propias palabras."]];
   return `<section class="hero">
    <p class="eyebrow">Science · The human body · pp. 29–32</p>
    <h1>¡A por el examen, Sara!</h1>
@@ -632,6 +645,78 @@ function viewCards(){
    ${topicChips("cardsTopic",S.topic)}
    <div class="row"><span class="muted" style="font-weight:700">Mostrar primero:</span><button class="chip" data-act="dir" data-arg="en" aria-pressed="${S.cardDir==="en"}">English</button><button class="chip" data-act="dir" data-arg="es" aria-pressed="${S.cardDir==="es"}">Español</button></div>
    ${body}`;
+}
+
+/* ---- Escribir (spelling) ---- */
+const norm=x=>x.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"'").replace(/[^a-z' ]/g," ").replace(/\s+/g," ").trim();
+function accepted(en){
+  const out=new Set([en]);
+  const m=en.match(/^(.*?)\s*\((.*)\)$/); if(m){out.add(m[1]);out.add(m[2]);}
+  for(const v of [...out]) if(/^to /.test(v)) out.add(v.slice(3));
+  return [...out].map(norm);
+}
+function mainForm(en){return en.replace(/\s*\(.*\)$/,"").replace(/^to /,"");}
+function align(a,b){ // a = typed, b = correct
+  const n=a.length,m=b.length,D=[...Array(n+1)].map(()=>Array(m+1).fill(0));
+  for(let i=0;i<=n;i++)D[i][0]=i; for(let j=0;j<=m;j++)D[0][j]=j;
+  for(let i=1;i<=n;i++)for(let j=1;j<=m;j++)D[i][j]=Math.min(D[i-1][j]+1,D[i][j-1]+1,D[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  const ta=[],tb=[];let i=n,j=m;
+  while(i>0||j>0){
+    if(i>0&&j>0&&D[i][j]===D[i-1][j-1]+(a[i-1]===b[j-1]?0:1)){const ok=a[i-1]===b[j-1];ta.unshift([a[i-1],ok?"m":"x"]);tb.unshift([b[j-1],ok?"m":"miss"]);i--;j--;}
+    else if(i>0&&D[i][j]===D[i-1][j]+1){ta.unshift([a[i-1],"del"]);i--;}
+    else {tb.unshift([b[j-1],"miss"]);j--;}
+  }
+  return {dist:D[n][m],ta,tb};
+}
+const letters=arr=>`<div class="letters">${arr.map(([c,k])=>`<span class="${k}">${c===" "?"&nbsp;":esc(c)}</span>`).join("")}</div>`;
+function newSpell(review){
+  let pool=VOCAB.filter(v=>S.topic==="all"||v[3]===S.topic);
+  if(review) pool=VOCAB.filter(v=>store.spellWrong.includes(v[0]));
+  const q=shuffle(pool).slice(0,10);
+  S.spell={queue:q,i:0,score:0,val:"",state:null,hint:false,tries:0,review:!!review,fails:[]};
+}
+function viewSpell(){
+  if(!S.spell) newSpell();
+  const P=S.spell, w=P.queue[P.i], nw=store.spellWrong.length;
+  const head=`<div class="view-head"><h2>Escribir en inglés</h2><p>Lee la palabra en castellano y escríbela en inglés. Con el lápiz, toca la casilla y escribe: en iPad (Scribble), en tablets Windows o Samsung con lápiz, tu letra se convierte en texto. También puedes usar el teclado.</p></div>
+   ${topicChips("spellTopic",S.topic)}${nw?`<div class="row"><button class="btn small" data-act="spellReview">Repasar palabras falladas (${nw})</button></div>`:""}`;
+  if(!P.queue.length) return head+`<div class="panel">No hay palabras que repasar. 🎉</div>`;
+  if(!w){
+    return head+`<section class="panel spell"><p class="eyebrow">Ronda terminada</p><div class="grade">${P.score}/${P.queue.length}</div>
+      ${P.fails.length?`<div><b>Repasa:</b> ${P.fails.map(f=>`<span class="key" style="margin:2px">${esc(f[1])} → <b>${esc(mainForm(f[0]))}</b></span>`).join(" ")}</div>`:"<b>¡Todas bien escritas! 🌟</b>"}
+      <div class="row" style="justify-content:center"><button class="btn primary" data-act="spellAgain">Otra ronda</button></div></section>`;
+  }
+  const [en,es,def,tp]=w, tc=TOPICS[tp].tc, target=mainForm(en);
+  let fb="";
+  if(P.state==="ok") fb=`<div class="fb ok" style="width:min(100%,460px)">¡Perfecto! <b>${esc(en)}</b> ${sayBtn(en)}</div>`;
+  if(P.state==="bad"){
+    const al=align(norm(P.val),norm(target));
+    fb=`<div class="fb bad" style="width:min(100%,460px)">${al.dist===1?"¡Casi! Solo falla una letra.":"No está bien escrita."} ${P.tries<2?"Inténtalo otra vez o mira la solución.":""}</div>
+      <div class="cmp"><small>Tú escribiste</small>${letters(al.ta)}</div>
+      ${P.tries>=2||P.show?`<div class="cmp"><small>Correcto</small>${letters(al.tb)} ${sayBtn(en)}</div>`:""}`;
+  }
+  const done=P.state==="ok"||P.show;
+  return head+`<section class="panel spell" style="--tc:${tc}">
+    <div class="count">${P.i+1} / ${P.queue.length} · ✓ ${P.score}</div>
+    <div class="esword">${esc(es)}</div>
+    <div class="muted" style="font-weight:700">${TOPICS[tp].en}</div>
+    ${P.hint?`<div class="hintline">${target.split("").map((c,k)=>c===" "?"&nbsp;&nbsp;":k===0?esc(c):"_").join(" ")}</div><div class="muted" style="max-width:40ch">${esc(def)}</div>`:""}
+    <input id="spell-in" type="text" value="${esc(P.val)}" class="${P.state||""}" placeholder="Write in English…" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" ${done?"readonly":""} aria-label="Escribe la palabra en inglés">
+    ${fb}
+    <div class="row" style="justify-content:center">
+      ${done?`<button class="btn primary" data-act="spellNext">Siguiente →</button>`:`
+      ${!P.hint?`<button class="btn" data-act="spellHint">💡 Pista</button>`:""}
+      <button class="btn primary" data-act="spellCheck">Comprobar</button>
+      ${P.state==="bad"?`<button class="btn" data-act="spellShow">Ver solución</button>`:""}`}
+    </div></section>`;
+}
+function spellResult(ok){
+  // Only the first attempt counts for the score and the review list
+  const P=S.spell,w=P.queue[P.i],en=w[0],set=new Set(store.spellWrong);
+  if(P.tries!==1) return;
+  if(ok){P.score++; if(!P.hint) set.delete(en);}
+  else {set.add(en); P.fails.push([en,w[1]]);}
+  store.spellWrong=[...set]; save();
 }
 
 function curDiagram(){return DIAGRAMS.find(d=>d.id===S.map.d);}
@@ -744,7 +829,7 @@ function viewRead(){
 
 function render(){
   renderTabs();
-  const v={home:viewHome,cards:viewCards,map:viewMap,quiz:viewQuiz,quizrun:viewQuizRun,order:viewOrder,read:viewRead}[S.view];
+  const v={home:viewHome,spell:viewSpell,cards:viewCards,map:viewMap,quiz:viewQuiz,quizrun:viewQuizRun,order:viewOrder,read:viewRead}[S.view];
   $("#app").innerHTML=v();
 }
 
@@ -793,9 +878,19 @@ const ACT={
   ordUndo(){S.order.picked.pop(); render();},
   ordCheck(){S.order.checked=true; render();},
   tr(){S.tr=!S.tr; store.tr=S.tr; save(); render();},
+  spellTopic(a){S.topic=a; newSpell(); render();},
+  spellReview(){newSpell(true); render();},
+  spellAgain(){newSpell(S.spell.review); render();},
+  spellHint(){S.spell.hint=true; render(); focusSpell();},
+  spellCheck(){const P=S.spell; const inp=$("#spell-in"); if(inp) P.val=inp.value; if(!norm(P.val)) {focusSpell(); return;}
+    const w=P.queue[P.i]; P.tries++; const ok=accepted(w[0]).includes(norm(P.val));
+    P.state=ok?"ok":"bad"; spellResult(ok); if(ok) say(w[0]); render(); if(!ok) focusSpell();},
+  spellShow(){S.spell.show=true; say(S.spell.queue[S.spell.i][0]); render();},
+  spellNext(){const P=S.spell; P.i++; P.val=""; P.state=null; P.hint=false; P.tries=0; P.show=false; render(); focusSpell();},
   readTopic(a){S.topic=a; render();},
   reveal(a){S.revealed[a]=!S.revealed[a]; render();},
 };
+function focusSpell(){const i=$("#spell-in"); if(i&&!i.readOnly){i.focus(); const n=i.value.length; try{i.setSelectionRange(n,n);}catch(e){}}}
 function answer(a){
   const Q=S.quiz,q=Q.items[Q.i]; if(Q.answered) return;
   const ok=a===q.a; Q.answered=true; Q.pick=a; Q.lastOk=ok; record(q.id,ok);
@@ -804,7 +899,9 @@ function answer(a){
 }
 document.addEventListener("click",e=>{const t=e.target.closest("[data-act]"); if(!t) return; ACT[t.dataset.act]?.(t.dataset.arg,t,e);});
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches('[role="button"][data-act]')){e.preventDefault();e.target.click?e.target.click():ACT[e.target.dataset.act]?.(e.target.dataset.arg);}});
-document.addEventListener("input",e=>{const id=e.target.dataset&&e.target.dataset.draft; if(id) S.drafts[id]=e.target.value;});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="spell-in"){e.preventDefault(); if(!e.target.readOnly) ACT.spellCheck(); else ACT.spellNext();}});
+document.addEventListener("input",e=>{if(e.target.id==="spell-in"&&S.spell){S.spell.val=e.target.value; if(S.spell.state==="bad"){S.spell.state=null; e.target.className="";}}
+const id=e.target.dataset&&e.target.dataset.draft; if(id) S.drafts[id]=e.target.value;});
 render();
 </script>
 <!--APP-END-->

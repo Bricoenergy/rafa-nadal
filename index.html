@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--APP-START-->
+<title>Ciencias con Sara</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: sticky tab bar + one centred study column; each body system keeps its own colour everywhere */
+:root{
+  --bg:#f2f5f9; --surface:#ffffff; --ink:#1b2232; --muted:#5b6578; --line:#dde3ec;
+  --accent:#e0691c; --accent-ink:#ffffff; --accent-soft:#fdeadb;
+  --ok:#17915a; --ok-soft:#daf2e5; --bad:#d23a3a; --bad-soft:#fbe1e1;
+  --nerv:#3463d1; --bone:#a87a1f; --musc:#c93b36; --repro:#a1438a;
+  --plate:#ffffff; --bone-fill:#f3e7cb; --bone-line:#a3824a; --joint-fill:#f5cd8a;
+  --skin:#f4dccb; --skin-line:#cfa98f; --musc-fill:#dd6a5e; --musc-line:#9f3a31;
+  --brain:#e8a3a8; --cord:#c4865a; --nerve-line:#3c6ee0;
+  --rep-fill:#f2aabb; --rep-dark:#d9708c; --rep-line:#a94a67; --ovary:#d6b0e2; --bladder:#f5e6b2; --urethra:#efc23f;
+  --pt:#1b2232; --pt-ink:#ffffff; --pt-ring:#e0691c;
+  --display:"Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11151d; --surface:#1a202b; --ink:#e8ecf3; --muted:#9ba6b9; --line:#2a3241;
+  --accent:#f08a3e; --accent-ink:#1a1208; --accent-soft:#3a2617;
+  --ok:#3cc283; --ok-soft:#163427; --bad:#f06666; --bad-soft:#3a1c1f;
+  --nerv:#7299f2; --bone:#dcae55; --musc:#f2716b; --repro:#da80c3;
+  --plate:#1f2633; --bone-line:#c9a463; --skin-line:#b8917a; --pt:#f2f4f8; --pt-ink:#11151d;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#11151d; --surface:#1a202b; --ink:#e8ecf3; --muted:#9ba6b9; --line:#2a3241;
+  --accent:#f08a3e; --accent-ink:#1a1208; --accent-soft:#3a2617;
+  --ok:#3cc283; --ok-soft:#163427; --bad:#f06666; --bad-soft:#3a1c1f;
+  --nerv:#7299f2; --bone:#dcae55; --musc:#f2716b; --repro:#da80c3;
+  --plate:#1f2633; --bone-line:#c9a463; --skin-line:#b8917a; --pt:#f2f4f8; --pt-ink:#11151d;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:960px;margin:0 auto;padding-block:10px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:10px}
+.brand b{font-family:var(--display);font-size:1.3rem;font-weight:800}
+.brand small{color:var(--muted);font-weight:600}
+.logo{width:30px;height:30px;flex:none}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-top:6px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:0;background:none;padding:8px 12px 10px;font-weight:800;color:var(--muted);border-bottom:3px solid transparent}
+.tab[aria-current="true"]{color:var(--accent);border-color:var(--accent)}
+
+main{max-width:960px;margin:0 auto;padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
+.view-head{display:grid;gap:6px}
+.view-head h2{font-size:1.7rem}
+.view-head p{margin:0;color:var(--muted);max-width:62ch}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 13px;font-weight:700;font-size:.92rem}
+.chip[aria-pressed="true"]{border-color:var(--tc,var(--accent));background:var(--tc,var(--accent));color:var(--surface)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--tc);margin-right:6px;vertical-align:1px}
+.chip[aria-pressed="true"] .dot{background:var(--surface)}
+
+.btn{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 16px;font-weight:800}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.small{padding:6px 11px;font-size:.9rem;border-radius:10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.muted{color:var(--muted)}
+.say{border:0;background:var(--accent-soft);color:var(--accent);border-radius:50%;width:34px;height:34px;flex:none;display:inline-grid;place-items:center;font-size:1rem;vertical-align:middle}
+
+/* home */
+.hero{display:grid;gap:10px;padding-block:6px}
+.eyebrow{font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem;color:var(--accent);margin:0}
+.hero h1{font-size:clamp(2rem,6vw,3rem);font-weight:800}
+.hero p{margin:0;max-width:60ch;color:var(--muted)}
+.topics{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:14px}
+.topic{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--tc);border-radius:var(--r);padding:16px;display:grid;gap:10px;align-content:start}
+.topic h3{font-size:1.25rem}
+.topic .es{color:var(--muted);font-weight:700;font-size:.9rem;margin-top:-6px}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--tc,var(--accent));border-radius:99px}
+.pct{font-size:.85rem;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+.steps{margin:0;padding-left:1.2em;display:grid;gap:6px;max-width:65ch}
+
+/* flashcards */
+.card-wrap{display:grid;justify-items:center;gap:14px}
+.flash{width:min(100%,460px);min-height:250px;border-radius:20px;border:2px solid var(--line);border-bottom:8px solid var(--tc);background:var(--surface);padding:24px;display:grid;place-items:center;text-align:center;gap:8px;position:relative}
+.flash .word{font-family:var(--display);font-size:clamp(2rem,8vw,2.8rem);font-weight:800;line-height:1.1}
+.flash .tr{font-family:var(--display);font-size:1.6rem;font-weight:700;color:var(--tc)}
+.flash .def{color:var(--muted);max-width:36ch}
+.flash .hint{position:absolute;bottom:10px;font-size:.8rem;color:var(--muted)}
+.flash .say{position:absolute;top:12px;right:12px}
+.count{font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* diagrams */
+.map-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:720px){.map-grid{grid-template-columns:1fr}}
+.plate{background:var(--plate);border:1px solid var(--line);border-radius:var(--r);padding:10px;overflow-x:auto}
+.plate svg{display:block;width:100%;height:auto;max-height:72vh;margin:0 auto}
+.bone{fill:var(--bone-fill);stroke:var(--bone-line);stroke-width:1.5}
+.joint{fill:var(--joint-fill);stroke:var(--bone-line);stroke-width:1.5}
+.skin{fill:var(--skin);stroke:var(--skin-line);stroke-width:1.5}
+.mus{fill:var(--musc-fill);stroke:var(--musc-line);stroke-width:1.2}
+.pt{cursor:pointer}
+.pt .hit{fill:transparent}
+.pt .c{fill:var(--pt);stroke:var(--plate);stroke-width:2.5}
+.pt .ring{fill:none;stroke:var(--pt-ring);stroke-width:3;opacity:0}
+.pt.hl .ring{opacity:1;animation:pulse 1.2s ease-in-out infinite}
+.pt.hl .c{fill:var(--pt-ring)}
+.pt.ok .c{fill:var(--ok)} .pt.bad .c{fill:var(--bad)}
+.pt:hover .c{fill:var(--accent)}
+@keyframes pulse{50%{stroke-width:7;opacity:.5}}
+@media (prefers-reduced-motion:reduce){.pt.hl .ring{animation:none}}
+.lbl{font-family:var(--body);font-weight:800;fill:var(--ink);paint-order:stroke;stroke:var(--plate);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+.lbl.ok{fill:var(--ok)} .lbl.bad{fill:var(--bad)}
+.prompt{font-family:var(--display);font-size:1.5rem;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.prompt em{font-style:normal;color:var(--accent)}
+.wordlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.wordlist li{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:10px}
+.wordlist li:hover{background:var(--bg)}
+.wordlist b{font-weight:800}
+.tag{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--muted)}
+
+/* quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.qtext{font-family:var(--display);font-size:clamp(1.3rem,4vw,1.7rem);font-weight:700;line-height:1.25}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+.opt{text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;font-weight:700}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.fb{border-radius:12px;padding:12px 14px;font-weight:600}
+.fb.ok{background:var(--ok-soft);color:var(--ink);border-left:6px solid var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--ink);border-left:6px solid var(--bad)}
+.grade{font-family:var(--display);font-size:4rem;font-weight:800;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.wronglist{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.wronglist li{background:var(--bg);border-radius:10px;padding:10px 12px}
+
+/* order */
+.seq{display:grid;gap:8px;margin:0;padding:0;list-style:none;counter-reset:s}
+.seq li{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border-radius:10px;padding:10px 12px;font-weight:700;counter-increment:s}
+.seq li::before{content:counter(s);font-family:var(--display);font-weight:800;color:var(--surface);background:var(--tc,var(--accent));border-radius:50%;min-width:28px;height:28px;display:grid;place-items:center}
+.seq li.ok{background:var(--ok-soft)} .seq li.bad{background:var(--bad-soft)}
+.pool{display:grid;gap:8px}
+.pool .opt{font-weight:600}
+
+/* reading */
+.reading{font-size:1.05rem;max-width:68ch}
+.reading p{margin:0 0 10px}
+.reading b{color:var(--tc)}
+.cq{display:grid;gap:10px}
+.cq h3{font-size:1.2rem}
+.cq .es{color:var(--muted);font-size:.9rem;margin-top:-6px}
+textarea{width:100%;min-height:90px;border:2px solid var(--line);border-radius:12px;padding:10px;font:inherit;background:var(--bg);color:var(--ink);resize:vertical}
+.model{background:var(--accent-soft);border-radius:12px;padding:12px 14px}
+.keys{display:flex;flex-wrap:wrap;gap:6px}
+.key{font-size:.85rem;font-weight:800;border-radius:99px;padding:2px 10px;border:2px solid var(--line);color:var(--muted)}
+.key.hit{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+</style>
+
+<header class="top"><div class="top-in">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="var(--accent)"/><path d="M10 9c-3 0-3 4-1 5l14 4c2 1 4-3 1-5M11 23c-3 0-3-4 0-4M21 23c3 0 3-4 0-4M11 21h10" stroke="var(--accent-ink)" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+    <b>Ciencias con Sara</b><small>The human body</small>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="Secciones"></nav>
+</div></header>
+<main id="app" aria-live="polite"></main>
+
+<script>
+/* ============ CONTENT (Science book pp. 29–32) ============ */
+const TOPICS = {
+  nervous:   {en:"Nervous system",  es:"Sistema nervioso",           tc:"var(--nerv)",  page:"p. 29"},
+  locomotor: {en:"Skeletal system", es:"Huesos y articulaciones",    tc:"var(--bone)",  page:"p. 30"},
+  muscular:  {en:"Muscular system", es:"Músculos y tendones",        tc:"var(--musc)",  page:"p. 31"},
+  repro:     {en:"Reproduction",    es:"Reproducción",               tc:"var(--repro)", page:"p. 32"},
+};
+
+// [english, español, definition, topic]
+const VOCAB = [
+ ["brain","cerebro","It's the boss of our body. When it gets a signal, it sends a message to react.","nervous"],
+ ["spinal cord","médula espinal","It connects the brain to the nerves. It's like a motorway.","nervous"],
+ ["nerves","nervios","They go from the organs, muscles and skin to the spinal cord.","nervous"],
+ ["signal","señal","Information that travels through the nerves.","nervous"],
+ ["to react","reaccionar","To respond to something, e.g. moving your hand away from something hot.","nervous"],
+ ["voluntary","voluntario","Something we decide to do, like speaking or dancing.","nervous"],
+ ["involuntary","involuntario","Something our body does automatically, like the heart pumping or digestion.","nervous"],
+ ["locomotor system","aparato locomotor","The skeletal system + the muscular system. It lets us move.","locomotor"],
+ ["skeleton","esqueleto","All the bones of the body together.","locomotor"],
+ ["bones","huesos","Hard on the outside and like sponges on the inside. We have more than 200.","locomotor"],
+ ["joints","articulaciones","They connect our bones and allow us to move our skeleton.","locomotor"],
+ ["shape","forma","Bones give shape to our bodies.","locomotor"],
+ ["to support","sostener","Bones support our bodies.","locomotor"],
+ ["to protect","proteger","Bones protect some of our organs, e.g. the skull protects the brain.","locomotor"],
+ ["skull","cráneo","The bone of the head. It protects the brain.","locomotor"],
+ ["humerus","húmero","The bone of the upper arm, between the shoulder and the elbow.","locomotor"],
+ ["rib cage","caja torácica","The ribs. It protects the heart and the lungs.","locomotor"],
+ ["spinal column","columna vertebral","The backbone. It protects the spinal cord.","locomotor"],
+ ["pelvis","pelvis","The bone at the hips that connects the spine and the legs.","locomotor"],
+ ["radius","radio","A bone of the forearm, between the elbow and the wrist.","locomotor"],
+ ["femur","fémur","The thigh bone. It's the largest bone in the human body.","locomotor"],
+ ["tibia","tibia","The bone of the lower leg, between the knee and the ankle.","locomotor"],
+ ["shoulder","hombro","The joint between the humerus and the body.","locomotor"],
+ ["elbow","codo","The joint in the middle of the arm.","locomotor"],
+ ["wrist","muñeca","The joint between the arm and the hand.","locomotor"],
+ ["hip","cadera","The joint between the pelvis and the femur.","locomotor"],
+ ["knee","rodilla","The joint between the femur and the tibia.","locomotor"],
+ ["ankle","tobillo","The joint between the leg and the foot.","locomotor"],
+ ["stapes","estribo","The smallest bone in the human body. It's in the ear and is about 3 mm long.","locomotor"],
+ ["Achilles tendon","tendón de Aquiles","The largest tendon in the body. It's at the back of the ankle.","muscular"],
+ ["muscular system","sistema muscular","It follows the brain's commands. It's made up of muscles and tendons.","muscular"],
+ ["muscles","músculos","They contract and relax to move the bones.","muscular"],
+ ["tendons","tendones","Flexible tissue that connects your muscles to your bones.","muscular"],
+ ["to contract","contraer","To get shorter and pull. One muscle contracts and pulls a joint.","muscular"],
+ ["to relax","relajar","To get longer and loose again.","muscular"],
+ ["elastic","elástico","Muscles are elastic, so they can relax and contract without breaking.","muscular"],
+ ["in pairs","en parejas","Muscles work in pairs: one pulls a joint one way, the other pulls it the other way.","muscular"],
+ ["trapezius","trapecio","Muscle in the upper back and neck.","muscular"],
+ ["deltoid","deltoides","Muscle of the shoulder.","muscular"],
+ ["pectoral","pectoral","Muscle of the chest.","muscular"],
+ ["biceps","bíceps","Muscle at the front of the upper arm. It bends the elbow.","muscular"],
+ ["triceps","tríceps","Muscle at the back of the upper arm. It straightens the elbow.","muscular"],
+ ["abdominal","abdominales","Muscles of the belly (tummy).","muscular"],
+ ["quadriceps","cuádriceps","Muscle at the front of the thigh. It helps you to walk.","muscular"],
+ ["to reproduce","reproducirse","To produce new living things.","repro"],
+ ["asexually","asexualmente","The organism produces an identical copy of itself.","repro"],
+ ["sexually","sexualmente","Two individuals produce a new organism with a mixture of each parent's genes.","repro"],
+ ["genes","genes","Information from the parents that passes to the baby.","repro"],
+ ["oviparous","ovíparo","Animals that reproduce by laying eggs (e.g. a turtle).","repro"],
+ ["viviparous","vivíparo","Animals that grow inside the mother's body (e.g. a dolphin, humans).","repro"],
+ ["ovoviviparous","ovovivíparo","Animals that hatch from eggs inside the mother's body (e.g. a great white shark).","repro"],
+ ["pregnancy","embarazo","The time the baby grows inside the mother: nine months in humans.","repro"],
+ ["to give birth","dar a luz","When the baby is born.","repro"],
+ ["ovaries","ovarios","They produce egg cells. There's one on each side of the uterus.","repro"],
+ ["egg cells (ova)","óvulos","The female cells. They are produced in the ovaries.","repro"],
+ ["fallopian tubes","trompas de Falopio","They connect the ovaries to the uterus.","repro"],
+ ["uterus","útero","The organ where the fertilised egg develops into a fetus.","repro"],
+ ["cervix","cuello uterino","It connects the vagina to the uterus.","repro"],
+ ["vagina","vagina","The canal that connects the uterus and cervix to the outside of the body.","repro"],
+ ["fetus","feto","The baby while it is growing inside the uterus.","repro"],
+ ["fertilised egg","óvulo fecundado","An egg cell that has joined with a sperm cell.","repro"],
+ ["testicles","testículos","They produce sperm cells.","repro"],
+ ["sperm cells","espermatozoides","The male cells. They are produced in the testicles.","repro"],
+ ["vas deferens","conducto deferente","Sperm cells travel through it to the seminal vesicles and the prostate.","repro"],
+ ["seminal vesicles","vesículas seminales","With the prostate, they produce semen.","repro"],
+ ["prostate","próstata","With the seminal vesicles, it produces semen.","repro"],
+ ["semen","semen","The liquid that carries the sperm cells.","repro"],
+ ["urethra","uretra","It carries semen out of the body.","repro"],
+ ["penis","pene","The male organ the urethra goes through.","repro"],
+];
+
+// Multiple choice: [id, topic, question, correct, [wrong...], explanation]
+const MC = [
+ ["n1","nervous","Which part of the nervous system is the boss of our body?","the brain",["the spinal cord","the nerves"],"The brain is the boss: it receives signals and sends messages to react."],
+ ["n2","nervous","\"When it gets a signal from a part of your body, it sends a message to react.\"","the brain",["the spinal cord","the nerves"],"The brain sends the message to react."],
+ ["n3","nervous","\"They go from the organs, muscles and skin to the spinal cord.\"","the nerves",["the brain","the spinal cord"],"Nerves go from organs, muscles and skin to the spinal cord."],
+ ["n4","nervous","\"Some of them receive information when we taste something.\"","the nerves",["the brain","the spinal cord"],"Some nerves receive information, e.g. from the tongue."],
+ ["n5","nervous","\"It connects the brain to the nerves.\"","the spinal cord",["the brain","the nerves"],"The spinal cord connects the brain to the nerves."],
+ ["n6","nervous","\"It's like a motorway.\"","the spinal cord",["the brain","the nerves"],"Messages travel up and down the spinal cord, like cars on a motorway."],
+ ["n7","nervous","Speaking is…","voluntary",["involuntary"],"We decide when we speak."],
+ ["n8","nervous","Dancing is…","voluntary",["involuntary"],"We decide when we dance."],
+ ["n9","nervous","Heart pumping is…","involuntary",["voluntary"],"The heart pumps automatically. We can't stop it."],
+ ["n10","nervous","Digestion is…","involuntary",["voluntary"],"Digestion happens automatically."],
+ ["n11","nervous","Respiration (breathing while you sleep) is…","involuntary",["voluntary"],"We breathe automatically, even when we are asleep."],
+ ["n12","nervous","Your sense of smell is around ___ times more sensitive than your sense of taste.","10,000",["10","100","1,000,000"],"WOW fact: about 10,000 times more sensitive."],
+ ["n13","nervous","What protects the spinal cord?","the spinal column",["the rib cage","the skull","the pelvis"],"The spinal column (backbone) protects the spinal cord."],
+ ["l1","locomotor","The locomotor system is formed by the…","skeletal and muscular systems",["nervous and skeletal systems","muscular and respiratory systems","circulatory and skeletal systems"],"Locomotor system = skeletal system + muscular system."],
+ ["l2","locomotor","How many bones have we got?","more than 200",["about 50","about 100","more than 1,000"],"We have more than 200 bones (an adult has 206)."],
+ ["l3","locomotor","Bones are hard on the outside and ___ on the inside.","like sponges",["empty","liquid","made of muscle"],"Bones are hard on the outside and like sponges on the inside."],
+ ["l4","locomotor","What do joints do?","They connect bones and allow us to move.",["They connect muscles to bones.","They produce blood.","They send messages to the brain."],"Joints connect our bones. Tendons connect muscles to bones."],
+ ["l5","locomotor","Bones give our body…","shape and support, and protect some organs",["energy and food","messages and signals","air and blood"],"Bones provide shape and support and protect some of our organs."],
+ ["l6","locomotor","What's the largest bone in the human body?","the femur",["the tibia","the humerus","the pelvis"],"The femur (thigh bone) is the largest."],
+ ["l7","locomotor","Where's the smallest bone in the human body?","in the ear",["in the little finger","in the little toe","in the nose"],"The stapes (stirrup) is in the ear."],
+ ["l8","locomotor","How long is the smallest bone in the human body?","about 3 mm",["about 3 cm","about 1 cm","about 10 cm"],"The stapes is about 3 millimetres long."],
+ ["l9","locomotor","Which organs are inside the rib cage?","the heart and the lungs",["the brain and the heart","the stomach and the intestines","the ovaries and the uterus"],"Lungs (respiratory system) and heart (circulatory system)."],
+ ["l10","locomotor","Which bone protects the brain?","the skull",["the pelvis","the rib cage","the spinal column"],"The skull protects the brain."],
+ ["l11","locomotor","The knee is between the…","femur and the tibia",["humerus and the radius","pelvis and the femur","tibia and the foot"],"The knee joins the femur and the tibia."],
+ ["l12","locomotor","Which of these is a joint?","wrist",["humerus","pelvis","radius"],"Joints: shoulder, elbow, wrist, hip, knee, ankle."],
+ ["l13","locomotor","Which of these is a bone?","radius",["elbow","ankle","hip"],"Bones: skull, humerus, rib cage, spinal column, pelvis, radius, femur, tibia."],
+ ["l14","locomotor","The humerus is in the…","arm",["leg","chest","head"],"The humerus is the bone of the upper arm."],
+ ["l15","locomotor","The tibia is in the…","leg",["arm","chest","hand"],"The tibia is the bone of the lower leg."],
+ ["l16","locomotor","The radius is between the…","elbow and the wrist",["knee and the ankle","shoulder and the elbow","hip and the knee"],"The radius is a forearm bone."],
+ ["l17","locomotor","Which joint connects the femur to the pelvis?","the hip",["the knee","the ankle","the shoulder"],"The hip joins the pelvis and the femur."],
+ ["l18","locomotor","Where's the largest tendon in your body?","at the back of the ankle (Achilles tendon)",["in the neck","in the elbow","in the wrist"],"The Achilles tendon connects the calf muscle to the heel."],
+ ["m1","muscular","The muscular system follows the…","brain's commands",["heart's commands","lungs' commands","stomach's commands"],"Muscles move when the brain sends a command."],
+ ["m2","muscular","The muscular system is made up of…","muscles and tendons",["bones and joints","nerves and the brain","muscles and bones"],"Muscles and tendons."],
+ ["m3","muscular","What are tendons?","flexible tissue that connects muscles to bones",["hard tissue that connects bones to bones","nerves that go to the brain","small bones in the hand"],"Tendons connect your muscles to your bones."],
+ ["m4","muscular","Muscles work…","in pairs",["alone","in groups of ten","only at night"],"One muscle pulls a joint one way, the other pulls it the other way."],
+ ["m5","muscular","Muscles are elastic, so they can…","relax and contract without breaking",["grow very fast","send messages","protect the brain"],"Elastic = they stretch and come back."],
+ ["m6","muscular","Name a muscle that helps you to walk.","quadriceps",["biceps","pectoral","trapezius"],"The quadriceps is at the front of the thigh."],
+ ["m7","muscular","What connects the bones in your fingers to the muscles in your arm?","tendons",["joints","nerves","ligaments of the skull"],"Tendons pull the finger bones when the arm muscles contract."],
+ ["m8","muscular","Voluntary muscles are muscles that…","we can control when we want",["work automatically","never move","are inside the bones"],"E.g. biceps, quadriceps."],
+ ["m9","muscular","Involuntary muscles are muscles that…","work automatically",["we can control when we want","are only in the legs","never contract"],"E.g. the heart, the stomach."],
+ ["m10","muscular","Which of these is an involuntary muscle?","the heart",["the biceps","the quadriceps","the deltoid"],"The heart beats without us deciding."],
+ ["m11","muscular","Which of these is a voluntary muscle?","the biceps",["the heart","the stomach muscles","the intestine muscles"],"We decide when to bend our arm."],
+ ["m12","muscular","When you bend your elbow, which muscle contracts?","biceps",["triceps","quadriceps","trapezius"],"The biceps contracts and the triceps relaxes."],
+ ["m13","muscular","When you straighten your arm, which muscle contracts?","triceps",["biceps","pectoral","abdominal"],"The triceps contracts and the biceps relaxes."],
+ ["m14","muscular","The pectoral muscle is in the…","chest",["back","leg","shoulder"],"Pectoral = chest."],
+ ["m15","muscular","The deltoid muscle is in the…","shoulder",["thigh","chest","belly"],"Deltoid = shoulder."],
+ ["m16","muscular","The trapezius muscle is in the…","upper back and neck",["belly","thigh","forearm"],"Trapezius = upper back and neck."],
+ ["r1","repro","Asexual reproduction: the organism produces…","an identical copy of itself",["a new organism with genes from two parents","eggs inside the mother","only sperm cells"],"Asexual = one parent, identical copy."],
+ ["r2","repro","Sexual reproduction: two individuals produce a new organism with…","a mixture of each parent's genes",["an identical copy of one parent","no genes","only the mother's genes"],"Sexual = two parents, mixture of genes."],
+ ["r3","repro","Oviparous animals…","reproduce by laying eggs",["grow inside the mother's body","hatch from eggs inside the mother's body","reproduce asexually"],"Ovi = egg. They lay eggs."],
+ ["r4","repro","Viviparous animals…","grow inside the mother's body",["reproduce by laying eggs","hatch from eggs inside the mother's body","have no parents"],"Vivi = alive. Born alive."],
+ ["r5","repro","Ovoviviparous animals…","hatch from eggs inside the mother's body",["reproduce by laying eggs","grow inside the mother's body without eggs","reproduce asexually"],"Eggs, but inside the mother."],
+ ["r6","repro","A turtle is…","oviparous",["viviparous","ovoviviparous"],"Turtles lay eggs."],
+ ["r7","repro","A great white shark is…","ovoviviparous",["oviparous","viviparous"],"The eggs hatch inside the mother's body."],
+ ["r8","repro","A dolphin is…","viviparous",["oviparous","ovoviviparous"],"Baby dolphins grow inside the mother."],
+ ["r9","repro","Humans give birth after ___ months of pregnancy.","nine",["six","twelve","three"],"Humans reproduce sexually and give birth after nine months."],
+ ["r10","repro","The female reproductive system produces egg cells called…","ova",["sperm","semen","genes"],"Egg cells = ova. They are made in the ovaries."],
+ ["r11","repro","\"They connect the ovaries to the uterus.\"","fallopian tubes",["cervix","vagina","urethra"],"The fallopian tubes connect the ovaries to the uterus."],
+ ["r12","repro","\"There's one on each side of the uterus. They produce egg cells.\"","ovaries",["fallopian tubes","testicles","cervix"],"The ovaries produce egg cells."],
+ ["r13","repro","\"This connects the vagina to the uterus.\"","cervix",["fallopian tube","ovary","urethra"],"The cervix connects the vagina to the uterus."],
+ ["r14","repro","\"The canal that connects the uterus and cervix to the outside of the body.\"","vagina",["fallopian tube","urethra","vas deferens"],"The vagina."],
+ ["r15","repro","\"The organ where the fertilised egg develops into a fetus.\"","uterus",["ovary","cervix","prostate"],"The baby grows in the uterus."],
+ ["r16","repro","Which organs produce sperm cells?","the testicles",["the prostate","the urethra","the ovaries"],"The testicles produce sperm cells."],
+ ["r17","repro","Sperm cells travel through the ___ to the seminal vesicles and the prostate.","vas deferens",["urethra","fallopian tubes","cervix"],"Vas deferens."],
+ ["r18","repro","Which organs produce semen?","the prostate and the seminal vesicles",["the testicles and the penis","the urethra and the penis","the ovaries and the uterus"],"The prostate and the seminal vesicles produce semen."],
+ ["r19","repro","What carries semen out of the body?","the urethra",["the vas deferens","the prostate","the cervix"],"The urethra."],
+ ["r20","repro","The male reproductive system produces…","sperm cells",["egg cells","ova","fetuses"],"Male = sperm cells. Female = egg cells (ova)."],
+];
+
+// Ordering activities
+const SEQS = [
+ {id:"male",topic:"repro",title:"The path of sperm cells",es:"Pregunta 3, pág. 32",steps:[
+  "The testicles produce sperm cells.",
+  "Sperm cells travel through the vas deferens to the seminal vesicles and the prostate.",
+  "The prostate and the seminal vesicles produce semen.",
+  "The urethra carries semen out of the body."]},
+ {id:"baby",topic:"repro",title:"From egg cell to baby",es:"Del óvulo al bebé",steps:[
+  "The ovaries produce an egg cell (ovum).",
+  "The egg cell travels through the fallopian tube.",
+  "A sperm cell fertilises the egg cell.",
+  "The fertilised egg develops into a fetus in the uterus.",
+  "After nine months of pregnancy, the baby is born."]},
+ {id:"hot",topic:"nervous",title:"You touch something hot",es:"Tocas algo caliente",steps:[
+  "The nerves in your skin receive the information.",
+  "The message travels through the nerves to the spinal cord.",
+  "The spinal cord takes the message to the brain.",
+  "The brain sends a message to react.",
+  "The message travels through the spinal cord and the nerves to the muscles.",
+  "Your muscles move your hand away."]},
+ {id:"move",topic:"muscular",title:"How we move our arm",es:"Cómo movemos el brazo",steps:[
+  "The brain sends a command.",
+  "The command travels through the nerves to the biceps.",
+  "The biceps contracts and the triceps relaxes.",
+  "The tendon pulls the bone.",
+  "The arm bends at the elbow joint."]},
+];
+
+// Reading + open questions
+const READ = {
+ nervous:`<p>The nervous system is made up of the <b>brain</b>, the <b>spinal cord</b> and the <b>nerves</b>.</p>
+<p>The brain is the <b>boss</b> of our body. When it gets a <b>signal</b> from a part of the body, it sends a message to <b>react</b>. The spinal cord <b>connects the brain to the nerves</b>. It's like a <b>motorway</b>. The nerves go from the <b>organs, muscles and skin</b> to the spinal cord. Some of them receive information, for example when we taste something.</p>
+<p>Some actions are <b>voluntary</b>: we decide to do them (speaking, dancing). Others are <b>involuntary</b>: they happen automatically (heart pumping, digestion, respiration).</p>`,
+ locomotor:`<p>We can move thanks to the connection of the <b>skeletal</b> and <b>muscular</b> systems. They both form the <b>locomotor system</b>.</p>
+<p>Bones provide <b>shape</b> and <b>support</b> to our bodies. They also <b>protect</b> some of our organs. We have got <b>more than 200 bones</b>. Bones are <b>hard on the outside</b> and <b>like sponges on the inside</b>.</p>
+<p><b>Joints</b> connect our bones and allow us to move our skeleton.</p>`,
+ muscular:`<p>The muscular system follows the <b>brain's commands</b> and is made up of <b>muscles</b> and <b>tendons</b>. Tendons are made of <b>flexible tissue</b> that connects your muscles to your bones.</p>
+<p>Muscles work <b>in pairs</b>: one muscle will <b>contract</b> and pull a joint one way and the other muscle will contract and pull it the other way. Muscles are <b>elastic</b> so they can relax and contract without breaking.</p>`,
+ repro:`<p>Some animals reproduce <b>asexually</b>: the organism produces an <b>identical copy</b> of itself. Most animals reproduce <b>sexually</b>: two individuals produce a new organism with a <b>mixture of each parent's genes</b>.</p>
+<p><b>Oviparous</b> animals reproduce by laying eggs. <b>Viviparous</b> animals grow inside the mother's body. <b>Ovoviviparous</b> animals hatch from eggs inside the mother's body. Humans reproduce sexually and give birth after <b>nine months</b> of pregnancy.</p>
+<p>The female reproductive system produces <b>egg cells</b> in the <b>ovaries</b>, called <b>ova</b>. The male reproductive system produces <b>sperm cells</b>.</p>`,
+};
+const COMP = [
+ {id:"c1",topic:"nervous",q:"What happens in your nervous system when you touch something hot?",es:"¿Qué pasa en tu sistema nervioso cuando tocas algo caliente?",
+  model:"The nerves in my skin receive the information. The message goes through the nerves and the spinal cord to the brain. The brain sends a message to react, and my muscles move my hand away.",keys:["nerves","skin","spinal cord","brain","message","muscles"]},
+ {id:"c2",topic:"nervous",q:"What's the difference between voluntary and involuntary actions? Give two examples of each.",es:"Diferencia entre acciones voluntarias e involuntarias, con dos ejemplos.",
+  model:"Voluntary actions are actions we decide to do, for example speaking and dancing. Involuntary actions happen automatically, for example the heart pumping and digestion.",keys:["decide","automatically","speaking","dancing","heart","digestion"]},
+ {id:"c3",topic:"nervous",q:"At home: think of three ways you use your nervous system when you wake up.",es:"Tres ejemplos de cómo usas el sistema nervioso al despertarte.",
+  model:"I hear the alarm clock with my ears. I open my eyes and see the light. I smell my breakfast. (The nerves send the information to the brain, and the brain tells my muscles to get up.)",keys:["hear","see","smell","brain","nerves"]},
+ {id:"c4",topic:"locomotor",q:"What are the functions of the bones? Give an example.",es:"¿Para qué sirven los huesos? Pon un ejemplo.",
+  model:"Bones give shape and support to our bodies, and they protect some of our organs. For example, the skull protects the brain and the rib cage protects the heart and the lungs.",keys:["shape","support","protect","skull","rib cage"]},
+ {id:"c5",topic:"locomotor",q:"What's the difference between a bone and a joint? Name three of each.",es:"Diferencia entre hueso y articulación. Nombra tres de cada.",
+  model:"Bones are hard on the outside and like sponges on the inside; they give shape and support. Joints connect bones and allow us to move. Bones: femur, tibia, humerus. Joints: knee, elbow, shoulder.",keys:["connect","move","femur","knee","elbow"]},
+ {id:"c6",topic:"locomotor",q:"Which systems make up the locomotor system and how do they work together?",es:"¿Qué sistemas forman el aparato locomotor y cómo trabajan juntos?",
+  model:"The skeletal system and the muscular system. Muscles are connected to bones by tendons. When a muscle contracts it pulls the bone, and the joint lets the bone move.",keys:["skeletal","muscular","tendons","contracts","joint"]},
+ {id:"c7",topic:"muscular",q:"Explain how muscles work in pairs. Use the biceps and the triceps.",es:"Explica cómo trabajan los músculos en parejas (bíceps y tríceps).",
+  model:"Muscles work in pairs. When I bend my arm, the biceps contracts and pulls the arm up and the triceps relaxes. When I straighten my arm, the triceps contracts and the biceps relaxes.",keys:["pairs","biceps","triceps","contracts","relaxes"]},
+ {id:"c8",topic:"muscular",q:"What are tendons? What do they do?",es:"¿Qué son los tendones y qué hacen?",
+  model:"Tendons are made of flexible tissue. They connect muscles to bones, so when a muscle contracts the tendon pulls the bone. The largest one is the Achilles tendon.",keys:["flexible","connect","muscles","bones","Achilles"]},
+ {id:"c9",topic:"muscular",q:"What's the difference between voluntary and involuntary muscles?",es:"Diferencia entre músculos voluntarios e involuntarios.",
+  model:"Voluntary muscles move when we decide, for example the biceps or the quadriceps. Involuntary muscles work automatically, for example the heart and the stomach.",keys:["decide","automatically","biceps","heart"]},
+ {id:"c10",topic:"repro",q:"What's the difference between asexual and sexual reproduction?",es:"Diferencia entre reproducción asexual y sexual.",
+  model:"In asexual reproduction the organism produces an identical copy of itself. In sexual reproduction two individuals produce a new organism with a mixture of each parent's genes.",keys:["identical copy","two individuals","mixture","genes"]},
+ {id:"c11",topic:"repro",q:"Explain oviparous, viviparous and ovoviviparous with an example of each.",es:"Explica ovíparo, vivíparo y ovovivíparo con un ejemplo.",
+  model:"Oviparous animals lay eggs, like a turtle. Viviparous animals grow inside the mother's body, like a dolphin. Ovoviviparous animals hatch from eggs inside the mother's body, like a great white shark.",keys:["lay eggs","turtle","inside","dolphin","hatch","shark"]},
+ {id:"c12",topic:"repro",q:"What do the ovaries, the fallopian tubes and the uterus do?",es:"¿Qué hacen los ovarios, las trompas de Falopio y el útero?",
+  model:"The ovaries produce egg cells (ova). The fallopian tubes connect the ovaries to the uterus. The uterus is where the fertilised egg develops into a fetus.",keys:["egg cells","connect","uterus","fertilised","fetus"]},
+ {id:"c13",topic:"repro",q:"Describe the path of sperm cells in the male reproductive system.",es:"Describe el recorrido de los espermatozoides.",
+  model:"The testicles produce sperm cells. They travel through the vas deferens to the seminal vesicles and the prostate, which produce semen. The urethra carries semen out of the body.",keys:["testicles","vas deferens","seminal vesicles","prostate","semen","urethra"]},
+];
+
+/* ============ DIAGRAMS (SVG drawn to match the book's labels) ============ */
+const MX = (x,w) => w - x;
+function bone(x1,y1,x2,y2,w){
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--bone-line)" stroke-width="${w+3}" stroke-linecap="round"/>`+
+         `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--bone-fill)" stroke-width="${w}" stroke-linecap="round"/>`;
+}
+function both(fn, W){ return fn(x=>x) + fn(x=>MX(x,W)); }
+
+function skeletonArt(){
+  const W=300; let s="";
+  // spine
+  for(let y=88;y<=300;y+=13) s+=`<rect class="bone" x="143" y="${y}" width="14" height="10" rx="3"/>`;
+  s+=both(m=>{
+    let r="";
+    const ws=[40,48,52,52,50,46,40];
+    ws.forEach((w,i)=>{const y=118+i*16; const sx=m(146), ex=m(150-w+6), c1=m(150-w-10), c2=m(150-w-8);
+      r+=`<path d="M${sx},${y} C${c1},${y-6} ${c2},${y+20} ${ex},${y+24}" fill="none" stroke="var(--bone-line)" stroke-width="6" stroke-linecap="round"/><path d="M${sx},${y} C${c1},${y-6} ${c2},${y+20} ${ex},${y+24}" fill="none" stroke="var(--bone-fill)" stroke-width="3.5" stroke-linecap="round"/>`;});
+    r+=bone(m(146),100,m(102),104,5);           // clavicle
+    r+=bone(m(92),122,m(80),198,9);             // humerus
+    r+=bone(m(74),214,m(62),288,5)+bone(m(83),214,m(72),288,5); // radius + ulna
+    [[54,340],[61,346],[69,347],[77,341]].forEach(([x,y])=>r+=bone(m(67),304,m(x),y,3));
+    r+=bone(m(61),305,m(50),322,3);
+    r+=bone(m(124),352,m(118),436,10);          // femur
+    r+=bone(m(114),460,m(112),538,8)+bone(m(124),462,m(122),536,4); // tibia + fibula
+    r+=`<path class="bone" d="M${m(112)},555 L${m(90)},572 L${m(120)},575 Z"/>`;
+    return r;},W);
+  s+=`<rect class="bone" x="146" y="108" width="8" height="80" rx="4"/>`;
+  s+=`<path class="bone" d="M108,298 C96,322 112,348 136,347 L150,336 L164,347 C188,348 204,322 192,298 C176,312 162,314 150,311 C138,314 124,312 108,298 Z"/>`;
+  // skull
+  s+=`<path class="bone" d="M128,60 Q150,102 172,60 Z"/><ellipse class="bone" cx="150" cy="48" rx="30" ry="34"/>`+
+     `<ellipse cx="139" cy="48" rx="7" ry="8" fill="var(--bone-line)"/><ellipse cx="161" cy="48" rx="7" ry="8" fill="var(--bone-line)"/><path d="M150,56 l-4,9 h8 Z" fill="var(--bone-line)"/>`;
+  // joints
+  s+=both(m=>[[96,110,9],[78,206,8],[67,297,7],[126,342,9],[117,448,10],[112,549,7]].map(([x,y,r])=>`<circle class="joint" cx="${m(x)}" cy="${y}" r="${r}"/>`).join(""),W);
+  return s;
+}
+function bodyArt(fill="skin"){
+  const W=300;
+  let s=both(m=>`<polyline points="${m(100)},112 ${m(82)},205 ${m(68)},295" fill="none" stroke="var(--skin-line)" stroke-width="29" stroke-linecap="round" stroke-linejoin="round"/>`+
+                `<polyline points="${m(128)},300 ${m(121)},445 ${m(116)},556" fill="none" stroke="var(--skin-line)" stroke-width="37" stroke-linecap="round" stroke-linejoin="round"/>`,W);
+  s+=both(m=>`<polyline points="${m(100)},112 ${m(82)},205 ${m(68)},295" fill="none" stroke="var(--skin)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>`+
+             `<polyline points="${m(128)},300 ${m(121)},445 ${m(116)},556" fill="none" stroke="var(--skin)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>`+
+             `<ellipse class="skin" cx="${m(64)}" cy="312" rx="11" ry="15"/><ellipse class="skin" cx="${m(108)}" cy="570" rx="20" ry="9"/>`,W);
+  s+=`<path class="skin" d="M102,100 Q150,88 198,100 L204,190 Q198,250 194,300 Q188,336 150,340 Q112,336 106,300 Q102,250 96,190 Z"/>`;
+  s+=`<rect class="skin" x="138" y="74" width="24" height="26"/><ellipse class="skin" cx="150" cy="46" rx="27" ry="33"/>`;
+  return s;
+}
+function muscleArt(){
+  const W=300; let s=bodyArt();
+  s+=`<path class="mus" d="M138,84 L162,84 L194,103 L172,110 L150,101 L128,110 L106,103 Z"/>`;
+  s+=both(m=>
+    `<path class="mus" d="M${m(150)},110 L${m(150)},160 Q${m(128)},168 ${m(110)},152 Q${m(106)},124 ${m(122)},110 Z"/>`+
+    `<ellipse class="mus" cx="${m(102)}" cy="124" rx="14" ry="21" transform="rotate(${m(1)===1?15:-15} ${m(102)} 124)"/>`+
+    `<ellipse class="mus" cx="${m(80)}" cy="160" rx="5" ry="25" transform="rotate(${m(1)===1?11:-11} ${m(80)} 160)" style="opacity:.85"/>`+
+    `<ellipse class="mus" cx="${m(92)}" cy="165" rx="9" ry="26" transform="rotate(${m(1)===1?11:-11} ${m(92)} 165)"/>`+
+    `<ellipse class="mus" cx="${m(76)}" cy="248" rx="8" ry="30" transform="rotate(${m(1)===1?9:-9} ${m(76)} 248)" style="opacity:.55"/>`+
+    `<ellipse class="mus" cx="${m(126)}" cy="378" rx="16" ry="56" transform="rotate(${m(1)===1?3:-3} ${m(126)} 378)"/>`+
+    `<ellipse class="mus" cx="${m(119)}" cy="495" rx="11" ry="34" style="opacity:.55"/>`,W);
+  s+=`<rect class="mus" x="132" y="166" width="36" height="96" rx="12"/>`;
+  [190,214,238].forEach(y=>s+=`<line x1="134" y1="${y}" x2="166" y2="${y}" stroke="var(--musc-line)" stroke-width="1.2"/>`);
+  s+=`<line x1="150" y1="168" x2="150" y2="260" stroke="var(--musc-line)" stroke-width="1.2"/>`;
+  return s;
+}
+function nerveArt(){
+  const W=300; let s=bodyArt();
+  const N=`fill="none" stroke="var(--nerve-line)" stroke-width="2" stroke-linecap="round"`;
+  s+=both(m=>{
+    let r=`<path d="M150,110 Q${m(120)},108 ${m(100)},118 L${m(84)},205 L${m(70)},292" ${N}/>`;
+    r+=[[56,322],[62,327],[70,328],[77,322]].map(([x,y])=>`<path d="M${m(70)},292 L${m(x)},${y}" ${N} stroke-width="1.4"/>`).join("");
+    r+=`<path d="M${m(84)},205 Q${m(76)},250 ${m(66)},290" ${N} stroke-width="1.4"/>`;
+    for(let y=130;y<=280;y+=18) r+=`<path d="M150,${y} Q${m(130)},${y+2} ${m(112)},${y+14}" ${N} stroke-width="1.4"/>`;
+    r+=`<path d="M150,300 Q${m(132)},310 ${m(128)},330 L${m(121)},445 L${m(116)},552" ${N}/>`;
+    r+=`<path d="M${m(121)},445 Q${m(128)},500 ${m(124)},552" ${N} stroke-width="1.4"/><path d="M${m(116)},552 L${m(100)},570 M${m(116)},552 L${m(110)},572" ${N} stroke-width="1.4"/>`;
+    r+=`<path d="M${m(126)},360 Q${m(134)},400 ${m(128)},440" ${N} stroke-width="1.4"/>`;
+    return r;},W);
+  s+=`<line x1="150" y1="64" x2="150" y2="304" stroke="var(--cord)" stroke-width="6" stroke-linecap="round"/>`;
+  s+=`<ellipse cx="150" cy="40" rx="23" ry="20" fill="var(--brain)" stroke="var(--cord)" stroke-width="1.5"/>`+
+     `<path d="M134,36 q6,-8 12,0 q6,8 12,0 q6,-8 10,2 M136,46 q7,6 14,0 q7,-6 14,0" fill="none" stroke="var(--cord)" stroke-width="1.3"/>`;
+  return s;
+}
+function femaleArt(){
+  const W=400; let s="";
+  s+=both(m=>`<path d="M${m(156)},92 C${m(126)},68 ${m(96)},60 ${m(72)},84" fill="none" stroke="var(--rep-line)" stroke-width="9" stroke-linecap="round"/>`+
+             `<path d="M${m(156)},92 C${m(126)},68 ${m(96)},60 ${m(72)},84" fill="none" stroke="var(--rep-fill)" stroke-width="6" stroke-linecap="round"/>`+
+             `<path d="M${m(72)},84 l${m(1)===1?-10:10},8 M${m(72)},84 l${m(1)===1?-4:4},13 M${m(72)},84 l${m(1)===1?4:-4},13" stroke="var(--rep-line)" stroke-width="3" stroke-linecap="round"/>`+
+             `<ellipse cx="${m(88)}" cy="120" rx="22" ry="15" fill="var(--ovary)" stroke="var(--rep-line)" stroke-width="1.5"/>`+
+             [[80,116],[92,112],[96,124],[84,126]].map(([x,y])=>`<circle cx="${m(x)}" cy="${y}" r="3.5" fill="none" stroke="var(--rep-line)" stroke-width="1"/>`).join(""),W);
+  s+=`<path d="M150,105 C150,62 250,62 250,105 C250,148 228,178 216,196 L184,196 C172,178 150,148 150,105 Z" fill="var(--rep-fill)" stroke="var(--rep-line)" stroke-width="1.8"/>`;
+  s+=`<path d="M170,92 L230,92 L204,168 L196,168 Z" fill="var(--rep-dark)" opacity=".45"/>`;
+  s+=`<path d="M184,196 L216,196 L213,222 L187,222 Z" fill="var(--rep-dark)" stroke="var(--rep-line)" stroke-width="1.5"/>`;
+  s+=`<path d="M187,222 L213,222 L218,300 Q200,310 182,300 Z" fill="var(--rep-fill)" stroke="var(--rep-line)" stroke-width="1.5"/>`;
+  s+=`<line x1="200" y1="224" x2="200" y2="300" stroke="var(--rep-line)" stroke-width="1" stroke-dasharray="3 4"/>`;
+  return s;
+}
+function maleArt(){
+  const W=400; let s="";
+  s+=both(m=>`<path d="M${m(132)},232 C${m(120)},190 ${m(92)},120 ${m(104)},70 C${m(114)},34 ${m(160)},36 ${m(162)},70 C${m(164)},96 ${m(166)},112 ${m(176)},134" fill="none" stroke="var(--rep-line)" stroke-width="6.5" stroke-linecap="round"/>`+
+             `<path d="M${m(132)},232 C${m(120)},190 ${m(92)},120 ${m(104)},70 C${m(114)},34 ${m(160)},36 ${m(162)},70 C${m(164)},96 ${m(166)},112 ${m(176)},134" fill="none" stroke="var(--rep-fill)" stroke-width="3.5" stroke-linecap="round"/>`,W);
+  s+=`<ellipse cx="200" cy="95" rx="56" ry="44" fill="var(--bladder)" stroke="var(--skin-line)" stroke-width="1.5"/>`;
+  s+=both(m=>`<ellipse cx="${m(154)}" cy="130" rx="21" ry="10" transform="rotate(${m(1)===1?-35:35} ${m(154)} 130)" fill="var(--rep-dark)" stroke="var(--rep-line)" stroke-width="1.5"/>`+
+             `<ellipse cx="${m(132)}" cy="262" rx="24" ry="32" fill="var(--ovary)" stroke="var(--rep-line)" stroke-width="1.5"/>`,W);
+  s+=`<path d="M178,170 L222,170 L222,318 Q200,346 178,318 Z" fill="var(--skin)" stroke="var(--skin-line)" stroke-width="1.5"/>`;
+  s+=`<line x1="200" y1="132" x2="200" y2="334" stroke="var(--urethra)" stroke-width="5" stroke-linecap="round"/>`;
+  s+=`<ellipse cx="200" cy="152" rx="30" ry="18" fill="var(--rep-fill)" stroke="var(--rep-line)" stroke-width="1.5"/>`;
+  s+=`<line x1="200" y1="136" x2="200" y2="168" stroke="var(--urethra)" stroke-width="5"/>`;
+  return s;
+}
+
+const DIAGRAMS = [
+ {id:"skeleton",topic:"locomotor",title:"Bones & joints",es:"Huesos y articulaciones",w:300,h:590,fs:12,art:skeletonArt,points:[
+   {id:"skull",x:150,y:28,k:"bone"},{id:"humerus",x:86,y:160,k:"bone"},{id:"rib cage",x:186,y:166,k:"bone"},
+   {id:"spinal column",x:150,y:272,k:"bone"},{id:"pelvis",x:138,y:326,k:"bone"},{id:"radius",x:68,y:252,k:"bone"},
+   {id:"femur",x:121,y:395,k:"bone"},{id:"tibia",x:113,y:500,k:"bone"},
+   {id:"shoulder",x:204,y:110,k:"joint"},{id:"elbow",x:222,y:206,k:"joint"},{id:"wrist",x:233,y:297,k:"joint"},
+   {id:"hip",x:174,y:342,k:"joint"},{id:"knee",x:183,y:448,k:"joint"},{id:"ankle",x:188,y:549,k:"joint"}]},
+ {id:"muscles",topic:"muscular",title:"Muscles",es:"Músculos",w:300,h:590,fs:12,art:muscleArt,points:[
+   {id:"trapezius",x:120,y:102},{id:"deltoid",x:198,y:124},{id:"pectoral",x:128,y:138},{id:"biceps",x:92,y:168},
+   {id:"triceps",x:220,y:160},{id:"abdominal",x:150,y:214},{id:"quadriceps",x:174,y:380}]},
+ {id:"nervous",topic:"nervous",title:"Nervous system",es:"Sistema nervioso",w:300,h:590,fs:12,art:nerveArt,points:[
+   {id:"brain",x:150,y:38},{id:"spinal cord",x:150,y:200},{id:"nerves",x:178,y:400}]},
+ {id:"female",topic:"repro",title:"Female reproductive system",es:"Aparato reproductor femenino",w:400,h:320,fs:13,art:femaleArt,points:[
+   {id:"fallopian tube",x:110,y:68},{id:"ovary",x:312,y:120},{id:"uterus",x:200,y:118},{id:"cervix",x:200,y:209},{id:"vagina",x:200,y:268}]},
+ {id:"male",topic:"repro",title:"Male reproductive system",es:"Aparato reproductor masculino",w:400,h:370,fs:13,art:maleArt,points:[
+   {id:"vas deferens",x:105,y:136},{id:"seminal vesicle",x:246,y:130},{id:"prostate",x:200,y:154},
+   {id:"testicle",x:268,y:262},{id:"urethra",x:200,y:240},{id:"penis",x:222,y:296}]},
+];
+const ES_PT = {"skull":"cráneo","humerus":"húmero","rib cage":"caja torácica","spinal column":"columna vertebral","pelvis":"pelvis","radius":"radio","femur":"fémur","tibia":"tibia","shoulder":"hombro","elbow":"codo","wrist":"muñeca","hip":"cadera","knee":"rodilla","ankle":"tobillo","trapezius":"trapecio","deltoid":"deltoides","pectoral":"pectoral","biceps":"bíceps","triceps":"tríceps","abdominal":"abdominales","quadriceps":"cuádriceps","brain":"cerebro","spinal cord":"médula espinal","nerves":"nervios","fallopian tube":"trompa de Falopio","ovary":"ovario","uterus":"útero","cervix":"cuello uterino","vagina":"vagina","vas deferens":"conducto deferente","seminal vesicle":"vesícula seminal","prostate":"próstata","testicle":"testículo","urethra":"uretra","penis":"pene"};
+
+/* ============ STATE ============ */
+const KEY="ciencias-sara-v1";
+let store={stats:{},mistakes:[],known:[]};
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s) store=Object.assign(store,s);}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){}};
+function record(id,ok){
+  const st=store.stats[id]||(store.stats[id]={r:0,w:0}); ok?st.r++:st.w++;
+  const m=new Set(store.mistakes); ok?m.delete(id):m.add(id); store.mistakes=[...m]; save();
+}
+const S={view:"home",topic:"all",cards:null,cardDir:"en",map:{d:"skeleton",mode:"study",run:null,sel:null},quiz:null,order:{i:0},drafts:{},revealed:{}};
+
+/* ============ HELPERS ============ */
+const $=(s,el=document)=>el.querySelector(s);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function say(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="en-GB";u.rate=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+const sayBtn=t=>`<button class="say" data-act="say" data-arg="${esc(t)}" aria-label="Escuchar ${esc(t)}" title="Escuchar">🔊</button>`;
+function topicChips(act,active,withAll=true){
+  let h=withAll?`<button class="chip" data-act="${act}" data-arg="all" aria-pressed="${active==="all"}">Todo</button>`:"";
+  for(const [k,t] of Object.entries(TOPICS)) h+=`<button class="chip" style="--tc:${t.tc}" data-act="${act}" data-arg="${k}" aria-pressed="${active===k}"><span class="dot"></span>${t.en}</button>`;
+  return `<div class="chips">${h}</div>`;
+}
+const MCQ=MC.map(([id,topic,q,a,w,ex])=>({id,type:"mc",topic,q,a,w,ex}));
+const PINQ=DIAGRAMS.flatMap(d=>d.points.map(p=>({id:`pin:${d.id}:${p.id}`,type:"pin",topic:d.topic,d:d.id,a:p.id})));
+const ALLQ=[...MCQ,...PINQ];
+const byId=Object.fromEntries(ALLQ.map(q=>[q.id,q]));
+function topicProgress(t){const qs=ALLQ.filter(q=>q.topic===t);const done=qs.filter(q=>store.stats[q.id]?.r>0&&!store.mistakes.includes(q.id)).length;return Math.round(done/qs.length*100);}
+
+function diagramSVG(d,o={}){
+  const fs=d.fs, mid=d.w/2;
+  let pts="";
+  d.points.forEach(p=>{
+    const st=(o.marks&&o.marks[p.id])||(o.hl===p.id?"hl":"");
+    const showLbl=o.labels||(o.marks&&o.marks[p.id]&&o.reveal);
+    pts+=`<g class="pt ${st}" data-act="pt" data-arg="${esc(p.id)}" role="button" tabindex="0" aria-label="${o.labels?esc(p.id):"punto"}"><circle class="hit" cx="${p.x}" cy="${p.y}" r="17"/><circle class="ring" cx="${p.x}" cy="${p.y}" r="12"/><circle class="c" cx="${p.x}" cy="${p.y}" r="7.5"/></g>`;
+    if(showLbl){const right=p.x>=mid; pts+=`<text class="lbl ${o.marks&&o.marks[p.id]||""}" x="${right?p.x+13:p.x-13}" y="${p.y+fs*.35}" font-size="${fs}" text-anchor="${right?"start":"end"}">${esc(p.id)}</text>`;}
+  });
+  return `<svg viewBox="0 0 ${d.w} ${d.h}" role="img" aria-label="${esc(d.title)}">${d.art()}${pts}</svg>`;
+}
+
+/* ============ VIEWS ============ */
+const VIEWS=[["home","Inicio"],["cards","Tarjetas"],["map","Posiciones"],["quiz","Test"],["order","Ordenar"],["read","Comprensión"]];
+function renderTabs(){ $("#tabs").innerHTML=VIEWS.map(([k,l])=>`<button class="tab" data-act="go" data-arg="${k}" aria-current="${S.view===k||(k==="quiz"&&S.view==="quizrun")}">${l}</button>`).join(""); }
+
+function viewHome(){
+  const nm=store.mistakes.length;
+  const tips=[["Tarjetas","aprende el vocabulario en inglés. Escúchalo con 🔊 y repítelo en voz alta."],["Posiciones","sitúa cada hueso, articulación, músculo y órgano en el dibujo."],["Test","responde preguntas como las del libro y del examen."],["Ordenar","pon en orden los procesos (por ejemplo, la pregunta 3 de la pág. 32)."],["Comprensión","lee el resumen y contesta con tus propias palabras."]];
+  return `<section class="hero">
+   <p class="eyebrow">Science · The human body · pp. 29–32</p>
+   <h1>¡A por el examen, Sara!</h1>
+   <p>Practica el vocabulario, las posiciones en los dibujos y la comprensión. Tus fallos se guardan para repasarlos al final.</p>
+   <div class="row"><button class="btn primary" data-act="exam">Examen de prueba</button>${nm?`<button class="btn" data-act="review">Repasar mis fallos (${nm})</button>`:""}</div>
+  </section>
+  <div class="topics">${Object.entries(TOPICS).map(([k,t])=>{const p=topicProgress(k);return `<article class="topic" style="--tc:${t.tc}">
+    <h3>${t.en}</h3><div class="es">${t.es} · ${t.page}</div>
+    <div class="bar"><i style="width:${p}%"></i></div><div class="pct">${p}% dominado</div>
+    <div class="row"><button class="btn small" data-act="goTopic" data-arg="cards|${k}">Tarjetas</button><button class="btn small" data-act="goTopic" data-arg="map|${k}">Posiciones</button><button class="btn small" data-act="goTopic" data-arg="quiz|${k}">Test</button></div>
+  </article>`;}).join("")}</div>
+  <section class="panel"><h3 style="font-size:1.2rem;margin-bottom:8px">Cómo estudiar</h3>
+   <ol class="steps">${tips.map(([a,b])=>`<li><b>${a}</b>: ${b}</li>`).join("")}</ol></section>`;
+}
+
+function newDeck(){ const d=shuffle(VOCAB.filter(v=>S.topic==="all"||v[3]===S.topic)); S.cards={queue:d,total:d.length,flip:false,done:0}; }
+function viewCards(){
+  if(!S.cards) newDeck();
+  const c=S.cards, cur=c.queue[0];
+  let body;
+  if(!cur) body=`<div class="panel" style="text-align:center;display:grid;gap:10px;justify-items:center"><h3 style="font-size:1.6rem">¡Mazo terminado! 🎉</h3><p class="muted" style="margin:0">Te sabes las ${c.total} palabras.</p><button class="btn primary" data-act="cardsTopic" data-arg="${S.topic}">Empezar otra vez</button></div>`;
+  else{
+    const [en,es,def,tp]=cur, tc=TOPICS[tp].tc, front=S.cardDir==="en";
+    const inner=!c.flip
+      ? (front?`<div class="word">${esc(en)}</div>`:`<div class="tr" style="font-size:2.2rem">${esc(es)}</div>`)
+      : `<div class="word">${esc(en)}</div><div class="tr">${esc(es)}</div><div class="def">${esc(def)}</div>`;
+    body=`<div class="card-wrap">
+      <div class="count">${c.done} / ${c.total} sabidas</div>
+      <div class="flash" style="--tc:${tc}" data-act="flip" role="button" tabindex="0" aria-label="Dar la vuelta">${sayBtn(en)}${inner}<span class="hint">${c.flip?"":"Toca la tarjeta para darle la vuelta"}</span></div>
+      <div class="row"><button class="btn" data-act="again">🔁 Otra vez</button><button class="btn primary" data-act="know">✓ ¡Lo sé!</button></div>
+    </div>`;
+  }
+  return `<div class="view-head"><h2>Tarjetas de vocabulario</h2><p>Lee la palabra, piensa qué significa y dale la vuelta. Si la sabías pulsa <b>¡Lo sé!</b>; si no, volverá a salir.</p></div>
+   ${topicChips("cardsTopic",S.topic)}
+   <div class="row"><span class="muted" style="font-weight:700">Mostrar primero:</span><button class="chip" data-act="dir" data-arg="en" aria-pressed="${S.cardDir==="en"}">English</button><button class="chip" data-act="dir" data-arg="es" aria-pressed="${S.cardDir==="es"}">Español</button></div>
+   ${body}`;
+}
+
+function curDiagram(){return DIAGRAMS.find(d=>d.id===S.map.d);}
+function startMapRun(){const d=curDiagram(); S.map.run={order:shuffle(d.points.map(p=>p.id)),i:0,score:0,marks:{},answered:false,opts:null};}
+function viewMap(){
+  const d=curDiagram(), M=S.map, mode=M.mode;
+  const dchips=`<div class="chips">${DIAGRAMS.map(x=>`<button class="chip" style="--tc:${TOPICS[x.topic].tc}" data-act="diag" data-arg="${x.id}" aria-pressed="${x.id===d.id}"><span class="dot"></span>${x.title}</button>`).join("")}</div>`;
+  const mchips=`<div class="chips">${[["study","📖 Estudiar"],["find","👆 ¿Dónde está?"],["name","❓ ¿Qué es?"]].map(([k,l])=>`<button class="chip" data-act="mode" data-arg="${k}" aria-pressed="${mode===k}">${l}</button>`).join("")}</div>`;
+  let svg, side;
+  if(mode==="study"){
+    svg=diagramSVG(d,{labels:true,hl:M.sel});
+    side=`<div class="panel"><h3 style="font-size:1.2rem;margin-bottom:8px">${esc(d.title)}<div class="muted" style="font-size:.9rem;font-family:var(--body)">${esc(d.es)}</div></h3>
+      <ul class="wordlist">${d.points.map(p=>`<li>${sayBtn(p.id)}<span><b>${esc(p.id)}</b> <span class="muted">· ${ES_PT[p.id]||""}</span></span>${p.k?`<span class="tag">${p.k}</span>`:""}</li>`).join("")}</ul>
+      <p class="muted" style="margin:12px 0 0">Mira bien dónde está cada palabra. Después prueba <b>¿Dónde está?</b> y <b>¿Qué es?</b></p></div>`;
+  } else {
+    if(!M.run) startMapRun();
+    const R=M.run, target=R.order[R.i];
+    if(!target){
+      svg=diagramSVG(d,{marks:R.marks,reveal:true});
+      side=`<div class="panel" style="display:grid;gap:10px"><h3 style="font-size:1.5rem">¡Terminado!</h3><div class="grade">${R.score}/${R.order.length}</div><p class="muted" style="margin:0">${R.score===R.order.length?"¡Perfecto! Te los sabes todos.":"Los rojos son los que fallaste. Repite hasta que todos salgan verdes."}</p><button class="btn primary" data-act="mapAgain">Otra vez</button></div>`;
+    } else if(mode==="find"){
+      svg=diagramSVG(d,{marks:R.marks,reveal:true});
+      side=`<div class="panel" style="display:grid;gap:12px"><div class="count">${R.i+1} / ${R.order.length} · Aciertos: ${R.score}</div>
+        <div class="prompt">Toca: <em>${esc(target)}</em> ${sayBtn(target)}</div><div class="muted">${ES_PT[target]||""}</div>
+        ${R.answered?`<div class="fb ${R.lastOk?"ok":"bad"}">${R.lastOk?"¡Correcto!":`No. El punto verde es <b>${esc(target)}</b>.`}</div><button class="btn primary" data-act="mapNext">Siguiente →</button>`:""}</div>`;
+    } else {
+      if(!R.opts){const others=shuffle(d.points.map(p=>p.id).filter(x=>x!==target)).slice(0,3); R.opts=shuffle([target,...others]);}
+      svg=diagramSVG(d,{marks:R.marks,reveal:true,hl:R.answered?null:target});
+      side=`<div class="panel" style="display:grid;gap:12px"><div class="count">${R.i+1} / ${R.order.length} · Aciertos: ${R.score}</div>
+        <div class="prompt">¿Qué es el punto naranja?</div>
+        <div class="opts">${R.opts.map(o=>{let cl="";if(R.answered){if(o===target)cl="ok";else if(o===R.pick)cl="bad";}return `<button class="opt ${cl}" data-act="mapPick" data-arg="${esc(o)}" ${R.answered?"disabled":""}>${esc(o)}</button>`;}).join("")}</div>
+        ${R.answered?`<div class="fb ${R.lastOk?"ok":"bad"}">${R.lastOk?"¡Correcto!":`Era <b>${esc(target)}</b> (${ES_PT[target]||""}).`} ${sayBtn(target)}</div><button class="btn primary" data-act="mapNext">Siguiente →</button>`:""}</div>`;
+    }
+  }
+  return `<div class="view-head"><h2>Posiciones</h2><p>Aprende dónde está cada parte del cuerpo, como en los dibujos del libro.</p></div>
+   ${dchips}${mchips}<div class="map-grid"><div class="plate">${svg}</div><div>${side}</div></div>`;
+}
+
+function startQuiz(mode){
+  let items;
+  if(mode==="exam") items=shuffle([...shuffle(MCQ).slice(0,14),...shuffle(PINQ).slice(0,6)]);
+  else if(mode==="review") items=shuffle(store.mistakes.map(id=>byId[id]).filter(Boolean));
+  else items=shuffle(MCQ.filter(q=>S.topic==="all"||q.topic===S.topic)).slice(0,12);
+  items=items.map(q=>q.type==="mc"?{...q,opts:shuffle([q.a,...q.w])}:q);
+  S.quiz={mode,items,i:0,score:0,answered:false,pick:null,wrong:[]};
+  S.view="quizrun";
+}
+function viewQuiz(){
+  const nm=store.mistakes.length;
+  return `<div class="view-head"><h2>Test</h2><p>Elige un tema y contesta 12 preguntas. El <b>examen de prueba</b> mezcla todos los temas y los dibujos (20 preguntas, nota sobre 10).</p></div>
+   ${topicChips("quizTopic",S.topic)}
+   <div class="row"><button class="btn primary" data-act="quizStart">Empezar test</button><button class="btn" data-act="exam">Examen de prueba</button>${nm?`<button class="btn" data-act="review">Repasar mis fallos (${nm})</button>`:""}</div>`;
+}
+function viewQuizRun(){
+  const Q=S.quiz, q=Q.items[Q.i];
+  if(!Q.items.length) return `<div class="panel"><h3>No hay fallos que repasar 🎉</h3><p class="muted">¡Muy bien! Haz un test para seguir practicando.</p><button class="btn primary" data-act="go" data-arg="quiz">Volver</button></div>`;
+  if(!q){
+    const grade=Math.round(Q.score/Q.items.length*100)/10;
+    const msg=grade>=9?"¡Excelente! 🌟":grade>=7?"¡Muy bien! 👏":grade>=5?"Aprobado. Repasa los fallos y vuelve a intentarlo.":"Toca repasar. ¡Tú puedes!";
+    return `<section class="panel" style="display:grid;gap:12px">
+      <p class="eyebrow">${Q.mode==="exam"?"Examen de prueba":Q.mode==="review"?"Repaso de fallos":"Test"}</p>
+      <div class="row" style="gap:18px"><div class="grade">${String(grade).replace(".",",")}</div><div><b style="font-size:1.2rem">${msg}</b><div class="muted">${Q.score} de ${Q.items.length} correctas</div></div></div>
+      ${Q.wrong.length?`<h3 style="font-size:1.15rem">Repasa esto:</h3><ul class="wronglist">${Q.wrong.map(w=>`<li>${w.type==="pin"?`Dibujo <b>${esc(DIAGRAMS.find(d=>d.id===w.d).title)}</b>: ¿dónde está <b>${esc(w.a)}</b>?`:esc(w.q)}<br><span style="color:var(--ok);font-weight:800">✓ ${esc(w.a)}</span>${w.ex?` <span class="muted">· ${esc(w.ex)}</span>`:""}</li>`).join("")}</ul>`:""}
+      <div class="row"><button class="btn primary" data-act="quizAgain">Repetir</button>${store.mistakes.length?`<button class="btn" data-act="review">Repasar mis fallos (${store.mistakes.length})</button>`:""}<button class="btn" data-act="go" data-arg="home">Inicio</button></div></section>`;
+  }
+  const t=TOPICS[q.topic];
+  const head=`<div class="qhead"><span class="count">Pregunta ${Q.i+1} / ${Q.items.length} · ✓ ${Q.score}</span><span class="tag" style="color:${t.tc}">${t.en}</span></div><div class="bar" style="--tc:${t.tc}"><i style="width:${Q.i/Q.items.length*100}%"></i></div>`;
+  const fb=Q.answered?`<div class="fb ${Q.lastOk?"ok":"bad"}">${Q.lastOk?"¡Correcto! ":`La respuesta es <b>${esc(q.a)}</b>. `}${q.ex?esc(q.ex):""}</div><div><button class="btn primary" data-act="quizNext">${Q.i+1<Q.items.length?"Siguiente →":"Ver nota"}</button></div>`:"";
+  if(q.type==="pin"){
+    const d=DIAGRAMS.find(x=>x.id===q.d);
+    const marks=Q.answered?{[q.a]:"ok",...(Q.pick&&Q.pick!==q.a?{[Q.pick]:"bad"}:{})}:{};
+    return `<section style="display:grid;gap:14px">${head}<div class="prompt">Toca en el dibujo: <em>${esc(q.a)}</em> ${sayBtn(q.a)}</div>
+      <div class="map-grid"><div class="plate">${diagramSVG(d,{marks,reveal:true})}</div><div style="display:grid;gap:12px;align-content:start">${fb}</div></div></section>`;
+  }
+  return `<section class="panel" style="display:grid;gap:14px">${head}
+    <div class="qtext">${esc(q.q)}</div>
+    <div class="opts">${q.opts.map(o=>{let cl="";if(Q.answered){if(o===q.a)cl="ok";else if(o===Q.pick)cl="bad";}return `<button class="opt ${cl}" data-act="qPick" data-arg="${esc(o)}" ${Q.answered?"disabled":""}>${esc(o)}</button>`;}).join("")}</div>${fb}</section>`;
+}
+
+function newOrder(i){const s=SEQS[i]; S.order={i,pool:shuffle(s.steps.map((_,k)=>k)),picked:[],checked:false};}
+function viewOrder(){
+  if(!S.order.pool) newOrder(S.order.i||0);
+  const O=S.order, s=SEQS[O.i], tc=TOPICS[s.topic].tc;
+  const chips=`<div class="chips">${SEQS.map((x,i)=>`<button class="chip" style="--tc:${TOPICS[x.topic].tc}" data-act="seq" data-arg="${i}" aria-pressed="${i===O.i}"><span class="dot"></span>${x.title}</button>`).join("")}</div>`;
+  const allOk=O.checked&&O.picked.every((k,i)=>k===i);
+  const left=O.pool.filter(k=>!O.picked.includes(k));
+  return `<div class="view-head"><h2>Ordenar</h2><p>Toca los pasos en el orden correcto. Si te equivocas, pulsa <b>Quitar el último</b>.</p></div>${chips}
+   <section class="panel" style="display:grid;gap:14px;--tc:${tc}">
+    <div><h3 style="font-size:1.3rem">${esc(s.title)}</h3><div class="muted">${esc(s.es)}</div></div>
+    ${O.picked.length?`<ol class="seq">${O.picked.map((k,i)=>`<li class="${O.checked?(k===i?"ok":"bad"):""}">${esc(s.steps[k])}</li>`).join("")}</ol>`:`<p class="muted" style="margin:0">Todavía no has elegido ningún paso.</p>`}
+    ${left.length?`<div class="pool">${left.map(k=>`<button class="opt" data-act="ordPick" data-arg="${k}">${esc(s.steps[k])}</button>`).join("")}</div>`:""}
+    ${O.checked?`<div class="fb ${allOk?"ok":"bad"}">${allOk?"¡Perfecto! Orden correcto.":`Casi. El orden correcto es:<ol style="margin:6px 0 0;padding-left:1.3em">${s.steps.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`}</div>`:""}
+    <div class="row">${O.picked.length&&!O.checked?`<button class="btn" data-act="ordUndo">↩ Quitar el último</button>`:""}${!left.length&&!O.checked?`<button class="btn primary" data-act="ordCheck">Comprobar</button>`:""}${O.checked?`<button class="btn primary" data-act="seq" data-arg="${O.i}">Otra vez</button>`:""}</div>
+   </section>`;
+}
+
+function viewRead(){
+  const t=S.topic==="all"?"nervous":S.topic, T=TOPICS[t];
+  return `<div class="view-head"><h2>Comprensión</h2><p>Lee el resumen del libro. Después escribe tu respuesta y compárala con la respuesta modelo: se marcan en verde las palabras clave que has usado.</p></div>
+   ${topicChips("readTopic",t,false)}
+   <section class="panel reading" style="--tc:${T.tc}"><p class="eyebrow" style="color:${T.tc}">${T.en} · ${T.page}</p>${READ[t]}</section>
+   ${COMP.filter(c=>c.topic===t).map(c=>{
+     const draft=S.drafts[c.id]||"", open=S.revealed[c.id], low=draft.toLowerCase();
+     return `<section class="panel cq"><h3>${esc(c.q)}</h3><div class="es">${esc(c.es)}</div>
+       <textarea id="ans-${c.id}" data-draft="${c.id}" placeholder="Write your answer in English…">${esc(draft)}</textarea>
+       <div class="row"><button class="btn ${open?"":"primary"}" data-act="reveal" data-arg="${c.id}">${open?"Ocultar respuesta":"Ver respuesta modelo"}</button>${open?sayBtn(c.model):""}</div>
+       ${open?`<div class="model">${esc(c.model)}</div><div><div class="muted" style="font-weight:700;margin-bottom:6px">Palabras clave${draft?" (verde = la has usado)":""}:</div><div class="keys">${c.keys.map(k=>`<span class="key ${draft&&low.includes(k.toLowerCase())?"hit":""}">${esc(k)}</span>`).join("")}</div></div>`:""}
+     </section>`;}).join("")}`;
+}
+
+function render(){
+  renderTabs();
+  const v={home:viewHome,cards:viewCards,map:viewMap,quiz:viewQuiz,quizrun:viewQuizRun,order:viewOrder,read:viewRead}[S.view];
+  $("#app").innerHTML=v();
+}
+
+/* ============ ACTIONS ============ */
+const ACT={
+  go(a){S.view=a; if(a==="map"){S.map.run=null;} render(); window.scrollTo(0,0);},
+  goTopic(a){const [v,t]=a.split("|"); S.topic=t;
+    if(v==="cards") newDeck();
+    if(v==="map"){S.map.d=DIAGRAMS.find(d=>d.topic===t).id;S.map.mode="study";S.map.run=null;}
+    if(v==="quiz"){startQuiz("normal"); render(); window.scrollTo(0,0); return;}
+    S.view=v; render(); window.scrollTo(0,0);},
+  say(a){say(a);},
+  exam(){startQuiz("exam"); render(); window.scrollTo(0,0);},
+  review(){startQuiz("review"); render(); window.scrollTo(0,0);},
+  cardsTopic(a){S.topic=a; newDeck(); render();},
+  dir(a){S.cardDir=a; S.cards.flip=false; render();},
+  flip(){S.cards.flip=!S.cards.flip; render();},
+  again(){const c=S.cards,x=c.queue.shift(); c.queue.splice(Math.min(3,c.queue.length),0,x); c.flip=false; render();},
+  know(){const c=S.cards,x=c.queue.shift(); c.done++; c.flip=false; if(!store.known.includes(x[0])){store.known.push(x[0]);save();} render();},
+  diag(a){S.map.d=a; S.map.run=null; S.map.sel=null; render();},
+  mode(a){S.map.mode=a; S.map.run=null; S.map.sel=null; render();},
+  mapAgain(){S.map.run=null; render();},
+  mapNext(){const R=S.map.run; R.i++; R.answered=false; R.opts=null; R.pick=null; render();},
+  pt(a){
+    if(S.view==="map"){
+      const M=S.map;
+      if(M.mode==="study"){M.sel=a; say(a); render(); return;}
+      if(M.mode!=="find") return;
+      const R=M.run, target=R.order[R.i]; if(!target||R.answered) return;
+      const ok=a===target; record(`pin:${M.d}:${target}`,ok);
+      R.answered=true; R.lastOk=ok; if(ok){R.score++;R.marks[target]="ok";} else {R.marks[target]="bad";}
+      if(ok){render(); setTimeout(()=>{if(S.map.run===R&&R.answered){ACT.mapNext();}},650); return;}
+      render(); return;
+    }
+    if(S.view==="quizrun"){const Q=S.quiz,q=Q.items[Q.i]; if(!q||q.type!=="pin"||Q.answered) return; answer(a);}
+  },
+  mapPick(a){const R=S.map.run,target=R.order[R.i]; if(R.answered) return; const ok=a===target; record(`pin:${S.map.d}:${target}`,ok);
+    R.answered=true; R.lastOk=ok; R.pick=a; if(ok)R.score++; R.marks[target]=ok?"ok":"bad"; render();},
+  quizTopic(a){S.topic=a; render();},
+  quizStart(){startQuiz("normal"); render(); window.scrollTo(0,0);},
+  quizAgain(){startQuiz(S.quiz.mode); render(); window.scrollTo(0,0);},
+  qPick(a){answer(a);},
+  quizNext(){const Q=S.quiz; Q.i++; Q.answered=false; Q.pick=null; render(); window.scrollTo(0,0);},
+  seq(a){newOrder(+a); render();},
+  ordPick(a){S.order.picked.push(+a); render();},
+  ordUndo(){S.order.picked.pop(); render();},
+  ordCheck(){S.order.checked=true; render();},
+  readTopic(a){S.topic=a; render();},
+  reveal(a){S.revealed[a]=!S.revealed[a]; render();},
+};
+function answer(a){
+  const Q=S.quiz,q=Q.items[Q.i]; if(Q.answered) return;
+  const ok=a===q.a; Q.answered=true; Q.pick=a; Q.lastOk=ok; record(q.id,ok);
+  if(ok) Q.score++; else Q.wrong.push(q);
+  render();
+}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-act]"); if(!t) return; ACT[t.dataset.act]?.(t.dataset.arg,t,e);});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches('[role="button"][data-act]')){e.preventDefault();e.target.click?e.target.click():ACT[e.target.dataset.act]?.(e.target.dataset.arg);}});
+document.addEventListener("input",e=>{const id=e.target.dataset&&e.target.dataset.draft; if(id) S.drafts[id]=e.target.value;});
+render();
+</script>
+<!--APP-END-->
+</html>

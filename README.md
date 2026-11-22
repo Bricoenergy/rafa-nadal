@@ -9,3 +9,9 @@ Abre `index.html` en cualquier navegador. No necesita instalación.
 - **Test** y **examen de prueba** con nota sobre 10 y repaso de fallos.
 - **Ordenar**: procesos paso a paso.
 - **Comprensión**: resumen del libro y preguntas abiertas con respuesta modelo.
+
+## Voces
+
+Las voces son audios generados en local con el Estudio creativo (Chatterbox V3), en `audio/`. Si falta un audio, la app usa la voz del navegador.
+
+Para regenerarlas tras cambiar el contenido: `node tools/extract_phrases.cjs`, `node tools/build_jobs.cjs` y `python_embeded\python.exe tools/gen_voices.py tools/jobs.json` (solo genera los que faltan).

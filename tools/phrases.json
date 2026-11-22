@@ -1,0 +1,419 @@
+{
+ "words": [
+  "Achilles tendon",
+  "abdominal",
+  "ankle",
+  "asexually",
+  "biceps",
+  "bones",
+  "brain",
+  "cervix",
+  "contract",
+  "deltoid",
+  "egg cells",
+  "egg cells (ova)",
+  "elastic",
+  "elbow",
+  "fallopian tube",
+  "fallopian tubes",
+  "femur",
+  "fertilised egg",
+  "fetus",
+  "genes",
+  "give birth",
+  "hip",
+  "humerus",
+  "in pairs",
+  "involuntary",
+  "joints",
+  "knee",
+  "locomotor system",
+  "muscles",
+  "muscular system",
+  "nerves",
+  "ovaries",
+  "ovary",
+  "oviparous",
+  "ovoviviparous",
+  "pectoral",
+  "pelvis",
+  "penis",
+  "pregnancy",
+  "prostate",
+  "protect",
+  "quadriceps",
+  "radius",
+  "react",
+  "relax",
+  "reproduce",
+  "rib cage",
+  "semen",
+  "seminal vesicle",
+  "seminal vesicles",
+  "sexually",
+  "shape",
+  "shoulder",
+  "signal",
+  "skeleton",
+  "skull",
+  "sperm cells",
+  "spinal column",
+  "spinal cord",
+  "stapes",
+  "support",
+  "tendons",
+  "testicle",
+  "testicles",
+  "tibia",
+  "to contract",
+  "to give birth",
+  "to protect",
+  "to react",
+  "to relax",
+  "to reproduce",
+  "to support",
+  "trapezius",
+  "triceps",
+  "urethra",
+  "uterus",
+  "vagina",
+  "vas deferens",
+  "viviparous",
+  "voluntary",
+  "wrist"
+ ],
+ "sentences": [
+  "What happens in your nervous system when you touch something hot?",
+  "Sara touches a hot candle with her hand.",
+  "The nerves in her skin receive the information: it's hot!",
+  "The message travels through the nerves to the spinal cord.",
+  "The spinal cord takes the message to the brain. It's like a motorway!",
+  "The brain is the boss. It sends a message to react.",
+  "The message travels through the spinal cord and the nerves to the muscles.",
+  "The muscles contract and move the hand away. It all happens in less than a second!",
+  "Why do we need bones and joints?",
+  "Bones give our body shape and support. Without bones we couldn't stand up!",
+  "The skull protects the brain.",
+  "The rib cage protects the heart and the lungs.",
+  "The spinal column protects the spinal cord.",
+  "Joints connect the bones and let us move: shoulder, elbow, wrist, hip, knee and ankle.",
+  "Bones are hard on the outside and like sponges on the inside.",
+  "How do muscles move our bones?",
+  "Muscles work in pairs. In the arm we have the biceps and the triceps.",
+  "The brain sends a command to the biceps through a nerve.",
+  "The biceps contracts: it gets shorter and fatter and pulls the forearm up. The triceps relaxes.",
+  "Tendons connect the muscles to the bones. The tendon pulls the bone.",
+  "Now the triceps contracts and the biceps relaxes: the arm straightens.",
+  "The elbow is the joint where the arm bends. Now move the arm yourself with the slider!",
+  "Oviparous, viviparous or ovoviviparous? Let's see how these animals are born.",
+  "Oviparous animals reproduce by laying eggs. The turtle lays its eggs on the beach.",
+  "The baby turtle hatches from the egg, outside the mother's body.",
+  "Viviparous animals grow inside the mother's body, like a dolphin.",
+  "Then the baby dolphin is born and swims next to its mother.",
+  "Ovoviviparous animals hatch from eggs inside the mother's body, like the great white shark.",
+  "The baby shark hatches inside its mother, and then it is born.",
+  "How does a baby start to grow?",
+  "The ovaries produce egg cells. An egg cell (ovum) leaves the ovary.",
+  "The egg cell travels through the fallopian tube.",
+  "Sperm cells travel up to the fallopian tube. One sperm cell fertilises the egg cell.",
+  "The fertilised egg travels to the uterus.",
+  "In the uterus, the fertilised egg develops into a fetus.",
+  "After nine months of pregnancy, the baby is born.",
+  "Where do sperm cells go? (Question 3, page 32)",
+  "The testicles produce sperm cells.",
+  "Sperm cells travel through the vas deferens…",
+  "…to the seminal vesicles and the prostate. They produce semen.",
+  "The urethra carries semen out of the body.",
+  "The nerves in my skin receive the information. The message goes through the nerves and the spinal cord to the brain. The brain sends a message to react, and my muscles move my hand away.",
+  "Voluntary actions are actions we decide to do, for example speaking and dancing. Involuntary actions happen automatically, for example the heart pumping and digestion.",
+  "I hear the alarm clock with my ears. I open my eyes and see the light. I smell my breakfast. (The nerves send the information to the brain, and the brain tells my muscles to get up.)",
+  "Bones give shape and support to our bodies, and they protect some of our organs. For example, the skull protects the brain and the rib cage protects the heart and the lungs.",
+  "Bones are hard on the outside and like sponges on the inside; they give shape and support. Joints connect bones and allow us to move. Bones: femur, tibia, humerus. Joints: knee, elbow, shoulder.",
+  "The skeletal system and the muscular system. Muscles are connected to bones by tendons. When a muscle contracts it pulls the bone, and the joint lets the bone move.",
+  "Muscles work in pairs. When I bend my arm, the biceps contracts and pulls the arm up and the triceps relaxes. When I straighten my arm, the triceps contracts and the biceps relaxes.",
+  "Tendons are made of flexible tissue. They connect muscles to bones, so when a muscle contracts the tendon pulls the bone. The largest one is the Achilles tendon.",
+  "Voluntary muscles move when we decide, for example the biceps or the quadriceps. Involuntary muscles work automatically, for example the heart and the stomach.",
+  "In asexual reproduction the organism produces an identical copy of itself. In sexual reproduction two individuals produce a new organism with a mixture of each parent's genes.",
+  "Oviparous animals lay eggs, like a turtle. Viviparous animals grow inside the mother's body, like a dolphin. Ovoviviparous animals hatch from eggs inside the mother's body, like a great white shark.",
+  "The ovaries produce egg cells (ova). The fallopian tubes connect the ovaries to the uterus. The uterus is where the fertilised egg develops into a fetus.",
+  "The testicles produce sperm cells. They travel through the vas deferens to the seminal vesicles and the prostate, which produce semen. The urethra carries semen out of the body."
+ ],
+ "vocab_es": [
+  [
+   "brain",
+   "cerebro"
+  ],
+  [
+   "spinal cord",
+   "médula espinal"
+  ],
+  [
+   "nerves",
+   "nervios"
+  ],
+  [
+   "signal",
+   "señal"
+  ],
+  [
+   "react",
+   "reaccionar"
+  ],
+  [
+   "voluntary",
+   "voluntario"
+  ],
+  [
+   "involuntary",
+   "involuntario"
+  ],
+  [
+   "locomotor system",
+   "aparato locomotor"
+  ],
+  [
+   "skeleton",
+   "esqueleto"
+  ],
+  [
+   "bones",
+   "huesos"
+  ],
+  [
+   "joints",
+   "articulaciones"
+  ],
+  [
+   "shape",
+   "forma"
+  ],
+  [
+   "support",
+   "sostener"
+  ],
+  [
+   "protect",
+   "proteger"
+  ],
+  [
+   "skull",
+   "cráneo"
+  ],
+  [
+   "humerus",
+   "húmero"
+  ],
+  [
+   "rib cage",
+   "caja torácica"
+  ],
+  [
+   "spinal column",
+   "columna vertebral"
+  ],
+  [
+   "pelvis",
+   "pelvis"
+  ],
+  [
+   "radius",
+   "radio"
+  ],
+  [
+   "femur",
+   "fémur"
+  ],
+  [
+   "tibia",
+   "tibia"
+  ],
+  [
+   "shoulder",
+   "hombro"
+  ],
+  [
+   "elbow",
+   "codo"
+  ],
+  [
+   "wrist",
+   "muñeca"
+  ],
+  [
+   "hip",
+   "cadera"
+  ],
+  [
+   "knee",
+   "rodilla"
+  ],
+  [
+   "ankle",
+   "tobillo"
+  ],
+  [
+   "stapes",
+   "estribo"
+  ],
+  [
+   "Achilles tendon",
+   "tendón de Aquiles"
+  ],
+  [
+   "muscular system",
+   "sistema muscular"
+  ],
+  [
+   "muscles",
+   "músculos"
+  ],
+  [
+   "tendons",
+   "tendones"
+  ],
+  [
+   "contract",
+   "contraer"
+  ],
+  [
+   "relax",
+   "relajar"
+  ],
+  [
+   "elastic",
+   "elástico"
+  ],
+  [
+   "in pairs",
+   "en parejas"
+  ],
+  [
+   "trapezius",
+   "trapecio"
+  ],
+  [
+   "deltoid",
+   "deltoides"
+  ],
+  [
+   "pectoral",
+   "pectoral"
+  ],
+  [
+   "biceps",
+   "bíceps"
+  ],
+  [
+   "triceps",
+   "tríceps"
+  ],
+  [
+   "abdominal",
+   "abdominales"
+  ],
+  [
+   "quadriceps",
+   "cuádriceps"
+  ],
+  [
+   "reproduce",
+   "reproducirse"
+  ],
+  [
+   "asexually",
+   "asexualmente"
+  ],
+  [
+   "sexually",
+   "sexualmente"
+  ],
+  [
+   "genes",
+   "genes"
+  ],
+  [
+   "oviparous",
+   "ovíparo"
+  ],
+  [
+   "viviparous",
+   "vivíparo"
+  ],
+  [
+   "ovoviviparous",
+   "ovovivíparo"
+  ],
+  [
+   "pregnancy",
+   "embarazo"
+  ],
+  [
+   "give birth",
+   "dar a luz"
+  ],
+  [
+   "ovaries",
+   "ovarios"
+  ],
+  [
+   "egg cells",
+   "óvulos"
+  ],
+  [
+   "fallopian tubes",
+   "trompas de Falopio"
+  ],
+  [
+   "uterus",
+   "útero"
+  ],
+  [
+   "cervix",
+   "cuello uterino"
+  ],
+  [
+   "vagina",
+   "vagina"
+  ],
+  [
+   "fetus",
+   "feto"
+  ],
+  [
+   "fertilised egg",
+   "óvulo fecundado"
+  ],
+  [
+   "testicles",
+   "testículos"
+  ],
+  [
+   "sperm cells",
+   "espermatozoides"
+  ],
+  [
+   "vas deferens",
+   "conducto deferente"
+  ],
+  [
+   "seminal vesicles",
+   "vesículas seminales"
+  ],
+  [
+   "prostate",
+   "próstata"
+  ],
+  [
+   "semen",
+   "semen"
+  ],
+  [
+   "urethra",
+   "uretra"
+  ],
+  [
+   "penis",
+   "pene"
+  ]
+ ]
+}

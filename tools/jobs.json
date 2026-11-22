@@ -1,0 +1,1230 @@
+{
+ "out": "D:\\0.ESTUDIOS_IA\\rafa-nadal\\audio",
+ "seed": 1234,
+ "items": [
+  {
+   "text": "Achilles tendon",
+   "lang": "en",
+   "file": "en/achilles-tendon.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "abdominal",
+   "lang": "en",
+   "file": "en/abdominal.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ankle",
+   "lang": "en",
+   "file": "en/ankle.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "asexually",
+   "lang": "en",
+   "file": "en/asexually.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "biceps",
+   "lang": "en",
+   "file": "en/biceps.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "bones",
+   "lang": "en",
+   "file": "en/bones.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "brain",
+   "lang": "en",
+   "file": "en/brain.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "cervix",
+   "lang": "en",
+   "file": "en/cervix.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "contract",
+   "lang": "en",
+   "file": "en/contract.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "deltoid",
+   "lang": "en",
+   "file": "en/deltoid.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "egg cells",
+   "lang": "en",
+   "file": "en/egg-cells.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "egg cells (ova)",
+   "lang": "en",
+   "file": "en/egg-cells-ova.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "elastic",
+   "lang": "en",
+   "file": "en/elastic.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "elbow",
+   "lang": "en",
+   "file": "en/elbow.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "fallopian tube",
+   "lang": "en",
+   "file": "en/fallopian-tube.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "fallopian tubes",
+   "lang": "en",
+   "file": "en/fallopian-tubes.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "femur",
+   "lang": "en",
+   "file": "en/femur.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "fertilised egg",
+   "lang": "en",
+   "file": "en/fertilised-egg.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "fetus",
+   "lang": "en",
+   "file": "en/fetus.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "genes",
+   "lang": "en",
+   "file": "en/genes.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "give birth",
+   "lang": "en",
+   "file": "en/give-birth.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "hip",
+   "lang": "en",
+   "file": "en/hip.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "humerus",
+   "lang": "en",
+   "file": "en/humerus.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "in pairs",
+   "lang": "en",
+   "file": "en/in-pairs.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "involuntary",
+   "lang": "en",
+   "file": "en/involuntary.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "joints",
+   "lang": "en",
+   "file": "en/joints.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "knee",
+   "lang": "en",
+   "file": "en/knee.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "locomotor system",
+   "lang": "en",
+   "file": "en/locomotor-system.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "muscles",
+   "lang": "en",
+   "file": "en/muscles.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "muscular system",
+   "lang": "en",
+   "file": "en/muscular-system.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "nerves",
+   "lang": "en",
+   "file": "en/nerves.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ovaries",
+   "lang": "en",
+   "file": "en/ovaries.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ovary",
+   "lang": "en",
+   "file": "en/ovary.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "oviparous",
+   "lang": "en",
+   "file": "en/oviparous.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ovoviviparous",
+   "lang": "en",
+   "file": "en/ovoviviparous.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "pectoral",
+   "lang": "en",
+   "file": "en/pectoral.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "pelvis",
+   "lang": "en",
+   "file": "en/pelvis.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "penis",
+   "lang": "en",
+   "file": "en/penis.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "pregnancy",
+   "lang": "en",
+   "file": "en/pregnancy.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "prostate",
+   "lang": "en",
+   "file": "en/prostate.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "protect",
+   "lang": "en",
+   "file": "en/protect.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "quadriceps",
+   "lang": "en",
+   "file": "en/quadriceps.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "radius",
+   "lang": "en",
+   "file": "en/radius.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "react",
+   "lang": "en",
+   "file": "en/react.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "relax",
+   "lang": "en",
+   "file": "en/relax.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "reproduce",
+   "lang": "en",
+   "file": "en/reproduce.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "rib cage",
+   "lang": "en",
+   "file": "en/rib-cage.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "semen",
+   "lang": "en",
+   "file": "en/semen.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "seminal vesicle",
+   "lang": "en",
+   "file": "en/seminal-vesicle.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "seminal vesicles",
+   "lang": "en",
+   "file": "en/seminal-vesicles.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "sexually",
+   "lang": "en",
+   "file": "en/sexually.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "shape",
+   "lang": "en",
+   "file": "en/shape.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "shoulder",
+   "lang": "en",
+   "file": "en/shoulder.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "signal",
+   "lang": "en",
+   "file": "en/signal.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "skeleton",
+   "lang": "en",
+   "file": "en/skeleton.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "skull",
+   "lang": "en",
+   "file": "en/skull.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "sperm cells",
+   "lang": "en",
+   "file": "en/sperm-cells.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "spinal column",
+   "lang": "en",
+   "file": "en/spinal-column.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "spinal cord",
+   "lang": "en",
+   "file": "en/spinal-cord.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "stapes",
+   "lang": "en",
+   "file": "en/stapes.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "support",
+   "lang": "en",
+   "file": "en/support.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tendons",
+   "lang": "en",
+   "file": "en/tendons.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "testicle",
+   "lang": "en",
+   "file": "en/testicle.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "testicles",
+   "lang": "en",
+   "file": "en/testicles.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tibia",
+   "lang": "en",
+   "file": "en/tibia.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to contract",
+   "lang": "en",
+   "file": "en/to-contract.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to give birth",
+   "lang": "en",
+   "file": "en/to-give-birth.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to protect",
+   "lang": "en",
+   "file": "en/to-protect.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to react",
+   "lang": "en",
+   "file": "en/to-react.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to relax",
+   "lang": "en",
+   "file": "en/to-relax.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to reproduce",
+   "lang": "en",
+   "file": "en/to-reproduce.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "to support",
+   "lang": "en",
+   "file": "en/to-support.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "trapezius",
+   "lang": "en",
+   "file": "en/trapezius.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "triceps",
+   "lang": "en",
+   "file": "en/triceps.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "urethra",
+   "lang": "en",
+   "file": "en/urethra.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "uterus",
+   "lang": "en",
+   "file": "en/uterus.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "vagina",
+   "lang": "en",
+   "file": "en/vagina.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "vas deferens",
+   "lang": "en",
+   "file": "en/vas-deferens.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "viviparous",
+   "lang": "en",
+   "file": "en/viviparous.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "voluntary",
+   "lang": "en",
+   "file": "en/voluntary.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "wrist",
+   "lang": "en",
+   "file": "en/wrist.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "What happens in your nervous system when you touch something hot?",
+   "lang": "en",
+   "file": "en/s/what-happens-in-your-nervous-system-when-f2824c.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Sara touches a hot candle with her hand.",
+   "lang": "en",
+   "file": "en/s/sara-touches-a-hot-candle-with-her-hand-f3dc73.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The nerves in her skin receive the information: it's hot!",
+   "lang": "en",
+   "file": "en/s/the-nerves-in-her-skin-receive-the-infor-990abc.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The message travels through the nerves to the spinal cord.",
+   "lang": "en",
+   "file": "en/s/the-message-travels-through-the-nerves-t-4ad813.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The spinal cord takes the message to the brain. It's like a motorway!",
+   "lang": "en",
+   "file": "en/s/the-spinal-cord-takes-the-message-to-the-79386c.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The brain is the boss. It sends a message to react.",
+   "lang": "en",
+   "file": "en/s/the-brain-is-the-boss-it-sends-a-message-6f032b.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The message travels through the spinal cord and the nerves to the muscles.",
+   "lang": "en",
+   "file": "en/s/the-message-travels-through-the-spinal-c-cff27f.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The muscles contract and move the hand away. It all happens in less than a second!",
+   "lang": "en",
+   "file": "en/s/the-muscles-contract-and-move-the-hand-a-0b0019.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Why do we need bones and joints?",
+   "lang": "en",
+   "file": "en/s/why-do-we-need-bones-and-joints-3e1355.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Bones give our body shape and support. Without bones we couldn't stand up!",
+   "lang": "en",
+   "file": "en/s/bones-give-our-body-shape-and-support-wi-2297f9.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The skull protects the brain.",
+   "lang": "en",
+   "file": "en/s/the-skull-protects-the-brain-429855.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The rib cage protects the heart and the lungs.",
+   "lang": "en",
+   "file": "en/s/the-rib-cage-protects-the-heart-and-the-ccb807.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The spinal column protects the spinal cord.",
+   "lang": "en",
+   "file": "en/s/the-spinal-column-protects-the-spinal-co-ee5d6b.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Joints connect the bones and let us move: shoulder, elbow, wrist, hip, knee and ankle.",
+   "lang": "en",
+   "file": "en/s/joints-connect-the-bones-and-let-us-move-0a3904.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Bones are hard on the outside and like sponges on the inside.",
+   "lang": "en",
+   "file": "en/s/bones-are-hard-on-the-outside-and-like-s-c463d7.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "How do muscles move our bones?",
+   "lang": "en",
+   "file": "en/s/how-do-muscles-move-our-bones-505ebd.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Muscles work in pairs. In the arm we have the biceps and the triceps.",
+   "lang": "en",
+   "file": "en/s/muscles-work-in-pairs-in-the-arm-we-have-b62a76.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The brain sends a command to the biceps through a nerve.",
+   "lang": "en",
+   "file": "en/s/the-brain-sends-a-command-to-the-biceps-b86de0.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The biceps contracts: it gets shorter and fatter and pulls the forearm up. The triceps relaxes.",
+   "lang": "en",
+   "file": "en/s/the-biceps-contracts-it-gets-shorter-and-5d78b4.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Tendons connect the muscles to the bones. The tendon pulls the bone.",
+   "lang": "en",
+   "file": "en/s/tendons-connect-the-muscles-to-the-bones-599192.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Now the triceps contracts and the biceps relaxes: the arm straightens.",
+   "lang": "en",
+   "file": "en/s/now-the-triceps-contracts-and-the-biceps-d6a951.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The elbow is the joint where the arm bends. Now move the arm yourself with the slider!",
+   "lang": "en",
+   "file": "en/s/the-elbow-is-the-joint-where-the-arm-ben-b0a213.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Oviparous, viviparous or ovoviviparous? Let's see how these animals are born.",
+   "lang": "en",
+   "file": "en/s/oviparous-viviparous-or-ovoviviparous-le-0b62bb.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Oviparous animals reproduce by laying eggs. The turtle lays its eggs on the beach.",
+   "lang": "en",
+   "file": "en/s/oviparous-animals-reproduce-by-laying-eg-78ced1.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The baby turtle hatches from the egg, outside the mother's body.",
+   "lang": "en",
+   "file": "en/s/the-baby-turtle-hatches-from-the-egg-out-0065be.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Viviparous animals grow inside the mother's body, like a dolphin.",
+   "lang": "en",
+   "file": "en/s/viviparous-animals-grow-inside-the-mothe-a74d51.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Then the baby dolphin is born and swims next to its mother.",
+   "lang": "en",
+   "file": "en/s/then-the-baby-dolphin-is-born-and-swims-0524d7.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Ovoviviparous animals hatch from eggs inside the mother's body, like the great white shark.",
+   "lang": "en",
+   "file": "en/s/ovoviviparous-animals-hatch-from-eggs-in-7d0698.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The baby shark hatches inside its mother, and then it is born.",
+   "lang": "en",
+   "file": "en/s/the-baby-shark-hatches-inside-its-mother-78e01a.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "How does a baby start to grow?",
+   "lang": "en",
+   "file": "en/s/how-does-a-baby-start-to-grow-560978.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The ovaries produce egg cells. An egg cell (ovum) leaves the ovary.",
+   "lang": "en",
+   "file": "en/s/the-ovaries-produce-egg-cells-an-egg-cel-c7ec2c.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The egg cell travels through the fallopian tube.",
+   "lang": "en",
+   "file": "en/s/the-egg-cell-travels-through-the-fallopi-75d050.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Sperm cells travel up to the fallopian tube. One sperm cell fertilises the egg cell.",
+   "lang": "en",
+   "file": "en/s/sperm-cells-travel-up-to-the-fallopian-t-d274a8.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The fertilised egg travels to the uterus.",
+   "lang": "en",
+   "file": "en/s/the-fertilised-egg-travels-to-the-uterus-bbd772.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "In the uterus, the fertilised egg develops into a fetus.",
+   "lang": "en",
+   "file": "en/s/in-the-uterus-the-fertilised-egg-develop-954b75.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "After nine months of pregnancy, the baby is born.",
+   "lang": "en",
+   "file": "en/s/after-nine-months-of-pregnancy-the-baby-61de10.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Where do sperm cells go? (Question 3, page 32)",
+   "lang": "en",
+   "file": "en/s/where-do-sperm-cells-go-question-3-page-4ff8f9.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The testicles produce sperm cells.",
+   "lang": "en",
+   "file": "en/s/the-testicles-produce-sperm-cells-b4293c.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Sperm cells travel through the vas deferens…",
+   "lang": "en",
+   "file": "en/s/sperm-cells-travel-through-the-vas-defer-d8b064.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "…to the seminal vesicles and the prostate. They produce semen.",
+   "lang": "en",
+   "file": "en/s/to-the-seminal-vesicles-and-the-prostate-d4e3dc.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The urethra carries semen out of the body.",
+   "lang": "en",
+   "file": "en/s/the-urethra-carries-semen-out-of-the-bod-3b3f10.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The nerves in my skin receive the information. The message goes through the nerves and the spinal cord to the brain. The brain sends a message to react, and my muscles move my hand away.",
+   "lang": "en",
+   "file": "en/s/the-nerves-in-my-skin-receive-the-inform-fa1b76.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Voluntary actions are actions we decide to do, for example speaking and dancing. Involuntary actions happen automatically, for example the heart pumping and digestion.",
+   "lang": "en",
+   "file": "en/s/voluntary-actions-are-actions-we-decide-760d36.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "I hear the alarm clock with my ears. I open my eyes and see the light. I smell my breakfast. (The nerves send the information to the brain, and the brain tells my muscles to get up.)",
+   "lang": "en",
+   "file": "en/s/i-hear-the-alarm-clock-with-my-ears-i-op-52d343.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Bones give shape and support to our bodies, and they protect some of our organs. For example, the skull protects the brain and the rib cage protects the heart and the lungs.",
+   "lang": "en",
+   "file": "en/s/bones-give-shape-and-support-to-our-bodi-3cc680.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Bones are hard on the outside and like sponges on the inside; they give shape and support. Joints connect bones and allow us to move. Bones: femur, tibia, humerus. Joints: knee, elbow, shoulder.",
+   "lang": "en",
+   "file": "en/s/bones-are-hard-on-the-outside-and-like-s-30f5d8.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The skeletal system and the muscular system. Muscles are connected to bones by tendons. When a muscle contracts it pulls the bone, and the joint lets the bone move.",
+   "lang": "en",
+   "file": "en/s/the-skeletal-system-and-the-muscular-sys-f8aa56.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Muscles work in pairs. When I bend my arm, the biceps contracts and pulls the arm up and the triceps relaxes. When I straighten my arm, the triceps contracts and the biceps relaxes.",
+   "lang": "en",
+   "file": "en/s/muscles-work-in-pairs-when-i-bend-my-arm-032fd3.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Tendons are made of flexible tissue. They connect muscles to bones, so when a muscle contracts the tendon pulls the bone. The largest one is the Achilles tendon.",
+   "lang": "en",
+   "file": "en/s/tendons-are-made-of-flexible-tissue-they-27d62e.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Voluntary muscles move when we decide, for example the biceps or the quadriceps. Involuntary muscles work automatically, for example the heart and the stomach.",
+   "lang": "en",
+   "file": "en/s/voluntary-muscles-move-when-we-decide-fo-48723d.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "In asexual reproduction the organism produces an identical copy of itself. In sexual reproduction two individuals produce a new organism with a mixture of each parent's genes.",
+   "lang": "en",
+   "file": "en/s/in-asexual-reproduction-the-organism-pro-4d91b5.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "Oviparous animals lay eggs, like a turtle. Viviparous animals grow inside the mother's body, like a dolphin. Ovoviviparous animals hatch from eggs inside the mother's body, like a great white shark.",
+   "lang": "en",
+   "file": "en/s/oviparous-animals-lay-eggs-like-a-turtle-573d82.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The ovaries produce egg cells (ova). The fallopian tubes connect the ovaries to the uterus. The uterus is where the fertilised egg develops into a fetus.",
+   "lang": "en",
+   "file": "en/s/the-ovaries-produce-egg-cells-ova-the-fa-abff7f.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "The testicles produce sperm cells. They travel through the vas deferens to the seminal vesicles and the prostate, which produce semen. The urethra carries semen out of the body.",
+   "lang": "en",
+   "file": "en/s/the-testicles-produce-sperm-cells-they-t-ba54e0.mp3",
+   "kind": "sentence"
+  },
+  {
+   "text": "cerebro",
+   "lang": "es",
+   "file": "es/cerebro.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "médula espinal",
+   "lang": "es",
+   "file": "es/medula-espinal.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "nervios",
+   "lang": "es",
+   "file": "es/nervios.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "señal",
+   "lang": "es",
+   "file": "es/senal.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "reaccionar",
+   "lang": "es",
+   "file": "es/reaccionar.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "voluntario",
+   "lang": "es",
+   "file": "es/voluntario.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "involuntario",
+   "lang": "es",
+   "file": "es/involuntario.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "aparato locomotor",
+   "lang": "es",
+   "file": "es/aparato-locomotor.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "esqueleto",
+   "lang": "es",
+   "file": "es/esqueleto.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "huesos",
+   "lang": "es",
+   "file": "es/huesos.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "articulaciones",
+   "lang": "es",
+   "file": "es/articulaciones.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "forma",
+   "lang": "es",
+   "file": "es/forma.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "sostener",
+   "lang": "es",
+   "file": "es/sostener.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "proteger",
+   "lang": "es",
+   "file": "es/proteger.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "cráneo",
+   "lang": "es",
+   "file": "es/craneo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "húmero",
+   "lang": "es",
+   "file": "es/humero.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "caja torácica",
+   "lang": "es",
+   "file": "es/caja-toracica.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "columna vertebral",
+   "lang": "es",
+   "file": "es/columna-vertebral.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "pelvis",
+   "lang": "es",
+   "file": "es/pelvis.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "radio",
+   "lang": "es",
+   "file": "es/radio.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "fémur",
+   "lang": "es",
+   "file": "es/femur.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tibia",
+   "lang": "es",
+   "file": "es/tibia.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "hombro",
+   "lang": "es",
+   "file": "es/hombro.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "codo",
+   "lang": "es",
+   "file": "es/codo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "muñeca",
+   "lang": "es",
+   "file": "es/muneca.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "cadera",
+   "lang": "es",
+   "file": "es/cadera.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "rodilla",
+   "lang": "es",
+   "file": "es/rodilla.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tobillo",
+   "lang": "es",
+   "file": "es/tobillo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "estribo",
+   "lang": "es",
+   "file": "es/estribo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tendón de Aquiles",
+   "lang": "es",
+   "file": "es/tendon-de-aquiles.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "sistema muscular",
+   "lang": "es",
+   "file": "es/sistema-muscular.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "músculos",
+   "lang": "es",
+   "file": "es/musculos.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tendones",
+   "lang": "es",
+   "file": "es/tendones.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "contraer",
+   "lang": "es",
+   "file": "es/contraer.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "relajar",
+   "lang": "es",
+   "file": "es/relajar.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "elástico",
+   "lang": "es",
+   "file": "es/elastico.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "en parejas",
+   "lang": "es",
+   "file": "es/en-parejas.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "trapecio",
+   "lang": "es",
+   "file": "es/trapecio.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "deltoides",
+   "lang": "es",
+   "file": "es/deltoides.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "pectoral",
+   "lang": "es",
+   "file": "es/pectoral.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "bíceps",
+   "lang": "es",
+   "file": "es/biceps.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "tríceps",
+   "lang": "es",
+   "file": "es/triceps.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "abdominales",
+   "lang": "es",
+   "file": "es/abdominales.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "cuádriceps",
+   "lang": "es",
+   "file": "es/cuadriceps.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "reproducirse",
+   "lang": "es",
+   "file": "es/reproducirse.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "asexualmente",
+   "lang": "es",
+   "file": "es/asexualmente.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "sexualmente",
+   "lang": "es",
+   "file": "es/sexualmente.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "genes",
+   "lang": "es",
+   "file": "es/genes.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ovíparo",
+   "lang": "es",
+   "file": "es/oviparo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "vivíparo",
+   "lang": "es",
+   "file": "es/viviparo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ovovivíparo",
+   "lang": "es",
+   "file": "es/ovoviviparo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "embarazo",
+   "lang": "es",
+   "file": "es/embarazo.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "dar a luz",
+   "lang": "es",
+   "file": "es/dar-a-luz.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "ovarios",
+   "lang": "es",
+   "file": "es/ovarios.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "óvulos",
+   "lang": "es",
+   "file": "es/ovulos.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "trompas de Falopio",
+   "lang": "es",
+   "file": "es/trompas-de-falopio.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "útero",
+   "lang": "es",
+   "file": "es/utero.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "cuello uterino",
+   "lang": "es",
+   "file": "es/cuello-uterino.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "vagina",
+   "lang": "es",
+   "file": "es/vagina.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "feto",
+   "lang": "es",
+   "file": "es/feto.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "óvulo fecundado",
+   "lang": "es",
+   "file": "es/ovulo-fecundado.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "testículos",
+   "lang": "es",
+   "file": "es/testiculos.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "espermatozoides",
+   "lang": "es",
+   "file": "es/espermatozoides.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "conducto deferente",
+   "lang": "es",
+   "file": "es/conducto-deferente.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "vesículas seminales",
+   "lang": "es",
+   "file": "es/vesiculas-seminales.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "próstata",
+   "lang": "es",
+   "file": "es/prostata.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "semen",
+   "lang": "es",
+   "file": "es/semen.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "uretra",
+   "lang": "es",
+   "file": "es/uretra.mp3",
+   "kind": "word"
+  },
+  {
+   "text": "pene",
+   "lang": "es",
+   "file": "es/pene.mp3",
+   "kind": "word"
+  }
+ ]
+}

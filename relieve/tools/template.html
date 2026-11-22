@@ -1,0 +1,945 @@
+<title>Misión Relieve</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: atlas de bolsillo — mapa grande a la izquierda, cuaderno de misión a la derecha; colores de grupo = los rotuladores del cuaderno */
+:root{
+  --bg:#edf2f0; --surface:#ffffff; --surface-2:#f5f8f7; --ink:#14232a; --muted:#56686f; --line:#d2dcd9;
+  --sea:#cfe2ea; --sea-ink:#4c7d93; --land:#fbfcf8; --land-other:#e3e8e3; --border:#7f8f8a; --relief:#55625d;
+  --accent:#0e6774; --accent-ink:#ffffff; --accent-soft:#d6ecee;
+  --g-interior:#8b5cf6; --g-rodean:#0aa2c4; --g-exterior:#4caf2f; --g-depresion:#e9488a; --g-pico:#1d2a2f; --g-costa:#f08a1c; --g-rio:#2c78cc;
+  --ok:#1c9150; --ok-soft:#dbf3e4; --bad:#d23640; --bad-soft:#fbe1e2; --gold:#e3a008;
+  --halo:#fbfcf8; --relief-filter:none;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1517; --surface:#152024; --surface-2:#1a272b; --ink:#e6eeed; --muted:#93a6a9; --line:#283a3e;
+  --sea:#11303c; --sea-ink:#7fb3c7; --land:#1f2c2e; --land-other:#172224; --border:#5c6f6c; --relief:#b4c7c1;
+  --accent:#4cc3d0; --accent-ink:#06262b; --accent-soft:#163a3f;
+  --g-interior:#a78bfa; --g-rodean:#2cc3e3; --g-exterior:#74cf52; --g-depresion:#f472b6; --g-pico:#f1f5f4; --g-costa:#ffa24a; --g-rio:#5aa5f0;
+  --ok:#4ad189; --ok-soft:#123a26; --bad:#ff6b73; --bad-soft:#3d1a1d; --gold:#f5c542; --halo:#1f2c2e; --relief-filter:brightness(.68) saturate(.85); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1517; --surface:#152024; --surface-2:#1a272b; --ink:#e6eeed; --muted:#93a6a9; --line:#283a3e;
+  --sea:#11303c; --sea-ink:#7fb3c7; --land:#1f2c2e; --land-other:#172224; --border:#5c6f6c; --relief:#b4c7c1;
+  --accent:#4cc3d0; --accent-ink:#06262b; --accent-soft:#163a3f;
+  --g-interior:#a78bfa; --g-rodean:#2cc3e3; --g-exterior:#74cf52; --g-depresion:#f472b6; --g-pico:#f1f5f4; --g-costa:#ffa24a; --g-rio:#5aa5f0;
+  --ok:#4ad189; --ok-soft:#123a26; --bad:#ff6b73; --bad-soft:#3d1a1d; --gold:#f5c542; --halo:#1f2c2e; --relief-filter:brightness(.68) saturate(.85); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 40px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:14px 10px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.brand svg{flex:none}
+.brand h1{font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
+.brand small{display:block;font-family:var(--f-body);font-weight:400;font-size:.78rem;color:var(--muted);letter-spacing:.02em}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;overflow-x:auto;max-width:100%}
+.tab{border:0;background:none;padding:7px 14px;border-radius:999px;font-weight:700;font-size:.92rem;color:var(--muted);white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.xp{display:flex;align-items:center;gap:10px;font-size:.85rem}
+.xp .lvl{font-weight:700}
+.xp .bar{width:110px;height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.xp .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--g-rodean),var(--g-exterior));width:0;transition:width .6s}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;width:36px;height:36px;display:grid;place-items:center}
+
+/* views */
+.view{padding-top:20px}
+.stage{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:minmax(0,1fr)}}
+
+/* map */
+.mapcard{position:relative;background:var(--sea);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media (min-width:901px){.mapcard{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 84px)}}
+#map{display:block;width:100%;height:auto;aspect-ratio:1000/820;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+#map.zoomed{touch-action:none;cursor:grab}
+.mapctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mapctl button{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:1.1rem;display:grid;place-items:center}
+.maphint{position:absolute;left:12px;top:10px;font-size:.78rem;color:var(--sea-ink);background:color-mix(in srgb,var(--surface) 75%,transparent);padding:3px 9px;border-radius:99px}
+
+.sea-lab{fill:var(--sea-ink);font-family:var(--f-display);font-style:italic;font-size:15px;letter-spacing:.12em;text-anchor:middle;pointer-events:none}
+.country-lab{fill:var(--border);font-family:var(--f-display);font-size:12px;letter-spacing:.3em;text-anchor:middle;pointer-events:none;opacity:.8}
+.land-es{fill:var(--land);stroke:var(--border);stroke-width:1.1;stroke-linejoin:round}
+.land-o{fill:var(--land-other);stroke:var(--border);stroke-width:.8;stroke-linejoin:round}
+.relief-img{filter:var(--relief-filter)}
+.map.flat .relief-img{display:none}
+.map:not(.flat) .relief{display:none}
+.fade-o{fill:var(--land-other);opacity:.62;pointer-events:none}
+.border-es{fill:none;stroke:var(--border);stroke-width:1.1;stroke-linejoin:round;pointer-events:none}
+.map:not(.flat) .land-es{stroke:none}
+.feat .case{fill:none;stroke:var(--halo);stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+.feat.line .case{stroke-width:17}
+.feat.river .case{stroke-width:5;opacity:.7}
+.legend{position:absolute;left:10px;bottom:10px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:1px solid var(--line);border-radius:10px;padding:7px 10px 6px;font-size:.72rem;line-height:1.2;pointer-events:none}
+.legend b{display:block;font-size:.72rem;margin-bottom:4px}
+.legend .ramp{width:170px;height:9px;border-radius:3px;background:linear-gradient(90deg,#aacb8e 0%,#e8e4aa 12%,#deb67a 29%,#c08c5c 47%,#96684e 74%,#806459 88%,#e1dedc 100%);filter:var(--relief-filter)}
+.legend .ticks{position:relative;height:12px;width:170px;color:var(--muted);font-variant-numeric:tabular-nums}
+.legend .ticks span{position:absolute;transform:translateX(-50%);top:2px}
+.map.flat ~ .legend{display:none}
+@media (max-width:520px){.legend{display:none}}
+.relief path{fill:none;stroke:var(--relief);stroke-linecap:round;stroke-linejoin:round;opacity:.2}
+.deco{fill:var(--relief);opacity:.25;font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:.5em;text-anchor:middle;pointer-events:none}
+.inset-frame{fill:var(--sea);stroke:var(--border);stroke-width:1}
+.inset-title{fill:var(--sea-ink);font-size:11px;letter-spacing:.2em;font-family:var(--f-body)}
+
+.feat{cursor:pointer;color:var(--c)}
+.feat .vis{transition:opacity .2s, stroke-width .2s}
+.feat.area .vis{fill:currentColor;fill-opacity:.2;stroke:currentColor;stroke-width:1.6;stroke-dasharray:5 4}
+.feat.line .vis{fill:none;stroke:currentColor;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;opacity:.72}
+.feat.coast .vis{fill:none;stroke:currentColor;stroke-width:8;stroke-linecap:round;stroke-dasharray:2 11;opacity:.95}
+.feat.ring .vis{fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-width:3;stroke-dasharray:2 8;stroke-linecap:round}
+.feat.river .vis{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.feat.peak .vis{fill:currentColor;stroke:var(--halo);stroke-width:1.5}
+.feat .hit{fill:none;stroke:transparent;stroke-linecap:round;stroke-linejoin:round}
+.feat.area .hit,.feat.ring .hit{fill:transparent}
+.feat:hover .vis{opacity:1}
+.feat.line:hover .vis{stroke-width:15}
+.feat.sel .vis{opacity:1;filter:drop-shadow(0 0 4px currentColor)}
+.feat.line.sel .vis{stroke-width:16}
+.feat.river.sel .vis{stroke-width:4.5}
+.feat.peak.sel .vis{transform-box:fill-box;transform-origin:center;transform:scale(1.5)}
+.feat.dim{opacity:.18;pointer-events:none}
+.feat.off{display:none}
+.feat.pulse .vis{animation:pulse 1s ease-in-out infinite}
+.feat.good .vis{color:var(--ok)} .feat.good{color:var(--ok)}
+.feat.wrong{color:var(--bad)}
+@keyframes pulse{50%{opacity:.25}}
+
+.lab{font-family:var(--f-display);font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--halo);stroke-width:3.5px;stroke-linejoin:round;text-anchor:middle;pointer-events:none;font-size:calc(14px * var(--ls,1))}
+.lab.rio{font-family:var(--f-body);font-style:italic;font-weight:400;fill:var(--g-rio);font-size:calc(12px * var(--ls,1))}
+.lab.pico{text-anchor:start;font-size:calc(11px * var(--ls,1));font-weight:500}
+.lab.costa{fill:var(--g-costa);font-size:calc(12px * var(--ls,1))}
+.lab.off{display:none}
+.map.nolabels .lab{display:none}
+.map.quiz .lab:not(.revealed){display:none}
+.map.quiz .deco{display:none}
+
+/* panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.eyebrow{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.panel h2{font-size:1.5rem}
+.muted{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:.86rem;font-weight:700}
+.chip .dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.chip[aria-pressed="false"]{opacity:.5}
+.chip[aria-pressed="true"]{border-color:var(--c, var(--ink))}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink);font-size:1rem}
+.btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+.info{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.info h3{font-size:1.3rem;display:flex;align-items:center;gap:8px}
+.info .grp{font-size:.82rem;font-weight:700;color:var(--c)}
+.fact{background:var(--surface-2);border-left:4px solid var(--c, var(--accent));padding:9px 12px;border-radius:8px;font-size:.95rem}
+
+.unitlist{display:grid;gap:6px;list-style:none;padding:0;margin:0}
+.unitlist button{width:100%;text-align:left;display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px 11px;font-weight:700}
+.unitlist button[aria-current="true"]{border-color:var(--c);box-shadow:inset 0 0 0 1.5px var(--c)}
+.unitlist small{margin-left:auto;color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
+
+/* quiz */
+.qhead{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.qhead .streak{margin-left:auto;font-weight:700;color:var(--g-costa)}
+.progress{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .4s}
+.progress.time i{background:var(--g-costa);transition:width 1s linear}
+.prompt{font-family:var(--f-display);font-size:1.6rem;font-weight:800;line-height:1.15}
+.prompt .ask{display:block;font-family:var(--f-body);font-size:.95rem;font-weight:400;color:var(--muted);margin-bottom:4px}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--surface-2);border-radius:12px;padding:11px 14px;font-weight:700;display:flex;align-items:center;gap:10px}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}
+.opt.no{background:var(--bad-soft);border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.opt kbd{font-family:var(--f-body);font-size:.75rem;border:1px solid var(--line);border-radius:5px;padding:0 6px;color:var(--muted);background:var(--surface)}
+.fb{border-radius:12px;padding:11px 14px;font-weight:700}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.no{background:var(--bad-soft);color:var(--bad)}
+.fb span{display:block;font-weight:400;color:var(--ink);margin-top:2px}
+.order-slots{display:flex;flex-direction:column;gap:6px;counter-reset:o}
+.order-slots div{border:1.5px dashed var(--line);border-radius:10px;padding:8px 12px;min-height:40px;display:flex;align-items:center;gap:10px;font-weight:700;counter-increment:o}
+.order-slots div::before{content:counter(o) "º";color:var(--muted);font-variant-numeric:tabular-nums;width:22px}
+.order-slots div.filled{border-style:solid;background:var(--surface-2)}
+
+.result{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.stars{display:flex;gap:6px}
+.stars svg{width:46px;height:46px}
+.big{font-family:var(--f-display);font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+
+/* ruta */
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:22px;align-items:end;padding-block:12px 22px}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero h2{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:800;letter-spacing:-.02em}
+.hero h2 em{font-style:normal;background:linear-gradient(transparent 58%, color-mix(in srgb,var(--g-exterior) 45%,transparent) 0)}
+.hero p{max-width:60ch;color:var(--muted);font-size:1.05rem}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.plan ol{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}
+.plan li{display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:baseline;font-size:.95rem}
+.plan li b{font-family:var(--f-display);color:var(--accent)}
+.path{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.mcard{width:100%;height:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px;position:relative}
+.mcard:hover{border-color:var(--ink)}
+.mcard .num{font-family:var(--f-display);font-weight:800;font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.mcard h3{font-size:1.2rem}
+.mcard p{margin:0;color:var(--muted);font-size:.92rem}
+.mcard .swatches{display:flex;gap:4px;margin-top:auto;padding-top:6px;align-items:center}
+.mcard .swatches i{width:22px;height:6px;border-radius:4px;background:var(--c)}
+.mcard .st{margin-left:auto;display:flex;gap:2px}
+.mcard .st svg{width:18px;height:18px}
+.mcard.next{border:2px solid var(--accent)}
+.mcard.next::after{content:"Siguiente";position:absolute;top:12px;right:12px;font-size:.72rem;font-weight:700;background:var(--accent);color:var(--accent-ink);border-radius:99px;padding:2px 9px}
+.section-h{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px}
+.section-h h2{font-size:1.4rem}
+.tips{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.tip{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:var(--r);padding:14px}
+.tip b{font-family:var(--f-display);font-size:1.15rem;display:block;margin-bottom:4px}
+.tip p{margin:0;font-size:.93rem;color:var(--muted)}
+.tip .mn{font-family:var(--f-display);font-weight:700;color:var(--ink);font-size:1.02rem;margin-top:6px}
+.tip .mn u{text-decoration-color:var(--c);text-decoration-thickness:3px;text-underline-offset:2px}
+
+/* retos */
+.modes{display:grid;gap:8px}
+.mode{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:12px}
+.mode:hover{border-color:var(--ink)}
+.mode b{display:block;font-family:var(--f-display);font-size:1.08rem}
+.mode small{color:var(--muted)}
+.mode .rec{margin-left:auto;font-size:.8rem;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mode .ico{width:38px;height:38px;border-radius:10px;background:var(--c);display:grid;place-items:center;flex:none;color:#fff}
+
+/* paisajes */
+.theory{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.tcard{grid-column:span 6;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;min-width:0}
+.tcard.wide{grid-column:span 12}
+.tcard.third{grid-column:span 4}
+@media (max-width:820px){.tcard,.tcard.third{grid-column:span 12}}
+.tcard h3{font-size:1.25rem;margin-bottom:8px}
+.def{font-size:1.25rem;font-family:var(--f-display);font-weight:500;line-height:1.35;max-width:62ch}
+.def mark{background:none;box-shadow:inset 0 -.45em 0 color-mix(in srgb,var(--g-depresion) 30%,transparent);color:inherit}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.twocol{grid-template-columns:1fr}}
+.twocol h4{margin:0 0 6px;font-size:.95rem}
+.twocol ul{margin:0;padding-left:18px;font-size:.95rem}
+.scheme{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:820px){.scheme{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.scheme div{border-radius:12px;padding:12px;background:color-mix(in srgb,var(--c) 13%,var(--surface));border:1.5px solid color-mix(in srgb,var(--c) 50%,transparent)}
+.scheme h4{margin:0 0 6px;font-family:var(--f-display);font-size:1rem}
+.scheme ul{margin:0;padding-left:16px;font-size:.92rem}
+
+.toast{opacity:0;visibility:hidden;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%) translateY(120%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;transition:transform .3s;z-index:20;max-width:calc(100% - 32px)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true"><rect width="38" height="38" rx="10" fill="var(--ink)"/><path d="M5 29 L14 14 L19 21 L24 12 L33 29 Z" fill="var(--bg)"/><path d="M5 29 L33 29" stroke="var(--g-exterior)" stroke-width="3"/><path d="M21.5 16.5 L24 12 L26.5 16.5" fill="var(--g-rodean)"/></svg>
+      <h1>Misión Relieve<small>Paisajes y relieve de España · 5.º Primaria</small></h1>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button class="tab" role="tab" data-view="ruta">Ruta</button>
+      <button class="tab" role="tab" data-view="mapa">Mapa</button>
+      <button class="tab" role="tab" data-view="retos">Retos</button>
+      <button class="tab" role="tab" data-view="paisajes">Apuntes</button>
+    </nav>
+    <div class="xp" aria-live="polite">
+      <div><div class="lvl" id="lvlName">Aprendiz de mapas</div><div class="muted" id="xpText">0 XP</div></div>
+      <div class="bar"><i id="xpBar"></i></div>
+      <button class="iconbtn" id="soundBtn" aria-label="Sonido" title="Sonido"></button>
+    </div>
+  </header>
+
+  <!-- RUTA -->
+  <section class="view" id="v-ruta" hidden>
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Tema 2 · Conocer y cuidar el relieve más cercano</div>
+        <h2>Aprende el relieve de España <em>tocando el mapa</em></h2>
+        <p>Nueve misiones, de la definición de paisaje al gran examen. En cada misión primero exploras el mapa y luego practicas. Ganas XP, estrellas y subes de nivel.</p>
+        <div class="row" style="margin-top:14px"><button class="btn" id="continueBtn">Empezar</button><button class="btn ghost" data-go="mapa">Explorar el mapa libre</button></div>
+      </div>
+      <div class="plan">
+        <div class="eyebrow">Plan de estudio en 5 días · 20 minutos al día</div>
+        <ol>
+          <li><b>Día 1</b><span>Misiones 1 y 2: qué es un paisaje y sus tipos.</span></li>
+          <li><b>Día 2</b><span>Misiones 3 y 4: la Meseta y lo que la rodea.</span></li>
+          <li><b>Día 3</b><span>Misión 5: unidades exteriores y depresiones.</span></li>
+          <li><b>Día 4</b><span>Misiones 6, 7 y 8: picos, ríos y costas.</span></li>
+          <li><b>Día 5</b><span>Repasa tus fallos en Retos y haz el gran examen.</span></li>
+        </ol>
+      </div>
+    </div>
+    <ol class="path" id="missionList"></ol>
+
+    <div class="section-h"><h2>Trucos para recordar</h2><span class="muted">Los colores son los de tus rotuladores</span></div>
+    <div class="tips">
+      <div class="tip" style="--c:var(--g-interior)"><b>Dentro de la Meseta</b><p>El Sistema Central la parte en dos: la Submeseta Norte y la Sur. En la Sur están los Montes de Toledo.</p><div class="mn">Una tarta partida en dos, con una vela (Toledo) en la mitad de abajo.</div></div>
+      <div class="tip" style="--c:var(--g-rodean)"><b>La rodean</b><p>Como las agujas del reloj, empezando por el noroeste.</p><div class="mn">Un <u>León</u> <u>Canta</u> <u>Ibérico</u> y <u>Moreno</u>.</div></div>
+      <div class="tip" style="--c:var(--g-exterior)"><b>Fuera de la Meseta</b><p>Galaico, Vascos, Pirineos, Costero-Catalana y Béticos, dando la vuelta.</p><div class="mn"><u>Ga</u>tos <u>Va</u>scos <u>Pi</u>ntan <u>Ca</u>sas <u>Bé</u>llas.</div></div>
+      <div class="tip" style="--c:var(--g-depresion)"><b>Depresiones</b><p>Zonas bajas por donde pasa un gran río que les da nombre: el Ebro y el Guadalquivir.</p><div class="mn">Depresión = valle grande con río.</div></div>
+      <div class="tip" style="--c:var(--g-pico)"><b>Las tres cumbres</b><p>Teide 3.718 m, Mulhacén 3.478 m, Aneto 3.404 m.</p><div class="mn"><u>T</u>res <u>M</u>ontañas <u>A</u>ltas: T &gt; M &gt; A.</div></div>
+    </div>
+  </section>
+
+  <!-- MAPA + RETOS share the stage -->
+  <section class="view" id="v-stage" hidden>
+    <div class="stage">
+      <div class="mapcard">
+        <svg id="map" class="map" viewBox="0 0 1000 820" role="img" aria-label="Mapa del relieve de España"></svg>
+        <div class="legend" aria-hidden="true"><b>Alturas (m)</b><div class="ramp"></div><div class="ticks"><span style="left:0%;transform:none">0</span><span style="left:29%">1.000</span><span style="left:74%">2.500</span><span style="left:100%;transform:translateX(-100%)">+</span></div></div>
+        <div class="maphint" id="mapHint">Toca una unidad del relieve</div>
+        <div class="mapctl">
+          <button id="zin" aria-label="Acercar">+</button>
+          <button id="zout" aria-label="Alejar">−</button>
+          <button id="zreset" aria-label="Ver todo el mapa" title="Ver todo"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+        </div>
+      </div>
+      <aside class="panel" id="panel" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <!-- APUNTES -->
+  <section class="view" id="v-paisajes" hidden>
+    <div class="theory">
+      <div class="tcard wide">
+        <div class="eyebrow">Jueves 12 de noviembre · El paisaje</div>
+        <p class="def">El paisaje es <mark>la parte de la superficie terrestre que podemos ver desde un lugar determinado.</mark></p>
+      </div>
+      <div class="tcard">
+        <h3>Se forma por…</h3>
+        <div class="twocol">
+          <div><h4 style="color:var(--g-exterior)">Elementos naturales</h4><p class="muted" style="margin:0 0 6px;font-size:.9rem">No los introduce el ser humano.</p><ul><li><b>Relieve</b>: formas del terreno (montañas, mesetas, valles…)</li><li><b>Agua</b>: mares, ríos, océanos…</li><li><b>Clima</b>: lluvia, nieve…</li><li><b>Flora y fauna</b>: plantas y animales</li></ul></div>
+          <div><h4 style="color:var(--g-depresion)">Elementos humanizados</h4><p class="muted" style="margin:0 0 6px;font-size:.9rem">Los introduce el ser humano.</p><ul><li>Puentes</li><li>Edificios</li><li>Carreteras</li><li>Campos de cultivo</li></ul></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <h3>Tipos de paisaje</h3>
+        <div class="twocol">
+          <div><h4>Según sus elementos</h4><ul><li><b>Natural</b>: resultado de la relación de los elementos naturales.</li><li><b>Artificial o humanizado</b>: el paisaje natural transformado por las personas.</li></ul></div>
+          <div><h4>Según la cercanía del mar</h4><ul><li><b>De interior</b>: lejos del mar; de llanura o de montaña.</li><li><b>De costa</b>: cerca del mar.</li></ul></div>
+        </div>
+      </div>
+      <div class="tcard wide">
+        <div class="eyebrow">Martes 17 de noviembre · Paisajes del interior de nuestro país</div>
+        <p class="def" style="font-size:1.1rem;margin:.4em 0 1em">La <mark>Meseta Central</mark> es una gran llanura elevada situada en el centro de la Península Ibérica. El relieve de España se completa con diferentes sistemas montañosos:</p>
+        <div class="scheme">
+          <div style="--c:var(--g-interior)"><h4>Interior de la Meseta</h4><ul><li>Sistema Central</li><li>Submeseta Norte</li><li>Submeseta Sur</li><li>Montes de Toledo</li></ul></div>
+          <div style="--c:var(--g-rodean)"><h4>Rodean la Meseta</h4><ul><li>Montes de León</li><li>Cordillera Cantábrica</li><li>Sistema Ibérico · Moncayo 2.313 m</li><li>Sierra Morena</li></ul></div>
+          <div style="--c:var(--g-exterior)"><h4>Exteriores a la Meseta</h4><ul><li>Macizo Galaico</li><li>Montes Vascos</li><li>Pirineos · Aneto 3.404 m</li><li>Cordillera Costero-Catalana</li><li>Cordilleras Béticas · Mulhacén 3.478 m</li></ul></div>
+          <div style="--c:var(--g-depresion)"><h4>Depresiones exteriores</h4><ul><li>Depresión del Ebro</li><li>Depresión del Guadalquivir</li></ul></div>
+        </div>
+        <p class="muted" style="margin:12px 0 0">Y en Canarias, el <b>Teide (3.718 m)</b>: el pico más alto de España.</p>
+      </div>
+      <div class="tcard third"><h3>Paisajes de costa</h3><p style="margin:0 0 6px"><b style="color:var(--g-costa)">Atlántica</b>: cantábrica, gallega, andaluza y Canarias.</p><p style="margin:0"><b style="color:var(--g-costa)">Mediterránea</b>: del sur, del este y Baleares.</p></div>
+      <div class="tcard third"><h3>Hidrografía: vertientes</h3><p style="margin:0">Los ríos desembocan en una vertiente: <b>Cantábrica</b>, <b>Atlántica</b> o <b>Mediterránea</b>. Baleares y Canarias tienen sus propios ríos cortos.</p></div>
+      <div class="tcard third"><h3>Tecnología en geografía</h3><p style="margin:0">Mapas físicos, <b>TIG</b> (Tecnologías de la Información Geográfica, como los satélites y el GPS) y aplicaciones prácticas, como esta.</p></div>
+      <div class="tcard wide row" style="justify-content:space-between"><span class="def" style="font-size:1.1rem">¿Lo tienes? Ponte a prueba.</span><div class="row"><button class="btn" data-mission="m1">Misión 1: El paisaje</button><button class="btn ghost" data-mission="m2">Misión 2: Tipos</button></div></div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script>
+const D = /*MAPDATA*/null;
+const W = D.W, H = D.H, INSET = {x:W-D.canarias.W-12, y:H-D.canarias.H-12};
+
+/* ---------- datos ---------- */
+const GROUPS = {
+  interior:{name:'Interior de la Meseta', short:'Interior', c:'var(--g-interior)'},
+  rodean:{name:'Rodean la Meseta', short:'Rodean', c:'var(--g-rodean)'},
+  exterior:{name:'Exteriores a la Meseta', short:'Exteriores', c:'var(--g-exterior)'},
+  depresion:{name:'Depresiones exteriores', short:'Depresiones', c:'var(--g-depresion)'},
+  pico:{name:'Picos', short:'Picos', c:'var(--g-pico)'},
+  rio:{name:'Ríos', short:'Ríos', c:'var(--g-rio)'},
+  costa:{name:'Costas', short:'Costas', c:'var(--g-costa)'}
+};
+const RELIEF4 = ['interior','rodean','exterior','depresion'];
+const seaOf = v => v==='Mediterránea'?'el mar Mediterráneo':v==='Cantábrica'?'el mar Cantábrico':'el océano Atlántico';
+const F = [...D.features, ...D.rivers.map(r=>({...r, g:'rio', k:'river', info:`Desemboca en ${seaOf(r.v)}. Pertenece a la vertiente ${r.v.toLowerCase()}.`}))];
+F.find(f=>f.id==='ebro').dato='Es el río más caudaloso de España y forma un delta al llegar al mar.';
+F.find(f=>f.id==='tajo').dato='Es el río más largo de la Península: desemboca en Lisboa (Portugal).';
+F.find(f=>f.id==='guadalquivir').dato='Pasa por Córdoba y Sevilla. Barcos grandes pueden subir hasta Sevilla.';
+F.find(f=>f.id==='duero').dato='Atraviesa la Submeseta Norte y muchas ciudades de Castilla y León.';
+F.find(f=>f.id==='mino').dato='Hace de frontera entre Galicia y Portugal al final de su recorrido.';
+const byId = Object.fromEntries(F.map(f=>[f.id,f]));
+const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a };
+const pick = (a,n) => shuffle(a).slice(0,n);
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- progreso ---------- */
+const store = {
+  get(){ try{ return JSON.parse(localStorage.getItem('mision-relieve')||'null') }catch(e){ return null } },
+  set(v){ try{ localStorage.setItem('mision-relieve', JSON.stringify(v)) }catch(e){} }
+};
+const P = Object.assign({xp:0, stars:{}, best:{}, fallos:[], sound:true}, store.get()||{});
+const save = () => store.set(P);
+const LEVELS = [[0,'Aprendiz de mapas'],[120,'Excursionista'],[320,'Montañista'],[650,'Guía de cumbres'],[1100,'Leyenda del relieve']];
+function renderXP(){
+  let i = LEVELS.findLastIndex(l=>P.xp>=l[0]);
+  const cur = LEVELS[i], nxt = LEVELS[i+1];
+  $('#lvlName').textContent = cur[1];
+  $('#xpText').textContent = nxt ? `${P.xp} / ${nxt[0]} XP` : `${P.xp} XP · nivel máximo`;
+  $('#xpBar').style.width = nxt ? ((P.xp-cur[0])/(nxt[0]-cur[0])*100)+'%' : '100%';
+}
+function addXP(n){
+  const before = LEVELS.findLastIndex(l=>P.xp>=l[0]);
+  P.xp += n; save(); renderXP();
+  const after = LEVELS.findLastIndex(l=>P.xp>=l[0]);
+  if(after>before){ toast(`¡Subes de nivel! Ahora eres ${LEVELS[after][1]}`); confetti(); sfx('level') }
+}
+
+/* ---------- sonido ---------- */
+let AC=null;
+function sfx(kind){
+  if(!P.sound) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    const seq = {ok:[[660,.08],[880,.12]], no:[[220,.18]], level:[[523,.1],[659,.1],[784,.1],[1047,.25]], done:[[392,.1],[523,.1],[659,.2]]}[kind];
+    let t = AC.currentTime;
+    for(const [f,d] of seq){
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type = kind==='no'?'sawtooth':'triangle'; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.12,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.connect(g).connect(AC.destination); o.start(t); o.stop(t+d+.02); t+=d*.9;
+    }
+  }catch(e){}
+}
+function renderSound(){
+  $('#soundBtn').innerHTML = P.sound
+    ? '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+    : '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  $('#soundBtn').setAttribute('aria-pressed', P.sound);
+}
+$('#soundBtn').onclick = () => { P.sound=!P.sound; save(); renderSound(); sfx('ok') };
+
+/* ---------- mapa ---------- */
+function curve(pts, closed){
+  const p = closed ? [pts[pts.length-1], ...pts, pts[0], pts[1]] : [pts[0], ...pts, pts[pts.length-1]];
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  const n = closed ? pts.length : pts.length-1;
+  for(let i=1;i<=n;i++){
+    const p0=p[i-1],p1=p[i],p2=p[i+1],p3=p[i+2];
+    const c1=[p1[0]+(p2[0]-p0[0])/6, p1[1]+(p2[1]-p0[1])/6], c2=[p2[0]-(p3[0]-p1[0])/6, p2[1]-(p3[1]-p1[1])/6];
+    d += `C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0]},${p2[1]}`;
+  }
+  return d + (closed?'Z':'');
+}
+function featSVG(f){
+  const c = GROUPS[f.g].c;
+  let vis='', hit='';
+  if(f.k==='peak'){
+    const [x,y]=f.at, s=f.id==='teide'?8:8;
+    vis = `<path class="vis" d="M${x},${y-s} L${x+s},${y+s*.75} L${x-s},${y+s*.75} Z"/>`;
+    hit = `<circle class="hit" cx="${x}" cy="${y}" r="17" fill="transparent"/>`;
+  } else {
+    const closed = f.k==='area'||f.k==='ring', d = curve(f.pts, closed);
+    const hw = {line:30, coast:26, ring:22, area:4, river:18}[f.k];
+    vis = (f.k==='line'||f.k==='river'?`<path class="case" d="${d}"/>`:'') + `<path class="vis" d="${d}"/>`;
+    hit = `<path class="hit" d="${d}" stroke-width="${hw}"/>`;
+  }
+  return `<g class="feat ${f.k}" data-id="${f.id}" data-g="${f.g}" style="--c:${c}">${vis}${hit}</g>`;
+}
+function labSVG(f){
+  let x,y,t=f.name, cls='lab';
+  if(f.k==='peak'){ [x,y]=f.at; x+=11; y+=4; t=`${f.name} ${fmt(f.alt)} m`; cls+=' pico' }
+  else { [x,y]=f.lab; if(f.k==='river') cls+=' rio'; if(f.g==='costa') cls+=' costa' }
+  return `<text class="${cls}" data-for="${f.id}" x="${x}" y="${y}">${esc(t)}</text>`;
+}
+function buildMap(){
+  const main = F.filter(f=>!f.inset), ins = F.filter(f=>f.inset);
+  const order = ['area','ring','river','coast','line','peak'];
+  const sortK = a => [...a].sort((p,q)=>order.indexOf(p.k)-order.indexOf(q.k));
+  const L = D.land;
+  const seas = D.seas.map(s=>`<text class="${s.country?'country-lab':'sea-lab'}" x="${s.at[0]}" y="${s.at[1]}" ${s.rot?`transform="rotate(${s.rot} ${s.at[0]} ${s.at[1]})"`:''}>${s.name}</text>`).join('');
+  const relief = F.filter(f=>f.k==='line').map(f=>`<path d="${curve(f.pts)}" stroke-width="${f.g==='exterior'&&['pirineos','sistemas-beticos'].includes(f.id)?42:32}"/>`).join('');
+  $('#map').innerHTML = `
+    <defs><filter id="blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter></defs>
+    <rect width="${W}" height="${H}" fill="var(--sea)"/>
+    <clipPath id="landclip">${Object.values(L).map(d=>`<path d="${d}"/>`).join('')}</clipPath>
+    <clipPath id="canclip"><path d="${D.canarias.path}"/></clipPath>
+    <g>${['france','andorra','portugal','morocco','algeria'].map(k=>`<path class="land-o" d="${L[k]}"/>`).join('')}<path class="land-es" d="${L.spain}"/></g>
+    <image class="relief-img" href="${D.relief}" x="0" y="0" width="${W}" height="${H}" clip-path="url(#landclip)" preserveAspectRatio="none"/>
+    <g>${['france','andorra','portugal','morocco','algeria'].map(k=>`<path class="fade-o" d="${L[k]}"/>`).join('')}<path class="border-es" d="${L.spain}"/></g>
+    <g class="relief" filter="url(#blur)">${relief}</g>
+    ${seas}
+    <g id="feats">${sortK(main).map(featSVG).join('')}</g>
+    <g transform="translate(${INSET.x},${INSET.y})" id="inset">
+      <rect class="inset-frame" width="${D.canarias.W}" height="${D.canarias.H}" rx="8"/>
+      <text class="inset-title" x="12" y="20">ISLAS CANARIAS</text>
+      <path class="land-es" d="${D.canarias.path}"/>
+      <image class="relief-img" href="${D.reliefCan}" width="${D.canarias.W}" height="${D.canarias.H}" clip-path="url(#canclip)" preserveAspectRatio="none"/>
+      <path class="border-es" d="${D.canarias.path}"/>
+      ${sortK(ins).map(featSVG).join('')}
+      ${ins.map(labSVG).join('')}
+    </g>
+    <g id="labs">${main.map(labSVG).join('')}</g>`;
+}
+
+/* visibility / state helpers */
+const svgEl = () => $('#map');
+const featEl = id => svgEl().querySelector(`.feat[data-id="${id}"]`);
+const labEl = id => svgEl().querySelector(`.lab[data-for="${id}"]`);
+function setVisible(groups){
+  svgEl().querySelectorAll('.feat').forEach(e=>e.classList.toggle('off', !groups.includes(e.dataset.g)));
+  svgEl().querySelectorAll('.lab').forEach(e=>e.classList.toggle('off', !groups.includes(byId[e.dataset.for].g)));
+}
+function clearMarks(){
+  svgEl().querySelectorAll('.feat').forEach(e=>e.classList.remove('sel','dim','pulse','good','wrong'));
+  svgEl().querySelectorAll('.lab.revealed').forEach(e=>e.classList.remove('revealed'));
+}
+function select(id){
+  svgEl().querySelectorAll('.feat.sel').forEach(e=>e.classList.remove('sel'));
+  if(id){ const e=featEl(id); if(e){ e.classList.add('sel'); e.parentNode.appendChild(e) } }
+}
+
+/* zoom & pan via viewBox */
+let vb={x:0,y:0,w:W,h:H}, anim=null;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function applyVB(){
+  const m=svgEl(); m.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+  m.style.setProperty('--ls', (0.5+0.5*vb.w/W).toFixed(3));
+  m.classList.toggle('zoomed', vb.w<W-1);
+}
+function clampVB(v){
+  const w=Math.min(W,Math.max(W/6,v.w)), h=w*H/W;
+  return {w,h,x:Math.min(W-w,Math.max(0,v.x)), y:Math.min(H-h,Math.max(0,v.y))};
+}
+function animateVB(t){
+  t=clampVB(t); cancelAnimationFrame(anim);
+  if(reduced){ vb=t; applyVB(); return }
+  const s={...vb}, t0=performance.now();
+  const step=now=>{ const k=Math.min(1,(now-t0)/350), e=1-Math.pow(1-k,3);
+    vb={x:s.x+(t.x-s.x)*e,y:s.y+(t.y-s.y)*e,w:s.w+(t.w-s.w)*e,h:s.h+(t.h-s.h)*e}; applyVB();
+    if(k<1) anim=requestAnimationFrame(step) };
+  anim=requestAnimationFrame(step);
+}
+function zoomBy(f,cx,cy){
+  cx ??= vb.x+vb.w/2; cy ??= vb.y+vb.h/2;
+  const w=vb.w*f, h=w*H/W;
+  animateVB({x:cx-(cx-vb.x)*f, y:cy-(cy-vb.y)*f, w, h});
+}
+function zoomTo(ids){
+  if(!ids || !ids.length){ animateVB({x:0,y:0,w:W,h:H}); return }
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  for(const id of ids){ const f=byId[id]; let pts = f.pts || [f.at];
+    if(f.inset) pts = pts.map(([x,y])=>[x+INSET.x,y+INSET.y]);
+    for(const [x,y] of pts){ x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y) } }
+  const pad=90, w=Math.max((x1-x0)+pad*2,((y1-y0)+pad*2)*W/H, W/2.2);
+  animateVB({x:(x0+x1)/2-w/2, y:(y0+y1)/2-w*H/W/2, w, h:w*H/W});
+}
+const toSvg = (clientX,clientY) => { const r=svgEl().getBoundingClientRect(); return [vb.x+(clientX-r.left)/r.width*vb.w, vb.y+(clientY-r.top)/r.height*vb.h] };
+let onTap = null;
+(function initPointer(){
+  const m=svgEl(), ptrs=new Map(); let start=null, moved=false, pinch=null;
+  m.addEventListener('pointerdown',e=>{
+    ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ptrs.size===1){ start={x:e.clientX,y:e.clientY,vb:{...vb},target:e.target}; moved=false }
+    if(ptrs.size===2){ const [a,b]=[...ptrs.values()]; pinch={d:Math.hypot(a.x-b.x,a.y-b.y), vb:{...vb}, c:toSvg((a.x+b.x)/2,(a.y+b.y)/2)}; moved=true }
+  });
+  m.addEventListener('pointermove',e=>{
+    if(!ptrs.has(e.pointerId)) return;
+    ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pinch && ptrs.size===2){ const [a,b]=[...ptrs.values()]; const f=pinch.d/Math.max(20,Math.hypot(a.x-b.x,a.y-b.y));
+      const w=pinch.vb.w*f; vb=clampVB({x:pinch.c[0]-(pinch.c[0]-pinch.vb.x)*f, y:pinch.c[1]-(pinch.c[1]-pinch.vb.y)*f, w, h:w*H/W}); applyVB(); return }
+    if(!start) return;
+    const dx=e.clientX-start.x, dy=e.clientY-start.y;
+    if(Math.hypot(dx,dy)>6) moved=true;
+    if(moved && vb.w<W-1){ const r=m.getBoundingClientRect(), k=vb.w/r.width; vb=clampVB({...start.vb, x:start.vb.x-dx*k, y:start.vb.y-dy*k}); applyVB() }
+  });
+  const end=e=>{
+    const wasTap = start && !moved && ptrs.size===1 && e.type==='pointerup';
+    ptrs.delete(e.pointerId); if(ptrs.size<2) pinch=null;
+    if(wasTap){ const g=start.target.closest && start.target.closest('.feat'); if(onTap) onTap(g?g.dataset.id:null) }
+    if(ptrs.size===0) start=null;
+  };
+  m.addEventListener('pointerup',end); m.addEventListener('pointercancel',end); m.addEventListener('pointerleave',e=>{ if(e.pointerType==='mouse') { ptrs.delete(e.pointerId); start=null } });
+  m.addEventListener('wheel',e=>{ e.preventDefault(); const [cx,cy]=toSvg(e.clientX,e.clientY); const f=e.deltaY>0?1.2:1/1.2; const w=vb.w*f; vb=clampVB({x:cx-(cx-vb.x)*f,y:cy-(cy-vb.y)*f,w,h:w*H/W}); applyVB() },{passive:false});
+  $('#zin').onclick=()=>zoomBy(1/1.5); $('#zout').onclick=()=>zoomBy(1.5); $('#zreset').onclick=()=>zoomTo(null);
+})();
+
+/* ---------- vistas ---------- */
+let view='ruta';
+function go(v, opts={}){
+  view=v;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected', t.dataset.view===(v==='mision'?'ruta':v)));
+  $('#v-ruta').hidden = v!=='ruta'; $('#v-paisajes').hidden = v!=='paisajes';
+  $('#v-stage').hidden = !['mapa','retos','mision'].includes(v);
+  if(timer){ clearInterval(timer); timer=null }
+  if(v==='ruta') renderRuta();
+  if(v==='mapa') renderExplore();
+  if(v==='retos') renderRetos();
+  if(!opts.keepHash){ try{ history.replaceState(null,'',v==='ruta'?location.pathname+location.search:'#'+v) }catch(e){} }
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>go(t.dataset.view));
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+document.querySelectorAll('[data-mission]').forEach(b=>b.onclick=()=>startMission(b.dataset.mission));
+
+/* ---------- explorar ---------- */
+let exploreGroups = [...RELIEF4,'pico'], exploreLabels=true, exploreSel=null, exploreRelief=true;
+function renderExplore(){
+  const m=svgEl(); m.classList.remove('quiz'); m.classList.toggle('nolabels',!exploreLabels); m.classList.toggle('flat',!exploreRelief);
+  clearMarks(); setVisible(exploreGroups); select(exploreSel);
+  $('#mapHint').textContent='Toca una unidad del relieve';
+  onTap = id => { exploreSel=id; select(id); renderExplore(); };
+  const f = exploreSel && byId[exploreSel];
+  const peaksOf = f ? F.filter(p=>p.g==='pico' && p.unit && p.unit.startsWith(f.name)) : [];
+  $('#panel').innerHTML = `
+    <div><div class="eyebrow">Mapa libre</div><h2>Explora el relieve</h2></div>
+    <div class="chips" role="group" aria-label="Capas">
+      ${Object.entries(GROUPS).map(([k,g])=>`<button class="chip" data-layer="${k}" aria-pressed="${exploreGroups.includes(k)}" style="--c:${g.c}"><span class="dot"></span>${g.short}</button>`).join('')}
+    </div>
+    <div class="row">
+      <button class="chip" id="labBtn" aria-pressed="${exploreLabels}">Nombres</button>
+      <button class="chip" id="relBtn" aria-pressed="${exploreRelief}">Alturas</button>
+      <button class="chip" id="allBtn" aria-pressed="true">Todo</button>
+      <button class="chip" id="onlyRelief" aria-pressed="true">Solo relieve</button>
+    </div>
+    <p class="muted" style="margin:0;font-size:.92rem">Los colores son alturas reales: verde, lo bajo; marrón, las montañas. Consejo: quita los nombres y di en voz alta qué es cada cosa, como en un mapa mudo.</p>
+    ${f ? `<div class="info" style="--c:${GROUPS[f.g].c}">
+        <span class="grp">${GROUPS[f.g].name}${f.sub?` · ${f.sub}`:''}${f.v?` · vertiente ${f.v.toLowerCase()}`:''}</span>
+        <h3>${f.k==='peak'?'':`<span class="dot"></span>`}${esc(f.name)}${f.alt?` · ${fmt(f.alt)} m`:''}</h3>
+        ${f.unit?`<div class="muted">${esc(f.unit)}</div>`:''}
+        <p style="margin:0">${esc(f.info)}</p>
+        ${f.dato?`<div class="fact"><b>¿Sabías que…?</b> ${esc(f.dato)}</div>`:''}
+        ${peaksOf.length?`<div class="row">${peaksOf.map(p=>`<button class="chip" data-sel="${p.id}" style="--c:var(--g-pico)">▲ ${p.name} ${fmt(p.alt)} m</button>`).join('')}</div>`:''}
+      </div>` : `<div class="info"><p class="muted" style="margin:0">Toca cualquier cordillera, depresión, río, costa o pico para ver su ficha.</p>
+      <ul class="unitlist">${RELIEF4.map(g=>`<li><button data-layer-only="${g}" style="--c:${GROUPS[g].c}"><span class="dot"></span>${GROUPS[g].name}<small>${F.filter(x=>x.g===g).length}</small></button></li>`).join('')}</ul></div>`}`;
+  $('#panel').querySelectorAll('[data-layer]').forEach(b=>b.onclick=()=>{ const k=b.dataset.layer; exploreGroups = exploreGroups.includes(k)?exploreGroups.filter(x=>x!==k):[...exploreGroups,k]; renderExplore() });
+  $('#labBtn').onclick=()=>{ exploreLabels=!exploreLabels; renderExplore() };
+  $('#relBtn').onclick=()=>{ exploreRelief=!exploreRelief; renderExplore() };
+  $('#allBtn').onclick=()=>{ exploreGroups=Object.keys(GROUPS); renderExplore() };
+  $('#onlyRelief').onclick=()=>{ exploreGroups=[...RELIEF4,'pico']; renderExplore() };
+  $('#panel').querySelectorAll('[data-sel]').forEach(b=>b.onclick=()=>{ exploreSel=b.dataset.sel; if(!exploreGroups.includes('pico')) exploreGroups.push('pico'); renderExplore() });
+  $('#panel').querySelectorAll('[data-layer-only]').forEach(b=>b.onclick=()=>{ exploreGroups=[b.dataset.layerOnly]; renderExplore(); zoomTo(F.filter(x=>x.g===b.dataset.layerOnly).map(x=>x.id)) });
+}
+
+/* ---------- generadores de preguntas ---------- */
+const relief = () => F.filter(f=>RELIEF4.includes(f.g));
+function qLocate(f){ return {t:'locate', id:f.id} }
+function qIdentify(f, pool){ const same = pool.filter(x=>x.id!==f.id && x.k===f.k); const others = pool.filter(x=>x.id!==f.id);
+  const d = pick(same.length>=3?same:others,3); return {t:'identify', id:f.id, opts:shuffle([f,...d]).map(x=>x.id)} }
+function qGroup(f){ return {t:'group', id:f.id} }
+const mc = (q, opts, a, why) => ({t:'mc', q, opts, a, why});
+function mapSet(groups, nLoc, nId){
+  const pool=F.filter(f=>groups.includes(f.g));
+  return [...pick(pool,nLoc).map(qLocate), ...pick(pool,nId).map(f=>qIdentify(f,pool))];
+}
+const ELEMENTS = [['Las montañas','Natural'],['Los ríos','Natural'],['Los puentes','Humanizado'],['Los edificios','Humanizado'],['Las carreteras','Humanizado'],['Los campos de cultivo','Humanizado'],['La lluvia y la nieve','Natural'],['Las plantas y los animales','Natural'],['El mar','Natural'],['Los valles','Natural'],['Un túnel','Humanizado'],['Un embalse','Humanizado']];
+const GEN = {
+  m1: () => shuffle([
+    mc('¿Qué es el paisaje?', ['La parte de la superficie terrestre que podemos ver desde un lugar determinado','Todo el planeta Tierra visto desde el espacio','Solo las montañas y los ríos'],0,'Es lo que vemos desde un lugar concreto.'),
+    mc('Los elementos naturales del paisaje…', ['No los introduce el ser humano','Los construye el ser humano','Solo existen en las ciudades'],0),
+    mc('El relieve son…', ['Las formas del terreno: montañas, mesetas, valles…','Las lluvias y la nieve','Los mares y los océanos'],0),
+    mc('La lluvia y la nieve son parte de…', ['El clima','El relieve','La fauna'],0),
+    mc('La flora y la fauna son…', ['Los seres vivos: plantas y animales','Los ríos y los lagos','Las carreteras y los puentes'],0),
+    ...pick(ELEMENTS,6).map(([e,a])=>mc(`${e}: ¿elemento natural o humanizado?`, ['Natural','Humanizado'], a==='Natural'?0:1, a==='Natural'?'No lo ha puesto el ser humano.':'Lo ha introducido el ser humano.'))
+  ]),
+  m2: () => shuffle([
+    mc('Un paisaje donde predominan los elementos naturales es…', ['Natural','Humanizado','De costa'],0),
+    mc('Un paisaje natural transformado por las personas es…', ['Artificial o humanizado','Natural','De interior'],0),
+    mc('Un paisaje situado lejos del mar es…', ['De interior','De costa'],0),
+    mc('Un paisaje situado cerca del mar es…', ['De costa','De interior'],0),
+    mc('Los paisajes de interior pueden ser…', ['De llanura o de montaña','De playa o de acantilado','De río o de lago'],0),
+    mc('Una ciudad llena de edificios y carreteras es un paisaje…', ['Humanizado','Natural'],0),
+    mc('Las cumbres nevadas de Sierra Nevada, lejos del mar, son un paisaje…', ['Natural y de interior','Humanizado y de costa','Natural y de costa'],0),
+    mc('Una playa salvaje sin casas ni carreteras es un paisaje…', ['Natural y de costa','Humanizado y de interior','Humanizado y de costa'],0),
+    mc('Los campos de trigo de la Meseta son un paisaje…', ['Humanizado y de interior','Natural y de costa','Natural y de interior'],0,'Los campos de cultivo los hacen las personas, y la Meseta está lejos del mar.'),
+    mc('Las costas de España pueden ser…', ['Atlánticas o mediterráneas','Del norte o del oeste','Altas o anchas'],0)
+  ]),
+  m3: () => shuffle([...mapSet(['interior'],4,3),
+    mc('La Meseta Central es…', ['Una gran llanura elevada en el centro de la Península','Una cordillera junto al mar','Una zona baja por donde pasa un río'],0),
+    mc('¿Qué divide la Meseta en Submeseta Norte y Sur?', ['El Sistema Central','Los Montes de Toledo','Sierra Morena'],0),
+    mc('Los Montes de Toledo están en…', ['La Submeseta Sur','La Submeseta Norte','La Depresión del Ebro'],0)]),
+  m4: () => shuffle([...mapSet(['rodean'],4,4),
+    mc('¿Qué cordillera rodea la Meseta por el sur?', ['Sierra Morena','Cordillera Cantábrica','Montes de León'],0),
+    mc('El pico más alto del Sistema Ibérico es…', ['El Moncayo (2.313 m)','El Aneto (3.404 m)','El Almanzor (2.591 m)'],0),
+    mc('¿Qué unidad rodea la Meseta por el norte?', ['Cordillera Cantábrica','Pirineos','Sistema Central'],0)]),
+  m5: () => shuffle([...mapSet(['exterior','depresion'],7,3),
+    ...pick(F.filter(f=>RELIEF4.includes(f.g)),4).map(qGroup),
+    mc('¿Qué es una depresión?', ['Una zona baja y llana, como un gran valle','Una montaña muy alta','Una isla volcánica'],0),
+    mc('Los Pirineos están en la frontera con…', ['Francia','Portugal','Marruecos'],0)]),
+  m6: () => {
+    const peaks=F.filter(f=>f.g==='pico');
+    return [...shuffle([
+      ...['teide','mulhacen','aneto'].map(id=>qLocate(byId[id])),
+      mc('¿Cuál es el pico más alto de España?', ['Teide (3.718 m)','Mulhacén (3.478 m)','Aneto (3.404 m)'],0,'El Teide está en Tenerife, en las islas Canarias.'),
+      mc('¿Cuál es el pico más alto de la Península Ibérica?', ['Mulhacén','Aneto','Teide'],0,'El Teide es más alto, pero está en una isla.'),
+      ...pick(peaks.filter(p=>p.id!=='teide'),4).map(p=>{ const d=pick(peaks.filter(x=>x.id!==p.id&&x.id!=='teide'),2).map(x=>x.unit); return {...mc(`¿Dónde está el ${p.name}?`, shuffle([p.unit,...d]), null), ans:p.unit} })
+    ]), {t:'order', ids:pick(peaks,5).map(p=>p.id)}];
+  },
+  m7: () => { const rivers=F.filter(f=>f.g==='rio');
+    return shuffle([...pick(rivers,6).map(qLocate), ...pick(rivers,2).map(f=>qIdentify(f,rivers)),
+      ...pick(rivers,3).map(r=>mc(`El río ${r.name} desemboca en la vertiente…`, ['Atlántica','Mediterránea','Cantábrica'], ['Atlántica','Mediterránea','Cantábrica'].indexOf(r.v))),
+      mc('¿Qué río da nombre a la depresión del noreste?', ['Ebro','Duero','Tajo'],0),
+      mc('¿Qué río atraviesa la Submeseta Norte?', ['Duero','Guadalquivir','Segura'],0)]) },
+  m8: () => { const cs=F.filter(f=>f.g==='costa');
+    return shuffle([...pick(cs,6).map(qLocate),
+      ...pick(cs,4).map(c=>mc(`La ${c.name.toLowerCase()} es…`, ['Atlántica','Mediterránea'], c.sub==='Atlántica'?0:1)),
+      mc('Las rías son típicas de la costa…', ['Gallega','Mediterránea del este','Balear'],0)]) },
+  m9: () => { const all=F.filter(f=>f.g!=='costa');
+    return shuffle([...pick(relief(),9).map(qLocate), ...pick(relief(),3).map(f=>qIdentify(f,relief())), ...pick(relief(),3).map(qGroup),
+      qLocate(byId.teide), ...pick(F.filter(f=>f.g==='rio'),2).map(qLocate),
+      ...pick(GEN.m2(),2)]) }
+};
+// mc con respuesta por texto
+const _mc = mc;
+function fixMC(q){ if(q.t==='mc' && q.a==null && q.ans){ q.a=q.opts.indexOf(q.ans) } return q }
+
+const MISSIONS = [
+  {id:'m1', t:'¿Qué es un paisaje?', s:'Elementos naturales y humanizados.', groups:[], theory:true},
+  {id:'m2', t:'Tipos de paisaje', s:'Natural o humanizado. De interior o de costa.', groups:[], theory:true},
+  {id:'m3', t:'El corazón: la Meseta', s:'Las cuatro unidades del interior de la Meseta.', groups:['interior']},
+  {id:'m4', t:'El anillo de montañas', s:'Las cuatro unidades que rodean la Meseta.', groups:['rodean']},
+  {id:'m5', t:'Fuera de la Meseta', s:'Unidades exteriores y depresiones.', groups:['exterior','depresion']},
+  {id:'m6', t:'Las grandes cumbres', s:'Teide, Mulhacén, Aneto y compañía.', groups:['pico']},
+  {id:'m7', t:'Ríos y vertientes', s:'Los grandes ríos y a qué mar van.', groups:['rio']},
+  {id:'m8', t:'Costas de España', s:'Costa atlántica y mediterránea.', groups:['costa']},
+  {id:'m9', t:'Gran examen', s:'Todo mezclado y sin nombres en el mapa.', groups:[...RELIEF4,'pico','rio'], exam:true}
+];
+const starSVG = (on,size) => `<svg viewBox="0 0 24 24" ${size?`width="${size}" height="${size}"`:''} aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="${on?'var(--gold)':'none'}" stroke="${on?'var(--gold)':'var(--line)'}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+function renderRuta(){
+  const nextM = MISSIONS.find(m=>!P.stars[m.id]);
+  $('#continueBtn').textContent = nextM ? (Object.keys(P.stars).length? `Seguir: ${nextM.t}` : 'Empezar la misión 1') : 'Repetir el gran examen';
+  $('#continueBtn').onclick = () => startMission((nextM||MISSIONS[8]).id);
+  $('#missionList').innerHTML = MISSIONS.map((m,i)=>{
+    const st=P.stars[m.id]||0, gs = m.theory?['exterior','depresion']:m.groups;
+    return `<li><button class="mcard ${nextM&&nextM.id===m.id?'next':''}" data-m="${m.id}">
+      <span class="num">Misión ${i+1}${m.exam?' · final':''}</span><h3>${m.t}</h3><p>${m.s}</p>
+      <span class="swatches">${gs.slice(0,6).map(g=>`<i style="--c:${GROUPS[g].c}"></i>`).join('')}<span class="st" aria-label="${st} de 3 estrellas">${[1,2,3].map(k=>starSVG(k<=st)).join('')}</span></span>
+    </button></li>`}).join('');
+  $('#missionList').querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>startMission(b.dataset.m));
+}
+
+/* ---------- misión: aprender -> practicar ---------- */
+function startMission(id){
+  const m = MISSIONS.find(x=>x.id===id);
+  if(m.theory){ go('mision'); runQuiz({title:m.t, mission:m, qs:GEN[id]().map(fixMC)}); svgEl().classList.add('quiz'); setVisible([...RELIEF4]); zoomTo(null); return }
+  go('mision');
+  if(m.exam){ runQuiz({title:m.t, mission:m, qs:GEN[id]().map(fixMC)}); return }
+  learn(m);
+}
+function learn(m, sel){
+  const items = F.filter(f=>m.groups.includes(f.g)).sort((a,b)=>(b.alt||0)-(a.alt||0));
+  svgEl().classList.remove('quiz','nolabels','flat'); clearMarks(); setVisible(m.groups.includes('pico')?[...RELIEF4,'pico']:m.groups.includes('rio')?['rio','depresion']:m.groups);
+  svgEl().querySelectorAll('.feat').forEach(e=>{ if(!m.groups.includes(e.dataset.g)) e.classList.add('dim') });
+  if(sel) select(sel);
+  if(!sel) zoomTo(m.groups.includes('pico')||m.groups.includes('costa')?null:items.map(f=>f.id));
+  $('#mapHint').textContent='Toca en el mapa o en la lista';
+  onTap = id => { if(id && m.groups.includes(byId[id].g)) learn(m,id) };
+  const f = sel && byId[sel];
+  $('#panel').innerHTML = `
+    <div><div class="eyebrow">Misión ${MISSIONS.indexOf(m)+1} · Paso 1 de 2: aprende</div><h2>${m.t}</h2></div>
+    <p class="muted" style="margin:0">Mira dónde está cada una. Toca cada nombre para verlo en el mapa. Cuando las tengas, pasa a practicar.</p>
+    <ul class="unitlist">${items.map(x=>`<li><button data-u="${x.id}" aria-current="${x.id===sel}" style="--c:${GROUPS[x.g].c}"><span class="dot"></span>${esc(x.name)}${x.alt?`<small>${fmt(x.alt)} m</small>`:x.v?`<small>${x.v}</small>`:x.sub?`<small>${x.sub}</small>`:''}</button></li>`).join('')}</ul>
+    ${f?`<div class="fact" style="--c:${GROUPS[f.g].c}"><b>${esc(f.name)}.</b> ${esc(f.info)}${f.dato?` <i>${esc(f.dato)}</i>`:''}</div>`:''}
+    <div class="row"><button class="btn" id="practice">¡A practicar!</button><button class="btn ghost" id="backRuta">Volver a la ruta</button></div>`;
+  $('#panel').querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>learn(m,b.dataset.u));
+  $('#practice').onclick=()=>{ zoomTo(null); runQuiz({title:m.t, mission:m, qs:GEN[m.id]().map(fixMC)}) };
+  $('#backRuta').onclick=()=>go('ruta');
+}
+
+/* ---------- motor del quiz ---------- */
+let Q=null, timer=null;
+function runQuiz(cfg){
+  Q = {...cfg, i:0, score:0, streak:0, best:0, wrong:[], answered:false, xp:0};
+  if(cfg.timed){ Q.timeLeft=cfg.timed; timer=setInterval(()=>{ Q.timeLeft--; const b=$('#timebar'); if(b) b.style.width=(Q.timeLeft/cfg.timed*100)+'%'; const t=$('#timeleft'); if(t) t.textContent=Q.timeLeft+' s'; if(Q.timeLeft<=0){ clearInterval(timer); timer=null; finish() } },1000) }
+  ask();
+}
+function poolGroups(){
+  const gs = new Set(Q.mission&&!Q.mission.theory ? Q.mission.groups : []);
+  for(const q of Q.qs){ if(q.id) gs.add(byId[q.id].g); if(q.ids) q.ids.forEach(i=>gs.add(byId[i].g)) }
+  return [...gs];
+}
+function ask(){
+  if(!Q.timed && Q.i>=Q.qs.length) return finish();
+  if(Q.timed && Q.i>=Q.qs.length) Q.qs.push(...Q.gen());
+  const q = Q.qs[Q.i]; Q.answered=false;
+  const m=svgEl(); m.classList.add('quiz'); m.classList.remove('nolabels','flat'); clearMarks();
+  const gs = poolGroups(); setVisible(gs.length?gs:RELIEF4);
+  onTap = null;
+  const head = `
+    <div class="qhead"><span>${esc(Q.title)}</span><span>·</span><span>${Q.timed?`<b id="timeleft">${Q.timeLeft} s</b> · ${Q.score} aciertos`:`${Q.i+1} / ${Q.qs.length}`}</span><span class="streak">${Q.streak>=2?`Racha ×${Q.streak}`:''}</span></div>
+    <div class="progress ${Q.timed?'time':''}"><i id="timebar" style="width:${Q.timed?(Q.timeLeft/Q.timed*100):(Q.i/Q.qs.length*100)}%"></i></div>`;
+  let body='';
+  if(q.t==='locate'){
+    const f=byId[q.id];
+    $('#mapHint').textContent='Toca la respuesta en el mapa';
+    body = `<div class="prompt"><span class="ask">Toca en el mapa…</span>${esc(f.k==='river'?'Río '+f.name:f.name)}</div>
+      <p class="muted" style="margin:0;font-size:.9rem">Puedes acercar el mapa con + o pellizcando.</p>`;
+    onTap = id => { if(!Q.answered && id) answer(id===q.id, id) };
+  } else if(q.t==='identify'){
+    const f=byId[q.id]; featEl(q.id).classList.add('pulse','sel');
+    m.querySelectorAll('.feat').forEach(e=>{ if(e.dataset.id!==q.id) e.classList.add('dim') });
+    $('#mapHint').textContent='Mira lo que parpadea';
+    body = `<div class="prompt"><span class="ask">¿Qué es lo que parpadea en el mapa?</span></div>
+      <div class="opts">${q.opts.map((id,k)=>`<button class="opt" data-o="${id}"><kbd>${k+1}</kbd>${esc(byId[id].name)}</button>`).join('')}</div>`;
+  } else if(q.t==='group'){
+    const f=byId[q.id]; featEl(q.id).classList.add('pulse','sel');
+    m.querySelectorAll('.feat').forEach(e=>{ if(e.dataset.id!==q.id) e.classList.add('dim') });
+    labEl(q.id)?.classList.add('revealed');
+    $('#mapHint').textContent='Clasifica la unidad';
+    body = `<div class="prompt"><span class="ask">¿En qué grupo va…?</span>${esc(f.name)}</div>
+      <div class="opts">${RELIEF4.map((g,k)=>`<button class="opt" data-o="${g}"><kbd>${k+1}</kbd><span class="dot" style="--c:${GROUPS[g].c}"></span>${GROUPS[g].name}</button>`).join('')}</div>`;
+  } else if(q.t==='mc'){
+    $('#mapHint').textContent='Pregunta de teoría';
+    body = `<div class="prompt" style="font-size:1.35rem">${esc(q.q)}</div>
+      <div class="opts">${q.opts.map((o,k)=>`<button class="opt" data-o="${k}"><kbd>${k+1}</kbd>${esc(o)}</button>`).join('')}</div>`;
+  } else if(q.t==='order'){
+    Q.order=[];
+    m.querySelectorAll('.feat').forEach(e=>{ if(!q.ids.includes(e.dataset.id)) e.classList.add('dim') });
+    q.ids.forEach(id=>labEl(id)?.classList.add('revealed'));
+    setVisible([...RELIEF4,'pico']);
+    $('#mapHint').textContent='Ordena las cumbres';
+    body = `<div class="prompt" style="font-size:1.35rem"><span class="ask">Toca de la más alta a la más baja</span>Ordena estas cumbres</div>
+      <div class="opts" id="ordOpts">${shuffle(q.ids).map(id=>`<button class="opt" data-ord="${id}">▲ ${esc(byId[id].name)} <small class="muted" style="font-weight:400">${esc(byId[id].unit)}</small></button>`).join('')}</div>
+      <div class="order-slots" id="slots">${q.ids.map(()=>'<div></div>').join('')}</div>`;
+  }
+  $('#panel').innerHTML = head + body + `<div id="fbBox"></div>`;
+  $('#panel').querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{
+    if(Q.answered) return;
+    if(q.t==='identify') answer(b.dataset.o===q.id, b.dataset.o, b);
+    if(q.t==='group') answer(b.dataset.o===byId[q.id].g, b.dataset.o, b);
+    if(q.t==='mc') answer(+b.dataset.o===q.a, +b.dataset.o, b);
+  });
+  $('#panel').querySelectorAll('[data-ord]').forEach(b=>b.onclick=()=>{
+    if(Q.answered) return;
+    Q.order.push(b.dataset.ord); b.disabled=true; b.style.visibility='hidden';
+    const slots=$('#slots').children; const s=slots[Q.order.length-1]; s.classList.add('filled'); s.append(byId[b.dataset.ord].name);
+    select(b.dataset.ord);
+    if(Q.order.length===q.ids.length){ const right=[...q.ids].sort((a,c)=>byId[c].alt-byId[a].alt); answer(right.every((id,k)=>Q.order[k]===id), null) }
+  });
+}
+function answer(ok, chosen, btn){
+  const q=Q.qs[Q.i]; Q.answered=true;
+  if(ok){ Q.score++; Q.streak++; Q.best=Math.max(Q.best,Q.streak); const g=10+(Q.streak>=3?5:0); Q.xp+=g; sfx('ok') }
+  else { Q.streak=0; Q.wrong.push(q); sfx('no') }
+  // fallos para repasar (solo de mapa)
+  if(q.id && q.t!=='mc'){ P.fallos = P.fallos.filter(x=>x!==q.id); if(!ok) P.fallos.unshift(q.id); P.fallos=P.fallos.slice(0,24); save() }
+  let msg='', extra='';
+  if(q.t==='locate'){
+    const f=byId[q.id];
+    featEl(q.id).classList.add(ok?'good':'pulse','sel'); labEl(q.id)?.classList.add('revealed');
+    if(!ok && chosen){ featEl(chosen).classList.add('wrong'); labEl(chosen)?.classList.add('revealed'); extra = `Has tocado: ${byId[chosen].name}. Mira dónde parpadea ${f.name}.` }
+    msg = ok?'¡Correcto!':'Casi…'; extra = ok ? (f.dato||f.info) : extra;
+  } else if(q.t==='identify' || q.t==='group'){
+    const f=byId[q.id]; labEl(q.id)?.classList.add('revealed'); featEl(q.id).classList.remove('pulse');
+    const right = q.t==='identify'?q.id:f.g;
+    $('#panel').querySelectorAll('[data-o]').forEach(b=>{ b.disabled=true; if(b.dataset.o===right) b.classList.add('ok') });
+    if(!ok && btn) btn.classList.add('no');
+    msg = ok?'¡Correcto!':`Era: ${q.t==='identify'?f.name:GROUPS[f.g].name}`; extra = q.t==='group'? GROUPS[f.g].name+'.' : f.info;
+  } else if(q.t==='mc'){
+    $('#panel').querySelectorAll('[data-o]').forEach(b=>{ b.disabled=true; if(+b.dataset.o===q.a) b.classList.add('ok') });
+    if(!ok && btn) btn.classList.add('no');
+    msg = ok?'¡Correcto!':`La respuesta es: ${q.opts[q.a]}`; extra = q.why||'';
+  } else if(q.t==='order'){
+    const right=[...q.ids].sort((a,c)=>byId[c].alt-byId[a].alt);
+    msg = ok?'¡Orden perfecto!':'El orden correcto es:';
+    extra = right.map((id,k)=>`${k+1}º ${byId[id].name} (${fmt(byId[id].alt)} m)`).join(' · ');
+  }
+  if(Q.timed){ $('#fbBox').innerHTML = `<div class="fb ${ok?'ok':'no'}">${esc(msg)}</div>`; setTimeout(()=>{ if(Q && Q.timed && Q.timeLeft>0){ Q.i++; ask() } }, ok?450:1100); return }
+  $('#fbBox').innerHTML = `<div class="fb ${ok?'ok':'no'}">${esc(msg)}${extra?`<span>${esc(extra)}</span>`:''}</div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="nextQ">${Q.i+1<Q.qs.length?'Siguiente':'Ver resultado'} <kbd style="font-size:.7rem;opacity:.7;margin-left:6px">Enter</kbd></button></div>`;
+  $('#nextQ').onclick=()=>{ Q.i++; ask() };
+  $('#nextQ').focus({preventScroll:true});
+}
+document.addEventListener('keydown',e=>{
+  if(!Q || $('#v-stage').hidden) return;
+  if(/^[1-4]$/.test(e.key)){ const b=$('#panel').querySelectorAll('.opt:not(:disabled)')[+e.key-1]; if(b){ b.click(); e.preventDefault() } }
+});
+function finish(){
+  if(timer){ clearInterval(timer); timer=null }
+  const total = Q.timed ? Math.max(Q.i,1) : Q.qs.length;
+  const pct = Math.round(Q.score/total*100);
+  const stars = Q.timed ? (Q.score>=15?3:Q.score>=10?2:Q.score>=5?1:0) : (pct>=90?3:pct>=70?2:pct>=40?1:0);
+  let bonus=0;
+  if(Q.mission){ const prev=P.stars[Q.mission.id]||0; if(stars>prev){ bonus=(stars-prev)*20; P.stars[Q.mission.id]=stars } }
+  if(Q.mode){ const prev=P.best[Q.mode]||0; if(Q.score>prev) P.best[Q.mode]=Q.score }
+  addXP(Q.xp+bonus); save();
+  if(stars>=2){ confetti(); sfx('done') }
+  clearMarks(); svgEl().classList.remove('quiz'); setVisible([...RELIEF4,'pico']); onTap=null;
+  const wrongNames=[...new Set(Q.wrong.map(q=>q.id?byId[q.id].name:q.ids?'Orden de las cumbres':q.q))];
+  const msg = stars===3?'¡Brutal! Lo dominas.':stars===2?'¡Muy bien! Ya casi lo tienes.':stars===1?'Vas por buen camino. Repasa y vuelve a intentarlo.':'Toca repasar un poco. ¡Tú puedes!';
+  const idx = Q.mission?MISSIONS.indexOf(Q.mission):-1, nextM = idx>=0 && idx<MISSIONS.length-1 ? MISSIONS[idx+1] : null;
+  $('#panel').innerHTML = `<div class="result">
+      <div class="eyebrow">${esc(Q.title)} · resultado</div>
+      <div class="stars">${[1,2,3].map(k=>starSVG(k<=stars)).join('')}</div>
+      <div class="big">${Q.timed?Q.score:pct+'%'}</div>
+      <div class="muted">${Q.timed?`aciertos en ${Q.timed} segundos${P.best[Q.mode]===Q.score&&Q.score>0?' · ¡récord!':''}`:`${Q.score} de ${total} aciertos · mejor racha ×${Q.best}`}</div>
+      <h2 style="font-size:1.3rem">${msg}</h2>
+      <div class="chip" style="--c:var(--gold)">+${Q.xp+bonus} XP</div>
+    </div>
+    ${wrongNames.length?`<div class="fact" style="--c:var(--bad)"><b>Repasa:</b> ${wrongNames.map(esc).join(', ')}</div>`:''}
+    <div class="row" style="justify-content:center">
+      <button class="btn" id="again">Repetir</button>
+      ${nextM&&stars>=1?`<button class="btn" id="nextMission">Siguiente misión</button>`:''}
+      <button class="btn ghost" id="toRuta">${Q.mission?'Volver a la ruta':'Más retos'}</button>
+    </div>`;
+  const cfg=Q;
+  $('#again').onclick=()=>{ if(cfg.mission) startMission(cfg.mission.id); else startMode(cfg.mode) };
+  if($('#nextMission')) $('#nextMission').onclick=()=>startMission(nextM.id);
+  $('#toRuta').onclick=()=>go(cfg.mission?'ruta':'retos');
+  Q=null;
+}
+
+/* ---------- retos libres ---------- */
+const MODES = {
+  donde:{t:'¿Dónde está?', s:'Toca en el mapa la unidad que te pido.', c:'var(--g-rodean)', i:'M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z', gen:()=>pick(relief(),12).map(qLocate)},
+  quees:{t:'¿Qué es?', s:'Algo parpadea en el mapa. Elige su nombre.', c:'var(--g-interior)', i:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm1 14h-2v-2h2zm1.6-6.2-.9.9c-.7.7-1.2 1.3-1.2 2.8h-2v-.5c0-1.1.5-2.1 1.2-2.8l1.2-1.3a2 2 0 1 0-3.4-1.4H8a4 4 0 1 1 6.6 3.3z', gen:()=>pick(relief(),12).map(f=>qIdentify(f,relief()))},
+  grupos:{t:'Clasifícalo', s:'¿Interior, rodea, exterior o depresión?', c:'var(--g-exterior)', i:'M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z', gen:()=>pick(relief(),12).map(qGroup)},
+  crono:{t:'Contrarreloj', s:'60 segundos. Localiza todo lo que puedas.', c:'var(--g-costa)', i:'M12 4a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm1 9.4V8h-2v6.6l4.2 2.5 1-1.7zM9 1h6v2H9z', gen:()=>pick([...relief(),byId.teide,byId.mulhacen,byId.aneto],20).map(qLocate), timed:60},
+  cumbres:{t:'Cumbres', s:'Localiza picos y ordénalos por altura.', c:'var(--g-pico)', i:'M3 20 10 7l4 6 2-3 5 10z', gen:()=>GEN.m6().map(fixMC)},
+  rios:{t:'Ríos', s:'Localiza los grandes ríos de España.', c:'var(--g-rio)', i:'M3 6c3 0 3 2 6 2s3-2 6-2 3 2 6 2v3c-3 0-3-2-6-2s-3 2-6 2-3-2-6-2zm0 7c3 0 3 2 6 2s3-2 6-2 3 2 6 2v3c-3 0-3-2-6-2s-3 2-6 2-3-2-6-2z', gen:()=>pick(F.filter(f=>f.g==='rio'),9).map(qLocate)},
+  fallos:{t:'Repasar mis fallos', s:'Solo lo que se te ha resistido.', c:'var(--bad)', i:'M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z', gen:()=>shuffle(P.fallos.filter(id=>byId[id]).map(id=>byId[id])).slice(0,12).map(qLocate)}
+};
+function renderRetos(){
+  svgEl().classList.remove('quiz','nolabels','flat'); clearMarks(); setVisible([...RELIEF4,'pico']); onTap=null; zoomTo(null);
+  $('#mapHint').textContent='Elige un reto';
+  $('#panel').innerHTML = `<div><div class="eyebrow">Práctica libre</div><h2>Retos</h2></div>
+    <div class="modes">${Object.entries(MODES).map(([k,m])=>{
+      const dis = k==='fallos' && !P.fallos.length;
+      const rec = k==='fallos'? `${P.fallos.length} pendientes` : P.best[k]?`Récord: ${P.best[k]}`:'';
+      return `<button class="mode" data-mode="${k}" ${dis?'disabled style="opacity:.5"':''}><span class="ico" style="--c:${m.c}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="${m.i}" fill="currentColor"/></svg></span><span><b>${m.t}</b><small>${dis?'¡No tienes fallos guardados!':m.s}</small></span><span class="rec">${rec}</span></button>`}).join('')}</div>`;
+  $('#panel').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>startMode(b.dataset.mode));
+}
+function startMode(k){
+  const m=MODES[k]; if(view!=='retos') go('retos');
+  if(k==='fallos' && !P.fallos.length){ renderRetos(); return }
+  runQuiz({title:m.t, mode:k, qs:m.gen(), gen:m.gen, timed:m.timed});
+}
+
+/* ---------- extras ---------- */
+let toastT;
+function toast(t){ const e=$('#toast'); e.textContent=t; e.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>e.classList.remove('show'),2600) }
+function confetti(){
+  if(reduced) return;
+  const c=$('#confetti'), x=c.getContext('2d'); c.width=innerWidth; c.height=innerHeight;
+  const cs=getComputedStyle(document.documentElement), cols=['--g-interior','--g-rodean','--g-exterior','--g-depresion','--g-costa','--gold'].map(v=>cs.getPropertyValue(v).trim());
+  const ps=Array.from({length:120},()=>({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*12,vy:-Math.random()*12-4,r:Math.random()*6+4,c:cols[Math.floor(Math.random()*cols.length)],a:Math.random()*6}));
+  let n=0; (function f(){ x.clearRect(0,0,c.width,c.height); for(const p of ps){ p.x+=p.vx; p.y+=p.vy; p.vy+=.35; p.a+=.2; x.fillStyle=p.c; x.save(); x.translate(p.x,p.y); x.rotate(p.a); x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2); x.restore() } if(++n<110) requestAnimationFrame(f); else x.clearRect(0,0,c.width,c.height) })();
+}
+
+/* ---------- arranque ---------- */
+buildMap(); applyVB(); renderXP(); renderSound();
+const h = (location.hash||'').slice(1);
+go(['mapa','retos','paisajes'].includes(h)?h:'ruta', {keepHash:true});
+addEventListener('hashchange',()=>{ const v=location.hash.slice(1); if(['ruta','mapa','retos','paisajes'].includes(v) && v!==view) go(v,{keepHash:true}) });
+</script>

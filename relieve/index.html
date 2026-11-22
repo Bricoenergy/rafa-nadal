@@ -278,7 +278,7 @@ button{font:inherit;color:inherit;cursor:pointer}
       <div>
         <div class="eyebrow">Tema 2 · Conocer y cuidar el relieve más cercano</div>
         <h2>Aprende el relieve de España <em>tocando el mapa</em></h2>
-        <p>Nueve misiones, de la definición de paisaje al gran examen. En cada misión primero exploras el mapa y luego practicas. Ganas XP, estrellas y subes de nivel.</p>
+        <p>Ocho misiones, de la definición de paisaje al gran examen. En cada misión primero exploras el mapa y luego practicas. Ganas XP, estrellas y subes de nivel.</p>
         <div class="row" style="margin-top:14px"><button class="btn" id="continueBtn">Empezar</button><button class="btn ghost" data-go="mapa">Explorar el mapa libre</button></div>
       </div>
       <div class="plan">
@@ -287,7 +287,7 @@ button{font:inherit;color:inherit;cursor:pointer}
           <li><b>Día 1</b><span>Misiones 1 y 2: qué es un paisaje y sus tipos.</span></li>
           <li><b>Día 2</b><span>Misiones 3 y 4: la Meseta y lo que la rodea.</span></li>
           <li><b>Día 3</b><span>Misión 5: unidades exteriores y depresiones.</span></li>
-          <li><b>Día 4</b><span>Misiones 6, 7 y 8: picos, ríos y costas.</span></li>
+          <li><b>Día 4</b><span>Misiones 6 y 7: picos y costas.</span></li>
           <li><b>Día 5</b><span>Repasa tus fallos en Retos y haz el gran examen.</span></li>
         </ol>
       </div>
@@ -353,9 +353,8 @@ button{font:inherit;color:inherit;cursor:pointer}
         </div>
         <p class="muted" style="margin:12px 0 0">Y en Canarias, el <b>Teide (3.718 m)</b>: el pico más alto de España.</p>
       </div>
-      <div class="tcard third"><h3>Paisajes de costa</h3><p style="margin:0 0 6px"><b style="color:var(--g-costa)">Atlántica</b>: cantábrica, gallega, andaluza y Canarias.</p><p style="margin:0"><b style="color:var(--g-costa)">Mediterránea</b>: del sur, del este y Baleares.</p></div>
-      <div class="tcard third"><h3>Hidrografía: vertientes</h3><p style="margin:0">Los ríos desembocan en una vertiente: <b>Cantábrica</b>, <b>Atlántica</b> o <b>Mediterránea</b>. Baleares y Canarias tienen sus propios ríos cortos.</p></div>
-      <div class="tcard third"><h3>Tecnología en geografía</h3><p style="margin:0">Mapas físicos, <b>TIG</b> (Tecnologías de la Información Geográfica, como los satélites y el GPS) y aplicaciones prácticas, como esta.</p></div>
+      <div class="tcard"><h3>Paisajes de costa</h3><p style="margin:0 0 6px"><b style="color:var(--g-costa)">Atlántica</b>: cantábrica, gallega, andaluza y Canarias.</p><p style="margin:0"><b style="color:var(--g-costa)">Mediterránea</b>: del sur, del este y Baleares.</p></div>
+      <div class="tcard"><h3>Tecnología en geografía</h3><p style="margin:0">Mapas físicos, <b>TIG</b> (Tecnologías de la Información Geográfica, como los satélites y el GPS) y aplicaciones prácticas, como esta.</p></div>
       <div class="tcard wide row" style="justify-content:space-between"><span class="def" style="font-size:1.1rem">¿Lo tienes? Ponte a prueba.</span><div class="row"><button class="btn" data-mission="m1">Misión 1: El paisaje</button><button class="btn ghost" data-mission="m2">Misión 2: Tipos</button></div></div>
     </div>
   </section>
@@ -374,17 +373,11 @@ const GROUPS = {
   exterior:{name:'Exteriores a la Meseta', short:'Exteriores', c:'var(--g-exterior)'},
   depresion:{name:'Depresiones exteriores', short:'Depresiones', c:'var(--g-depresion)'},
   pico:{name:'Picos', short:'Picos', c:'var(--g-pico)'},
-  rio:{name:'Ríos', short:'Ríos', c:'var(--g-rio)'},
   costa:{name:'Costas', short:'Costas', c:'var(--g-costa)'}
 };
 const RELIEF4 = ['interior','rodean','exterior','depresion'];
 const seaOf = v => v==='Mediterránea'?'el mar Mediterráneo':v==='Cantábrica'?'el mar Cantábrico':'el océano Atlántico';
-const F = [...D.features, ...D.rivers.map(r=>({...r, g:'rio', k:'river', info:`Desemboca en ${seaOf(r.v)}. Pertenece a la vertiente ${r.v.toLowerCase()}.`}))];
-F.find(f=>f.id==='ebro').dato='Es el río más caudaloso de España y forma un delta al llegar al mar.';
-F.find(f=>f.id==='tajo').dato='Es el río más largo de la Península: desemboca en Lisboa (Portugal).';
-F.find(f=>f.id==='guadalquivir').dato='Pasa por Córdoba y Sevilla. Barcos grandes pueden subir hasta Sevilla.';
-F.find(f=>f.id==='duero').dato='Atraviesa la Submeseta Norte y muchas ciudades de Castilla y León.';
-F.find(f=>f.id==='mino').dato='Hace de frontera entre Galicia y Portugal al final de su recorrido.';
+const F = [...D.features];
 const byId = Object.fromEntries(F.map(f=>[f.id,f]));
 const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
 const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a };
@@ -629,7 +622,7 @@ function renderExplore(){
         <p style="margin:0">${esc(f.info)}</p>
         ${f.dato?`<div class="fact"><b>¿Sabías que…?</b> ${esc(f.dato)}</div>`:''}
         ${peaksOf.length?`<div class="row">${peaksOf.map(p=>`<button class="chip" data-sel="${p.id}" style="--c:var(--g-pico)">▲ ${p.name} ${fmt(p.alt)} m</button>`).join('')}</div>`:''}
-      </div>` : `<div class="info"><p class="muted" style="margin:0">Toca cualquier cordillera, depresión, río, costa o pico para ver su ficha.</p>
+      </div>` : `<div class="info"><p class="muted" style="margin:0">Toca cualquier cordillera, depresión, costa o pico para ver su ficha.</p>
       <ul class="unitlist">${RELIEF4.map(g=>`<li><button data-layer-only="${g}" style="--c:${GROUPS[g].c}"><span class="dot"></span>${GROUPS[g].name}<small>${F.filter(x=>x.g===g).length}</small></button></li>`).join('')}</ul></div>`}`;
   $('#panel').querySelectorAll('[data-layer]').forEach(b=>b.onclick=()=>{ const k=b.dataset.layer; exploreGroups = exploreGroups.includes(k)?exploreGroups.filter(x=>x!==k):[...exploreGroups,k]; renderExplore() });
   $('#labBtn').onclick=()=>{ exploreLabels=!exploreLabels; renderExplore() };
@@ -694,18 +687,13 @@ const GEN = {
       ...pick(peaks.filter(p=>p.id!=='teide'),4).map(p=>{ const d=pick(peaks.filter(x=>x.id!==p.id&&x.id!=='teide'),2).map(x=>x.unit); return {...mc(`¿Dónde está el ${p.name}?`, shuffle([p.unit,...d]), null), ans:p.unit} })
     ]), {t:'order', ids:pick(peaks,5).map(p=>p.id)}];
   },
-  m7: () => { const rivers=F.filter(f=>f.g==='rio');
-    return shuffle([...pick(rivers,6).map(qLocate), ...pick(rivers,2).map(f=>qIdentify(f,rivers)),
-      ...pick(rivers,3).map(r=>mc(`El río ${r.name} desemboca en la vertiente…`, ['Atlántica','Mediterránea','Cantábrica'], ['Atlántica','Mediterránea','Cantábrica'].indexOf(r.v))),
-      mc('¿Qué río da nombre a la depresión del noreste?', ['Ebro','Duero','Tajo'],0),
-      mc('¿Qué río atraviesa la Submeseta Norte?', ['Duero','Guadalquivir','Segura'],0)]) },
   m8: () => { const cs=F.filter(f=>f.g==='costa');
     return shuffle([...pick(cs,6).map(qLocate),
       ...pick(cs,4).map(c=>mc(`La ${c.name.toLowerCase()} es…`, ['Atlántica','Mediterránea'], c.sub==='Atlántica'?0:1)),
       mc('Las rías son típicas de la costa…', ['Gallega','Mediterránea del este','Balear'],0)]) },
   m9: () => { const all=F.filter(f=>f.g!=='costa');
     return shuffle([...pick(relief(),9).map(qLocate), ...pick(relief(),3).map(f=>qIdentify(f,relief())), ...pick(relief(),3).map(qGroup),
-      qLocate(byId.teide), ...pick(F.filter(f=>f.g==='rio'),2).map(qLocate),
+      qLocate(byId.teide), qLocate(byId.mulhacen), qLocate(byId.aneto),
       ...pick(GEN.m2(),2)]) }
 };
 // mc con respuesta por texto
@@ -719,15 +707,14 @@ const MISSIONS = [
   {id:'m4', t:'El anillo de montañas', s:'Las cuatro unidades que rodean la Meseta.', groups:['rodean']},
   {id:'m5', t:'Fuera de la Meseta', s:'Unidades exteriores y depresiones.', groups:['exterior','depresion']},
   {id:'m6', t:'Las grandes cumbres', s:'Teide, Mulhacén, Aneto y compañía.', groups:['pico']},
-  {id:'m7', t:'Ríos y vertientes', s:'Los grandes ríos y a qué mar van.', groups:['rio']},
   {id:'m8', t:'Costas de España', s:'Costa atlántica y mediterránea.', groups:['costa']},
-  {id:'m9', t:'Gran examen', s:'Todo mezclado y sin nombres en el mapa.', groups:[...RELIEF4,'pico','rio'], exam:true}
+  {id:'m9', t:'Gran examen', s:'Todo mezclado y sin nombres en el mapa.', groups:[...RELIEF4,'pico'], exam:true}
 ];
 const starSVG = (on,size) => `<svg viewBox="0 0 24 24" ${size?`width="${size}" height="${size}"`:''} aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="${on?'var(--gold)':'none'}" stroke="${on?'var(--gold)':'var(--line)'}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
 function renderRuta(){
   const nextM = MISSIONS.find(m=>!P.stars[m.id]);
   $('#continueBtn').textContent = nextM ? (Object.keys(P.stars).length? `Seguir: ${nextM.t}` : 'Empezar la misión 1') : 'Repetir el gran examen';
-  $('#continueBtn').onclick = () => startMission((nextM||MISSIONS[8]).id);
+  $('#continueBtn').onclick = () => startMission((nextM||MISSIONS.at(-1)).id);
   $('#missionList').innerHTML = MISSIONS.map((m,i)=>{
     const st=P.stars[m.id]||0, gs = m.theory?['exterior','depresion']:m.groups;
     return `<li><button class="mcard ${nextM&&nextM.id===m.id?'next':''}" data-m="${m.id}">
@@ -915,7 +902,6 @@ const MODES = {
   grupos:{t:'Clasifícalo', s:'¿Interior, rodea, exterior o depresión?', c:'var(--g-exterior)', i:'M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z', gen:()=>pick(relief(),12).map(qGroup)},
   crono:{t:'Contrarreloj', s:'60 segundos. Localiza todo lo que puedas.', c:'var(--g-costa)', i:'M12 4a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm1 9.4V8h-2v6.6l4.2 2.5 1-1.7zM9 1h6v2H9z', gen:()=>pick([...relief(),byId.teide,byId.mulhacen,byId.aneto],20).map(qLocate), timed:60},
   cumbres:{t:'Cumbres', s:'Localiza picos y ordénalos por altura.', c:'var(--g-pico)', i:'M3 20 10 7l4 6 2-3 5 10z', gen:()=>GEN.m6().map(fixMC)},
-  rios:{t:'Ríos', s:'Localiza los grandes ríos de España.', c:'var(--g-rio)', i:'M3 6c3 0 3 2 6 2s3-2 6-2 3 2 6 2v3c-3 0-3-2-6-2s-3 2-6 2-3-2-6-2zm0 7c3 0 3 2 6 2s3-2 6-2 3 2 6 2v3c-3 0-3-2-6-2s-3 2-6 2-3-2-6-2z', gen:()=>pick(F.filter(f=>f.g==='rio'),9).map(qLocate)},
   fallos:{t:'Repasar mis fallos', s:'Solo lo que se te ha resistido.', c:'var(--bad)', i:'M12 4V1L8 5l4 4V6a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z', gen:()=>shuffle(P.fallos.filter(id=>byId[id]).map(id=>byId[id])).slice(0,12).map(qLocate)}
 };
 function renderRetos(){

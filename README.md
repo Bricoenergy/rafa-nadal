@@ -21,8 +21,8 @@ Para regenerarlas tras cambiar el contenido: `node tools/extract_phrases.cjs`, `
 App para estudiar **los paisajes y el relieve de España** (Sociales, 5.º, tema 2). Abre `relieve/index.html` en cualquier navegador.
 
 - **Mapa interactivo con alturas reales** (sombreado del terreno y colores por altura), zoom y Canarias.
-- **9 misiones** con plan de 5 días: paisaje, tipos de paisaje, Meseta, unidades que la rodean, exteriores y depresiones, picos, ríos y costas, y gran examen.
-- **Retos**: ¿Dónde está?, ¿Qué es?, Clasifícalo, Contrarreloj, Cumbres, Ríos y Repasar mis fallos.
+- **8 misiones** con plan de 5 días: paisaje, tipos de paisaje, Meseta, unidades que la rodean, exteriores y depresiones, picos, costas y gran examen.
+- **Retos**: ¿Dónde está?, ¿Qué es?, Clasifícalo, Contrarreloj, Cumbres y Repasar mis fallos.
 - XP, niveles y estrellas guardados en el navegador.
 
 Para regenerar el mapa: en `relieve/tools`, `npm install`, `node gen.mjs`, `node relief.mjs` (descarga datos de elevación públicos) y `node build.mjs`.
